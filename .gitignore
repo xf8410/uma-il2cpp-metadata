@@ -1,0 +1,9 @@
+# CI 解包出来的原始 .so 不入库：单文件 >100MB，GitHub 会拒绝 push。
+# 原始数据保留在 zip 里（~39MB），每次 CI 解包到工作区用完即弃。
+metadata-*/*.so
+metadata-*/**/*.so
+
+# 解析产物不忽略，要入库：
+# metadata-*/dump/*.tsv
+# metadata-*/so_check.txt
+# metadata-*/dump_check.txt
