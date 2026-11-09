@@ -1,82 +1,141 @@
 file: metadata-20261110/libil2cpp.so  size: 129667848
-未覆盖区间 12 处，合计 27332656 B
-  0x2E8~0x1A4CF  106983 B  ELF_HOOK_,stub_,MetadataCache,il2cpp_init
-  0x1A4D0~0x28DF8   59688 B  -
-  0x2CC9C~0x2DFF0    4948 B  -
-  0x135ECD0~0x1360E50    8576 B  -
-  0x5C17190~0x62D4BCD  7068221 B  -
-  0x62D4BD0~0x65D9E34  3166820 B  -
-  0x65D9E38~0x71C4830  12495352 B  -
-  0x7282048~0x7282058      16 B  -
-  0x7282060~0x75956C8  3225192 B  -
-  0x75958A8~0x76B9410  1194856 B  -
-  0x7BA4470~0x7BA4640     464 B  -
+未覆盖区间 12 处，合计 96234 B
+  0x0~0x2E8     744 B  -
+  0x1A4CF~0x1A4D0       1 B  -
+  0x2C104~0x2CC9C    2968 B  -
+  0x135BE20~0x135ECD0   11952 B  -
+  0x5C17188~0x5C17190       8 B  -
+  0x62D4BCD~0x62D4BD0       3 B  -
+  0x65D9E34~0x65D9E38       4 B  -
+  0x72814B4~0x7282048    2964 B  -
+  0x7282058~0x7282060       8 B  -
+  0x75956C8~0x75958A8     480 B  -
+  0x7B91D46~0x7BA4470   75562 B  ELF_HOOK_,stub_,MetadataCache,il2cpp_init
   0x7BA8D04~0x7BA9308    1540 B  -
 
 ======================================================================
-重点区间 0x65D9E38 ~ 0x71C4830  (12495352 B)
-head: 14 00 00 00 00 00 00 00 01 7a 52 00 01 7c 1e 01 1b 0c 1f 00 00 00 00 00 2c 00 00 00 1c 00 00 00 34 82 d8 fa 6c 05 00 00 00 60 0c 1d 10 9e 02 9d 04 93 06 94 08 95 0a 96 0c 97 0e 98 10 99 12 9a 14 9b 16 9c 18 00 00 00 2c 00 00 00 4c 00 00 00 70 87 d8 fa 94 06 00 00 00 60 0c 1d 10 9e 02 9d
+重点区间 0x7B91D46 ~ 0x7BA4470  (75562 B)
+head: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
 -- u64 视图（前 16 个）--
-  +0x0000  0x0000000000000014 -> .shstrtab
-  +0x0008  0x011E7C0100527A01 
-  +0x0010  0x00000000001F0C1B -> .rela.dyn
-  +0x0018  0x0000001C0000002C 
-  +0x0020  0x0000056CFAD88234 
-  +0x0028  0x9D029E101D0C6000 
-  +0x0030  0x960A950894069304 
-  +0x0038  0x9A129910980E970C 
-  +0x0040  0x000000189C169B14 
-  +0x0048  0x0000004C0000002C 
-  +0x0050  0x00000694FAD88770 
-  +0x0058  0x9D029E101D0C6000 
-  +0x0060  0x960A950894069304 
-  +0x0068  0x9A129910980E970C 
-  +0x0070  0x000000189C169B14 
+  +0x0000  0x0000000000000000 -> .shstrtab
+  +0x0008  0x0000000000000000 -> .shstrtab
+  +0x0010  0x0000000000000000 -> .shstrtab
+  +0x0018  0x0000000000000000 -> .shstrtab
+  +0x0020  0x0000000000000000 -> .shstrtab
+  +0x0028  0x0000000000000000 -> .shstrtab
+  +0x0030  0x0000000000000000 -> .shstrtab
+  +0x0038  0x0000000000000000 -> .shstrtab
+  +0x0040  0x0000000000000000 -> .shstrtab
+  +0x0048  0x0000000000000000 -> .shstrtab
+  +0x0050  0x0000000000000000 -> .shstrtab
+  +0x0058  0x0000000000000000 -> .shstrtab
+  +0x0060  0x0000000000000000 -> .shstrtab
+  +0x0068  0x0000000000000000 -> .shstrtab
+  +0x0070  0x0000000000000000 -> .shstrtab
 
 -- u32 视图（前 16 个）--
-  +0x0000  0x00000014 -> .shstrtab
+  +0x0000  0x00000000 -> .shstrtab
   +0x0004  0x00000000 -> .shstrtab
-  +0x0008  0x00527A01 -> .rela.dyn
-  +0x000C  0x011E7C01 -> .rela.dyn
-  +0x0010  0x001F0C1B -> .rela.dyn
+  +0x0008  0x00000000 -> .shstrtab
+  +0x000C  0x00000000 -> .shstrtab
+  +0x0010  0x00000000 -> .shstrtab
   +0x0014  0x00000000 -> .shstrtab
-  +0x0018  0x0000002C -> .shstrtab
-  +0x001C  0x0000001C -> .shstrtab
-  +0x0020  0xFAD88234 
-  +0x0024  0x0000056C -> .dynstr
-  +0x0028  0x1D0C6000 
-  +0x002C  0x9D029E10 
-  +0x0030  0x94069304 
-  +0x0034  0x960A9508 
-  +0x0038  0x980E970C 
+  +0x0018  0x00000000 -> .shstrtab
+  +0x001C  0x00000000 -> .shstrtab
+  +0x0020  0x00000000 -> .shstrtab
+  +0x0024  0x00000000 -> .shstrtab
+  +0x0028  0x00000000 -> .shstrtab
+  +0x002C  0x00000000 -> .shstrtab
+  +0x0030  0x00000000 -> .shstrtab
+  +0x0034  0x00000000 -> .shstrtab
+  +0x0038  0x00000000 -> .shstrtab
 
--- 可读字符串 1 条（前 60）--
-  +0x83D49  zPLR
+-- 可读字符串 121 条（前 60）--
+  +0x0E4FE  Android
+  +0x0E50A  r27c
+  +0x0E54A  12479018
+  +0x0EFF7  __cxa_finalize
+  +0x0F006  __cxa_atexit
+  +0x0F013  xxxxXXXXxxxx
+  +0x0F046  g_tprt_pfn_array
+  +0x0F057  __errno
+  +0x0F05F  __stack_chk_fail
+  +0x0F070  vsnprintf
+  +0x0F07A  stub_decrypt_elf
+  +0x0F08B  stub_read
+  +0x0F095  stub_write
+  +0x0F0A0  stub_close
+  +0x0F0AB  stub_mmap
+  +0x0F0B5  stub_munmap
+  +0x0F0C1  stub_dlsym
+  +0x0F0CC  stub_fopen
+  +0x0F0D7  stub_fread
+  +0x0F0E2  stub_fwrite
+  +0x0F0EE  stub_fclose
+  +0x0F0FA  stub_recv
+  +0x0F104  stub_recvfrom
+  +0x0F112  stub_send
+  +0x0F11C  stub_sendto
+  +0x0F128  stub_strlen
+  +0x0F134  stub_strcmp
+  +0x0F140  stub_strstr
+  +0x0F14C  stub_strchr
+  +0x0F158  stub_strrchr
+  +0x0F165  stub_time
+  +0x0F16F  stub_gettimeofday
+  +0x0F181  stub_settimeofday
+  +0x0F193  ELF_HOOK_BRIDGE_MetadataCache_Register
+  +0x0F1BA  ELF_HOOK_MetadataCache_Register
+  +0x0F1DA  ELF_HOOK_BRIDGE_InitializeMethodMetadata
+  +0x0F203  ELF_HOOK_InitializeMethodMetadata
+  +0x0F225  ELF_HOOK_BRIDGE_InitializeAllMethodMetadata
+  +0x0F251  ELF_HOOK_InitializeAllMethodMetadata
+  +0x0F276  ELF_HOOK_BRIDGE_LoadMetadataFile
+  +0x0F297  ELF_HOOK_LoadMetadataFile
+  +0x0F2B1  ELF_HOOK_BRIDGE_InitializeRuntimeMetadata
+  +0x0F2DB  ELF_HOOK_InitializeRuntimeMetadata
+  +0x0F2FE  g_tprt_ori_array
+  +0x0F30F  ELF_HOOK_BRIDGE_il2cpp_init
+  +0x0F32B  ELF_HOOK_il2cpp_init
+  +0x0F340  ELF_HOOK_BRIDGE_il2cpp_runtime_invoke
+  +0x0F366  ELF_HOOK_il2cpp_runtime_invoke
+  +0x0F385  ELF_HOOK_BRIDGE_JNI_OnLoad
+  +0x0F3A0  ELF_HOOK_JNI_OnLoad
+  +0x0F3B4  ELF_HOOK_BRIDGE_Java_com_epicgames_ue4_VolumeReceiver_volumeChanged
+  +0x0F3F8  ELF_HOOK_Java_com_epicgames_ue4_VolumeReceiver_volumeChanged
+  +0x0F435  ELF_HOOK_BRIDGE_UE4_FPakInfo_Serialize
+  +0x0F45C  ELF_HOOK_UE4_FPakInfo_Serialize
+  +0x0F47C  ELF_HOOK_BRIDGE_unity_fileaccessor_read
+  +0x0F4A4  ELF_HOOK_unity_fileaccessor_read
+  +0x0F4C5  ELF_HOOK_BRIDGE_unity_fileaccessor_read_before2020
+  +0x0F4F8  ELF_HOOK_unity_fileaccessor_read_before2020
+  +0x0F524  ELF_HOOK_BRIDGE_cocos2d_JNI_OnLoad
+  +0x0F547  ELF_HOOK_cocos2d_JNI_OnLoad
 
--- 指针候选 276947 / 1561919 槽位（前 25）--
-  +0x00000  -> 0x14 (.shstrtab)
-  +0x00010  -> 0x1F0C1B (.rela.dyn)
-  +0x000F0  -> 0x89C04 (.rela.dyn)
-  +0x001D0  -> 0x4 (.shstrtab)
-  +0x00678  -> 0xC (.shstrtab)
-  +0x006D0  -> 0x10970C (.rela.dyn)
-  +0x006F0  -> 0x89304 (.rela.dyn)
-  +0x00760  -> 0x89304 (.rela.dyn)
-  +0x00780  -> 0x89304 (.rela.dyn)
-  +0x007A0  -> 0x89304 (.rela.dyn)
-  +0x007C0  -> 0x89304 (.rela.dyn)
-  +0x00890  -> 0x189B14 (.rela.dyn)
-  +0x008C0  -> 0x14 (.shstrtab)
-  +0x008E0  -> 0x4 (.shstrtab)
-  +0x00910  -> 0x14 (.shstrtab)
-  +0x00930  -> 0x4 (.shstrtab)
-  +0x00950  -> 0x4 (.shstrtab)
-  +0x00970  -> 0x89304 (.rela.dyn)
-  +0x00990  -> 0x89304 (.rela.dyn)
-  +0x009B0  -> 0x89304 (.rela.dyn)
-  +0x009D0  -> 0x89304 (.rela.dyn)
-  +0x00AA0  -> 0x14 (.shstrtab)
-  +0x00AD0  -> 0x14 (.shstrtab)
-  +0x00B00  -> 0x14 (.shstrtab)
-  +0x00B30  -> 0x14 (.shstrtab)
+-- 指针候选 8034 / 9445 槽位（前 25）--
+  +0x00000  -> 0x0 (.shstrtab)
+  +0x00008  -> 0x0 (.shstrtab)
+  +0x00010  -> 0x0 (.shstrtab)
+  +0x00018  -> 0x0 (.shstrtab)
+  +0x00020  -> 0x0 (.shstrtab)
+  +0x00028  -> 0x0 (.shstrtab)
+  +0x00030  -> 0x0 (.shstrtab)
+  +0x00038  -> 0x0 (.shstrtab)
+  +0x00040  -> 0x0 (.shstrtab)
+  +0x00048  -> 0x0 (.shstrtab)
+  +0x00050  -> 0x0 (.shstrtab)
+  +0x00058  -> 0x0 (.shstrtab)
+  +0x00060  -> 0x0 (.shstrtab)
+  +0x00068  -> 0x0 (.shstrtab)
+  +0x00070  -> 0x0 (.shstrtab)
+  +0x00078  -> 0x0 (.shstrtab)
+  +0x00080  -> 0x0 (.shstrtab)
+  +0x00088  -> 0x0 (.shstrtab)
+  +0x00090  -> 0x0 (.shstrtab)
+  +0x00098  -> 0x0 (.shstrtab)
+  +0x000A0  -> 0x0 (.shstrtab)
+  +0x000A8  -> 0x0 (.shstrtab)
+  +0x000B0  -> 0x0 (.shstrtab)
+  +0x000B8  -> 0x0 (.shstrtab)
+  +0x000C0  -> 0x0 (.shstrtab)
