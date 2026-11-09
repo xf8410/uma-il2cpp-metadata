@@ -1,0 +1,677 @@
+images: 73，示例: ['mscorlib.dll', 'System.Configuration.dll', 'Mono.Security.dll', 'System.Xml.dll', 'System.dll']
+在 so 里定位到 61/73 个程序集名字符串
+扫描段: ['.rodata', '.data.rel.ro', '.data']
+
+== Assembly-CSharp.dll   str@0x5E2F828  结构候选 1
+   in .data.rel.ro +0x1D8500:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2F828 .rodata
+      +1  0x0000000000000000 
+      +2  0x0000000000000000 
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000000000000 
+
+== BUMA_Notification.dll   str@0x5DC2045  结构候选 1
+   in .data.rel.ro +0x1D5F00:
+      -2  0x000000000159F1BC CODE:.text
+      -1  0x000000000159F1D0 CODE:.text
+      +0  0x0000000005DC2045 .rodata
+      +1  0x00000000000000BF int?=191
+      +2  0x00000000078ED170 .data
+      +3  0x0000000000000002 int?=2
+      +4  0x00000000078ED768 .data
+      +5  0x0000000005DC205C .rodata
+
+== Cinemachine.dll   str@0x5DADAF0  结构候选 1
+   in .data.rel.ro +0x1CD410:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DADAF0 .rodata
+      +1  0x00000000000003C6 .dynstr
+      +2  0x00000000078DDA20 .data
+      +3  0x0000000000000055 int?=85
+      +4  0x00000000078DF850 .data
+      +5  0x0000000005DADB00 .rodata
+
+== CriMw.CriWare.Mcdsp.Runtime.dll   str@0x5E2EA34  结构候选 1
+   in .data.rel.ro +0x1D7EC0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2EA34 .rodata
+      +1  0x0000000000000007 int?=7
+      +2  0x00000000078F2E10 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2EA54 .rodata
+
+== CriMw.CriWare.Runtime.dll   str@0x5D860E0  结构候选 1
+   in .data.rel.ro +0x1C7AE0:
+      -2  0x0000000007B03928 .data
+      -1  0x0000000000000000 
+      +0  0x0000000005D860E0 .rodata
+      +1  0x0000000000000910 .dynstr
+      +2  0x00000000078B5328 .data
+      +3  0x0000000000000048 int?=72
+      +4  0x00000000078B9BA8 .data
+      +5  0x0000000005D860FC .rodata
+
+== CriMw.CriWare.Vp9.Runtime.dll   str@0x5E2E9F0  结构候选 1
+   in .data.rel.ro +0x1D7E30:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2E9F0 .rodata
+      +1  0x0000000000000009 int?=9
+      +2  0x00000000078F2DC8 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2EA10 .rodata
+
+== Cute.AssetBundle.Assembly.dll   str@0x5DC8920  结构候选 1
+   in .data.rel.ro +0x1D6F50:
+      -2  0x00000000015B15DC CODE:.text
+      -1  0x00000000015B15F0 CODE:.text
+      +0  0x0000000005DC8920 .rodata
+      +1  0x0000000000000045 int?=69
+      +2  0x00000000078F12C8 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DC8940 .rodata
+
+== Cute.Core.Assembly.dll   str@0x5DB8FB6  结构候选 1
+   in .data.rel.ro +0x1D3208:
+      -2  0x0000000007B00750 .data
+      -1  0x0000000000000000 
+      +0  0x0000000005DB8FB6 .rodata
+      +1  0x000000000000023F int?=575
+      +2  0x00000000078E5608 .data
+      +3  0x0000000000000003 int?=3
+      +4  0x00000000078E6800 .data
+      +5  0x0000000005DB8FD0 .rodata
+
+== Cute.Cri.Assembly.dll   str@0x5DA2B0F  结构候选 1
+   in .data.rel.ro +0x1CC500:
+      -2  0x000000000154EA74 CODE:.text
+      -1  0x000000000154EAF8 CODE:.text
+      +0  0x0000000005DA2B0F .rodata
+      +1  0x00000000000004A8 .dynstr
+      +2  0x00000000078D3570 .data
+      +3  0x000000000000006B int?=107
+      +4  0x00000000078D5AB0 .data
+      +5  0x0000000005DA2B28 .rodata
+
+== DOTweenPro.dll   str@0x5E28BA4  结构候选 1
+   in .data.rel.ro +0x1D7588:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E28BA4 .rodata
+      +1  0x000000000000002E int?=46
+      +2  0x00000000078F2080 .data
+      +3  0x0000000000000001 int?=1
+      +4  0x00000000078F21F0 .data
+      +5  0x0000000005E28BB4 .rodata
+
+== DebugHook.dll   str@0x5E28C6C  结构候选 1
+   in .data.rel.ro +0x1D7618:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E28C6C .rodata
+      +1  0x000000000000002A int?=42
+      +2  0x00000000078F2200 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E28C7C .rodata
+
+== FlashToolEditor_BUMA.dll   str@0x5E2F80F  结构候选 1
+   in .data.rel.ro +0x1D8470:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2F80F .rodata
+      +1  0x0000000000000000 
+      +2  0x0000000000000000 
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000000000000 
+
+== Fox.Core.dll   str@0x5DC29BA  结构候选 1
+   in .data.rel.ro +0x1D6270:
+      -2  0x00000000015A0248 CODE:.text
+      -1  0x00000000015A0258 CODE:.text
+      +0  0x0000000005DC29BA .rodata
+      +1  0x000000000000009F int?=159
+      +2  0x00000000078EDE00 .data
+      +3  0x0000000000000020 int?=32
+      +4  0x00000000078EE2F8 .data
+      +5  0x0000000005DC29C8 .rodata
+
+== I18N.CJK.dll   str@0x5DC23C6  结构候选 1
+   in .data.rel.ro +0x1D6150:
+      -2  0x000000000159FE30 CODE:.text
+      -1  0x000000000159FE40 CODE:.text
+      +0  0x0000000005DC23C6 .rodata
+      +1  0x00000000000000CF int?=207
+      +2  0x00000000078ED788 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DC23D4 .rodata
+
+== I18N.dll   str@0x5DC7190  结构候选 1
+   in .data.rel.ro +0x1D6BD0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC7190 .rodata
+      +1  0x0000000000000069 int?=105
+      +2  0x00000000078F0418 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DC719C .rodata
+
+== K4os.Compression.LZ4.Streams.dll   str@0x5DC3DB6  结构候选 1
+   in .data.rel.ro +0x1D6550:
+      -2  0x00000000015A2278 CODE:.text
+      -1  0x00000000015A2350 CODE:.text
+      +0  0x0000000005DC3DB6 .rodata
+      +1  0x0000000000000074 int?=116
+      +2  0x00000000078EEC18 .data
+      +3  0x0000000000000020 int?=32
+      +4  0x00000000078EEFB8 .data
+      +5  0x0000000005DC3DD8 .rodata
+
+== K4os.Compression.LZ4.dll   str@0x5DC74F0  结构候选 1
+   in .data.rel.ro +0x1D6CF0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC74F0 .rodata
+      +1  0x000000000000005E int?=94
+      +2  0x00000000078F0A70 .data
+      +3  0x0000000000000001 int?=1
+      +4  0x00000000078F0D60 .data
+      +5  0x0000000005DC750C .rodata
+
+== K4os.Hash.xxHash.dll   str@0x5E2EB2C  结构候选 1
+   in .data.rel.ro +0x1D8070:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2EB2C .rodata
+      +1  0x0000000000000006 int?=6
+      +2  0x00000000078F2EC0 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2EB44 .rodata
+
+== LibNative.Runtime.dll   str@0x5DBF99C  结构候选 1
+   in .data.rel.ro +0x1D5758:
+      -2  0x1000010201020020 
+      -1  0x000000000159B658 CODE:.text
+      +0  0x0000000005DBF99C .rodata
+      +1  0x0000000000000127 int?=295
+      +2  0x00000000078EA7A8 .data
+      +3  0x0000000000000002 int?=2
+      +4  0x00000000078EB0E0 .data
+      +5  0x0000000005DBF9B4 .rodata
+
+== MessagePack.dll   str@0x5DB3914  结构候选 1
+   in .data.rel.ro +0x1D16D8:
+      -2  0x0000000001567E18 CODE:.text
+      -1  0x0000000001567E50 CODE:.text
+      +0  0x0000000005DB3914 .rodata
+      +1  0x000000000000035D .dynstr
+      +2  0x00000000078DFDB0 .data
+      +3  0x000000000000000C int?=12
+      +4  0x00000000078E1898 .data
+      +5  0x0000000005DB3924 .rodata
+
+== Mono.Security.dll   str@0x5DC4522  结构候选 1
+   in .data.rel.ro +0x1D7C80:
+      -2  0x00000000015E78C0 CODE:.text
+      -1  0x00000000015C8CBC CODE:.text
+      +0  0x0000000005DC4522 .rodata
+      +1  0x0000000000000013 int?=19
+      +2  0x00000000078F2960 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2C5D0 .rodata
+
+== SignInWithApple.dll   str@0x5E28B0C  结构候选 1
+   in .data.rel.ro +0x1D74F8:
+      -2  0x0000000007B06678 .data
+      -1  0x0000000000000000 
+      +0  0x0000000005E28B0C .rodata
+      +1  0x0000000000000021 int?=33
+      +2  0x00000000078F1F78 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E28B20 .rodata
+
+== System.Configuration.dll   str@0x5DC271B  结构候选 1
+   in .data.rel.ro +0x1D79B0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC271B .rodata
+      +1  0x0000000000000011 int?=17
+      +2  0x00000000078F28B8 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E290F0 .rodata
+
+== System.Core.dll   str@0x5DB0E88  结构候选 1
+   in .data.rel.ro +0x1D4FE8:
+      -2  0x0000000001595020 CODE:.text
+      -1  0x0000000001595058 CODE:.text
+      +0  0x0000000005DB0E88 .rodata
+      +1  0x00000000000001B6 int?=438
+      +2  0x00000000078E8EA0 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DBD1A0 .rodata
+
+== System.Memory.dll   str@0x5E2873C  结构候选 1
+   in .data.rel.ro +0x1D7410:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2873C .rodata
+      +1  0x000000000000003D int?=61
+      +2  0x00000000078F1D90 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E28750 .rodata
+
+== System.Numerics.dll   str@0x5DC29A6  结构候选 1
+   in .data.rel.ro +0x1D7380:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC29A6 .rodata
+      +1  0x0000000000000023 int?=35
+      +2  0x00000000078F1AF8 .data
+      +3  0x0000000000000018 int?=24
+      +4  0x00000000078F1C10 .data
+      +5  0x0000000005E285B4 .rodata
+
+== System.Runtime.CompilerServices.Unsafe.dll   str@0x5E2EA70  结构候选 1
+   in .data.rel.ro +0x1D7F50:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2EA70 .rodata
+      +1  0x0000000000000009 int?=9
+      +2  0x00000000078F2E48 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2EA9C .rodata
+
+== System.Xml.dll   str@0x5DC1DDB  结构候选 1
+   in .data.rel.ro +0x1D82A0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC1DDB .rodata
+      +1  0x0000000000000001 int?=1
+      +2  0x00000000078F2F58 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2F2B0 .rodata
+
+== System.dll   str@0x5DA3DC8  结构候选 1
+   in .data.rel.ro +0x1CC5C0:
+      -2  0x0000000007AE9A50 .data
+      -1  0x0000000000000000 
+      +0  0x0000000005DA3DC8 .rodata
+      +1  0x00000000000005AC .dynstr
+      +2  0x00000000078D6160 .data
+      +3  0x0000000000000006 int?=6
+      +4  0x00000000078D8EC0 .data
+      +5  0x0000000005DA3DD4 .rodata
+
+== Unity.Burst.dll   str@0x5E2F1CC  结构候选 1
+   in .data.rel.ro +0x1D8210:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2F1CC .rodata
+      +1  0x0000000000000001 int?=1
+      +2  0x00000000078F2F50 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2F1DC .rodata
+
+== Unity.Mathematics.dll   str@0x5DC700C  结构候选 1
+   in .data.rel.ro +0x1D6B40:
+      -2  0x00000000015A5978 CODE:.text
+      -1  0x00000000015A59D8 CODE:.text
+      +0  0x0000000005DC700C .rodata
+      +1  0x000000000000005B int?=91
+      +2  0x00000000078EFED0 .data
+      +3  0x0000000000000027 int?=39
+      +4  0x00000000078F01A8 .data
+      +5  0x0000000005DC7024 .rodata
+
+== Unity.RenderPipeline.Universal.ShaderLibrary.dll   str@0x5E2F48A  结构候选 1
+   in .data.rel.ro +0x1D8350:
+      -2  0x000000000162E638 CODE:.text
+      -1  0x000000000162E6C0 CODE:.text
+      +0  0x0000000005E2F48A .rodata
+      +1  0x0000000000000000 
+      +2  0x0000000000000000 
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000000000000 
+
+== Unity.RenderPipelines.Core.Runtime.dll   str@0x5D92364  结构候选 1
+   in .data.rel.ro +0x1C8F28:
+      -2  0x0000000001541A2C CODE:.text
+      -1  0x0000000001541A3C CODE:.text
+      +0  0x0000000005D92364 .rodata
+      +1  0x00000000000006AC .dynstr
+      +2  0x00000000078C5090 .data
+      +3  0x00000000000000A0 int?=160
+      +4  0x00000000078C85F0 .data
+      +5  0x0000000005D9238C .rodata
+
+== Unity.RenderPipelines.Universal.Runtime.dll   str@0x5D98DC4  结构候选 1
+   in .data.rel.ro +0x1CA340:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005D98DC4 .rodata
+      +1  0x000000000000056A .dynstr
+      +2  0x00000000078CCBA0 .data
+      +3  0x000000000000004F int?=79
+      +4  0x00000000078CF6F0 .data
+      +5  0x0000000005D98DF0 .rodata
+
+== Unity.Timeline.dll   str@0x5DB75A6  结构候选 1
+   in .data.rel.ro +0x1D2888:
+      -2  0x0000000001573DB4 CODE:.text
+      -1  0x0000000001573DC4 CODE:.text
+      +0  0x0000000005DB75A6 .rodata
+      +1  0x0000000000000226 int?=550
+      +2  0x00000000078E2FE8 .data
+      +3  0x000000000000001D int?=29
+      +4  0x00000000078E4118 .data
+      +5  0x0000000005DB75BC .rodata
+
+== UnityEngine.AnimationModule.dll   str@0x5DBF06C  结构候选 1
+   in .data.rel.ro +0x1D5078:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DBF06C .rodata
+      +1  0x0000000000000109 int?=265
+      +2  0x00000000078E9C50 .data
+      +3  0x0000000000000031 int?=49
+      +4  0x00000000078EA498 .data
+      +5  0x0000000005DBF08C .rodata
+
+== UnityEngine.AssetBundleModule.dll   str@0x5E28E98  结构候选 1
+   in .data.rel.ro +0x1D77B0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E28E98 .rodata
+      +1  0x000000000000001B int?=27
+      +2  0x00000000078F26B0 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E28EBC .rodata
+
+== UnityEngine.AudioModule.dll   str@0x5E28300  结构候选 1
+   in .data.rel.ro +0x1D71D8:
+      -2  0x00000000015C6DFC CODE:.text
+      -1  0x00000000015C6E10 CODE:.text
+      +0  0x0000000005E28300 .rodata
+      +1  0x0000000000000032 int?=50
+      +2  0x00000000078F1710 .data
+      +3  0x0000000000000007 int?=7
+      +4  0x00000000078F18A0 .data
+      +5  0x0000000005E2831C .rodata
+
+== UnityEngine.GameCenterModule.dll   str@0x5DC76A0  结构候选 1
+   in .data.rel.ro +0x1D6D80:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC76A0 .rodata
+      +1  0x0000000000000054 int?=84
+      +2  0x00000000078F0D70 .data
+      +3  0x0000000000000001 int?=1
+      +4  0x00000000078F1010 .data
+      +5  0x0000000005DC76C4 .rodata
+
+== UnityEngine.IMGUIModule.dll   str@0x5DC0937  结构候选 1
+   in .data.rel.ro +0x1D5D80:
+      -2  0x000000000159CD4C CODE:.text
+      -1  0x000000000159CD5C CODE:.text
+      +0  0x0000000005DC0937 .rodata
+      +1  0x00000000000000F1 int?=241
+      +2  0x00000000078EC2F0 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DC0954 .rodata
+
+== UnityEngine.ImageConversionModule.dll   str@0x5E2F146  结构候选 1
+   in .data.rel.ro +0x1D8100:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2F146 .rodata
+      +1  0x0000000000000004 int?=4
+      +2  0x00000000078F2EF0 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2F16C .rodata
+
+== UnityEngine.InputLegacyModule.dll   str@0x5E283E4  结构候选 1
+   in .data.rel.ro +0x1D72F0:
+      -2  0x0000000001577BF8 CODE:.text
+      -1  0x0000000001577B0C CODE:.text
+      +0  0x0000000005E283E4 .rodata
+      +1  0x0000000000000031 int?=49
+      +2  0x00000000078F1910 .data
+      +3  0x0000000000000006 int?=6
+      +4  0x00000000078F1A98 .data
+      +5  0x0000000005E28408 .rodata
+
+== UnityEngine.JSONSerializeModule.dll   str@0x5E2EAD4  结构候选 1
+   in .data.rel.ro +0x1D7FE0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2EAD4 .rodata
+      +1  0x0000000000000006 int?=6
+      +2  0x00000000078F2E90 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E2EAF8 .rodata
+
+== UnityEngine.ParticleSystemModule.dll   str@0x5DBFF33  结构候选 1
+   in .data.rel.ro +0x1D5A00:
+      -2  0x000000000159C394 CODE:.text
+      -1  0x000000000159C3A4 CODE:.text
+      +0  0x0000000005DBFF33 .rodata
+      +1  0x00000000000000AF int?=175
+      +2  0x00000000078EB100 .data
+      +3  0x0000000000000052 int?=82
+      +4  0x00000000078EB678 .data
+      +5  0x0000000005DBFF58 .rodata
+
+== UnityEngine.Physics2DModule.dll   str@0x5DC4635  结构候选 1
+   in .data.rel.ro +0x1D6940:
+      -2  0x00000000015A5284 CODE:.text
+      -1  0x00000000015A5294 CODE:.text
+      +0  0x0000000005DC4635 .rodata
+      +1  0x0000000000000066 int?=102
+      +2  0x00000000078EF1C0 .data
+      +3  0x0000000000000013 int?=19
+      +4  0x00000000078EF4F0 .data
+      +5  0x0000000005DC4658 .rodata
+
+== UnityEngine.PhysicsModule.dll   str@0x5DC1820  结构候选 1
+   in .data.rel.ro +0x1D5E10:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC1820 .rodata
+      +1  0x00000000000000B1 int?=177
+      +2  0x00000000078ECA78 .data
+      +3  0x0000000000000017 int?=23
+      +4  0x00000000078ED000 .data
+      +5  0x0000000005DC1840 .rodata
+
+== UnityEngine.SharedInternalsModule.dll   str@0x5E281CC  结构候选 1
+   in .data.rel.ro +0x1D7118:
+      -2  0x0000000000000000 
+      -1  0x0000000005E27A50 .rodata
+      +0  0x0000000005E281CC .rodata
+      +1  0x0000000000000043 int?=67
+      +2  0x00000000078F14F8 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E281F4 .rodata
+
+== UnityEngine.SpriteShapeModule.dll   str@0x5E2F7ED  结构候选 1
+   in .data.rel.ro +0x1D83E0:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2F7ED .rodata
+      +1  0x0000000000000000 
+      +2  0x0000000000000000 
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000000000000 
+
+== UnityEngine.SubsystemsModule.dll   str@0x5E28D2C  结构候选 1
+   in .data.rel.ro +0x1D7720:
+      -2  0x0000000000000049 int?=73
+      -1  0x00000000078F2350 .data
+      +0  0x0000000005E28D2C .rodata
+      +1  0x0000000000000022 int?=34
+      +2  0x00000000078F25A0 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005E28D50 .rodata
+
+== UnityEngine.TextCoreModule.dll   str@0x5DC3B40  结构候选 1
+   in .data.rel.ro +0x1D6360:
+      -2  0x0000001300000000 
+      -1  0x0000000000000007 int?=7
+      +0  0x0000000005DC3B40 .rodata
+      +1  0x0000000000000066 int?=102
+      +2  0x00000000078EE4F8 .data
+      +3  0x000000000000003F int?=63
+      +4  0x00000000078EE828 .data
+      +5  0x0000000005DC3B60 .rodata
+
+== UnityEngine.TextRenderingModule.dll   str@0x5DC78C9  结构候选 1
+   in .data.rel.ro +0x1D6E10:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC78C9 .rodata
+      +1  0x000000000000004E int?=78
+      +2  0x00000000078F1020 .data
+      +3  0x0000000000000003 int?=3
+      +4  0x00000000078F1290 .data
+      +5  0x0000000005DC78F0 .rodata
+
+== UnityEngine.UI.dll   str@0x5D96F0E  结构候选 1
+   in .data.rel.ro +0x1CA2B0:
+      -2  0x0000000001547D68 CODE:.text
+      -1  0x0000000001547DB8 CODE:.text
+      +0  0x0000000005D96F0E .rodata
+      +1  0x00000000000006E6 .dynstr
+      +2  0x00000000078C8FF0 .data
+      +3  0x0000000000000048 int?=72
+      +4  0x00000000078CC720 .data
+      +5  0x0000000005D96F24 .rodata
+
+== UnityEngine.UIModule.dll   str@0x5DC484E  结构候选 1
+   in .data.rel.ro +0x1D69D8:
+      -2  0x0000000000000000 
+      -1  0x00000000015A52F0 CODE:.text
+      +0  0x0000000005DC484E .rodata
+      +1  0x000000000000006E int?=110
+      +2  0x00000000078EF620 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DC4868 .rodata
+
+== UnityEngine.UnityWebRequestModule.dll   str@0x5DC7340  结构候选 1
+   in .data.rel.ro +0x1D6C60:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC7340 .rodata
+      +1  0x0000000000000062 int?=98
+      +2  0x00000000078F0760 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DC7368 .rodata
+
+== UnityEngine.XRModule.dll   str@0x5DC6E20  结构候选 1
+   in .data.rel.ro +0x1D6A68:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC6E20 .rodata
+      +1  0x0000000000000052 int?=82
+      +2  0x00000000078EF990 .data
+      +3  0x000000000000002B int?=43
+      +4  0x00000000078EFC20 .data
+      +5  0x0000000005DC6E3C .rodata
+
+== UnityEngine.dll   str@0x5E2F83C  结构候选 1
+   in .data.rel.ro +0x1D8590:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2F83C .rodata
+      +1  0x0000000000000000 
+      +2  0x0000000000000000 
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000000000000 
+
+== XNode.dll   str@0x5DC0214  结构候选 1
+   in .data.rel.ro +0x1D5A90:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DC0214 .rodata
+      +1  0x00000000000000EB int?=235
+      +2  0x00000000078EBB98 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DC0220 .rodata
+
+== _Cyan.dll   str@0x5DB4944  结构候选 1
+   in .data.rel.ro +0x1D1768:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DB4944 .rodata
+      +1  0x00000000000002D0 int?=720
+      +2  0x00000000078E1958 .data
+      +3  0x0000000000000001 int?=1
+      +4  0x00000000078E2FD8 .data
+      +5  0x0000000005DB4950 .rodata
+
+== mscorlib.dll   str@0x5D42128  结构候选 1
+   in .data.rel.ro +0x1B8B18:
+      -2  0x0000000007B00978 .data
+      -1  0x0000000000000000 
+      +0  0x0000000005D42128 .rodata
+      +1  0x0000000000002776 .dynstr
+      +2  0x0000000007883490 .data
+      +3  0x0000000000000328 .dynstr
+      +4  0x0000000007897040 .data
+      +5  0x0000000005D42138 .rodata
+
+== umamusume.dll   str@0x5E2F858  结构候选 1
+   in .data.rel.ro +0x1D8620:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005E2F858 .rodata
+      +1  0x000000000002953C .rela.plt
+      +2  0x00000000078F2FF8 .data
+      +3  0x000000000000013D int?=317
+      +4  0x0000000007A3D9D8 .data
+      +5  0x0000000005E2F868 .rodata
+
+== zxing.unity.dll   str@0x5DB7F54  结构候选 1
+   in .data.rel.ro +0x1D2918:
+      -2  0x0000000000000000 
+      -1  0x0000000000000000 
+      +0  0x0000000005DB7F54 .rodata
+      +1  0x0000000000000264 int?=612
+      +2  0x00000000078E42E8 .data
+      +3  0x0000000000000000 
+      +4  0x0000000000000000 
+      +5  0x0000000005DB7F64 .rodata
+
+找到 61/73 个 module 结构
+提示：若每个 module 附近出现「CODE:il2cpp / CODE:.text」的指针 + 一个小整数，那对就是 methodPointers 指针与 methodPointerCount；把所有 module 的计数加总应接近 metadata 方法数。
