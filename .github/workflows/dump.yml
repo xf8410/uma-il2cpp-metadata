@@ -31,15 +31,8 @@ jobs:
             for z in "$d"*.zip ; do
               [ -f "$z" ] || continue
               echo "unpack: $z ($(stat -c%s "$z") B)"
-              python3 - "$z" "$d" <<'PY'
-import sys, zipfile
-z = zipfile.ZipFile(sys.argv[1])
-bad = z.testzip()
-if bad:
-    raise SystemExit("zip 校验失败: %s" % bad)
-z.extractall(sys.argv[2])
-print("members:", z.namelist())
-PY
+              unzip -t "$z" > /dev/null
+              unzip -o "$z" -d "$d"
             done
           done
 
@@ -48,12 +41,12 @@ PY
           for f in metadata-*/*.so ; do
             [ -f "$f" ] || continue
             d=$(dirname "$f")
-            echo "== $f  ($(stat -c%s "$f") B)"
+            echo "== $f ($(stat -c%s "$f") B)"
             if [ -f "$d/libil2cpp.sha256" ]; then
               ( cd "$d" && sha256sum -c libil2cpp.sha256 )
             else
               sha256sum "$f"
-              echo "（没有 libil2cpp.sha256，跳过比对）"
+              echo "(没有 libil2cpp.sha256，跳过比对)"
             fi
           done
 
