@@ -1,13 +1,13 @@
 name: il2cpp-dump
 
 # metadata-*/global-metadata.fixed.dat 存在就跑解析；
-# 同目录下若有 libil2cpp*.zip / *.so，顺带解包、校验、出 ELF 概况。
+# 同目录下若有 libil2cpp*.gz / *.zip，自动解包/解压、校验 sha256、出 ELF 概况。
 on:
   push:
     paths:
       - 'metadata-*/global-metadata.fixed.dat'
+      - 'metadata-*/**.gz'
       - 'metadata-*/**.zip'
-      - 'metadata-*/**.so'
       - 'tools/**.py'
       - '.github/workflows/dump.yml'
   workflow_dispatch:
@@ -25,21 +25,30 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Unpack libil2cpp.so (若以 zip 上传)
+      - name: 解包 libil2cpp.so
         run: |
+          set -e
           for d in metadata-*/ ; do
             for z in "$d"*.zip ; do
               [ -f "$z" ] || continue
-              echo "unpack: $z ($(stat -c%s "$z") B)"
+              echo "unzip: $z ($(stat -c%s "$z") B)"
               unzip -t "$z" > /dev/null
               unzip -o "$z" -d "$d"
+            done
+            for g in "$d"*.gz ; do
+              [ -f "$g" ] || continue
+              out="${g%.gz}"
+              echo "gunzip: $g ($(stat -c%s "$g") B) -> $out"
+              gzip -dc "$g" > "$out"
             done
           done
 
       - name: 校验 libil2cpp.so
         run: |
-          for f in metadata-*/*.so ; do
-            [ -f "$f" ] || continue
+          set -e
+          found=0
+          for f in $(find metadata-* -maxdepth 3 -name '*.so' -type f) ; do
+            found=1
             d=$(dirname "$f")
             echo "== $f ($(stat -c%s "$f") B)"
             if [ -f "$d/libil2cpp.sha256" ]; then
@@ -49,6 +58,7 @@ jobs:
               echo "(没有 libil2cpp.sha256，跳过比对)"
             fi
           done
+          [ "$found" = 1 ] && echo "so 校验完成" || echo "本仓未上传 so，跳过"
 
       - name: Self-check + dump (metadata)
         run: |
@@ -67,8 +77,7 @@ jobs:
 
       - name: ELF 概况
         run: |
-          for f in metadata-*/*.so ; do
-            [ -f "$f" ] || continue
+          for f in $(find metadata-* -maxdepth 3 -name '*.so' -type f) ; do
             echo "::group::elf $f"
             python3 tools/elf_info.py "$f" | tee "$(dirname "$f")/so_check.txt"
             echo "::endgroup::"
