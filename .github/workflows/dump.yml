@@ -1,7 +1,8 @@
 name: il2cpp-dump
 
 # metadata-*/global-metadata.fixed.dat 存在就跑解析；
-# 同目录下若有 libil2cpp*.gz / *.zip，自动解包/解压、校验 sha256、出 ELF 概况。
+# 同目录下若有 libil2cpp*.gz / *.zip，自动解包、校验、ELF 概况、
+# hook payload 分析、CodeRegistration 扫描。
 on:
   push:
     paths:
@@ -55,7 +56,6 @@ jobs:
               ( cd "$d" && sha256sum -c libil2cpp.sha256 )
             else
               sha256sum "$f"
-              echo "(没有 libil2cpp.sha256，跳过比对)"
             fi
           done
           [ "$found" = 1 ] && echo "so 校验完成" || echo "本仓未上传 so，跳过"
@@ -80,6 +80,26 @@ jobs:
           for f in $(find metadata-* -maxdepth 3 -name '*.so' -type f) ; do
             echo "::group::elf $f"
             python3 tools/elf_info.py "$f" | tee "$(dirname "$f")/so_check.txt"
+            echo "::endgroup::"
+          done
+
+      - name: hook payload 分析（未覆盖区间）
+        run: |
+          for f in $(find metadata-* -maxdepth 3 -name '*.so' -type f) ; do
+            echo "::group::payload $f"
+            python3 tools/payload_info.py "$f" | tee "$(dirname "$f")/so_payload.txt"
+            echo "::endgroup::"
+          done
+
+      - name: CodeRegistration / methodPointers 扫描
+        run: |
+          for f in $(find metadata-* -maxdepth 3 -name '*.so' -type f) ; do
+            d=$(dirname "$f")
+            m="$d/global-metadata.fixed.dat"
+            [ -f "$m" ] || continue
+            echo "::group::registration $f"
+            python3 tools/find_registration.py "$f" "$m" \
+              --write-rva "$d/dump/methods_rva.tsv" | tee "$d/so_registration.txt"
             echo "::endgroup::"
           done
 
