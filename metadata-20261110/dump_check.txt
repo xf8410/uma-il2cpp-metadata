@@ -1,0 +1,9 @@
+file      : metadata-20261110/global-metadata.fixed.dat
+size      : 32248932
+sanity    : 0xFAB11BAF ok, version=27
+sections  : 31, gaps=0, last_end=0x1EC1464 (file=0x1EC1464)
+last sec ends at EOF: True
+types     : 32080
+methods   : 213983 (sum method_count=213983, OK)
+fields    : 254055 (sum field_count=254055, OK)
+method token monotonic: breaks=48
