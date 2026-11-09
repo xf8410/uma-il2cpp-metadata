@@ -1,0 +1,39 @@
+file    : metadata-20261110/libil2cpp.so
+size    : 129667848
+sha256  : 19e68c4efaf04294ac4b4334faf012df056c81f5fbeec908ad539bc97351aac4
+class   : ELF64
+endian  : LE
+type    : 0x3  machine: 0xB7 (AArch64)  entry: 0x1360E50
+sections: 24  (shoff=0x7BA8D08, shentsize=64)
+
+idx  name                 offset       vaddr        size         flags
+0                         0x0          0x0          0x0          ---
+1    .note.gnu.build-id   0x2C0E0      0x2C0E0      0x24         -A-
+2    .hash                0x7BA4640    0x7E08640    0x46C4       -A-
+3    .dynsym              0x1A4D0      0x1A4D0      0xE928       -A-
+4    .dynstr              0x2E8        0x2E8        0x1A1E7      -A-
+5    .gnu.version         0x2CC9C      0x2CC9C      0x1354       -A-
+6    .gnu.version_r       0x2DFF0      0x2DFF0      0x60         -A-
+7    .rela.dyn            0x2E050      0x2E050      0x132DDD0    -A-
+8    .rela.plt            0x28DF8      0x28DF8      0x32E8       -A-
+9    .plt                 0x135ECD0    0x135ECD0    0x2180       -AX
+10   .text                0x1360E50    0x1360E50    0x4C8270     -AX
+11   il2cpp               0x18290C0    0x18290C0    0x43EE0C8    -AX
+12   .rodata              0x5C17190    0x5C17190    0x6BDA3D     -A-
+13   .eh_frame_hdr        0x62D4BD0    0x62D4BD0    0x305264     -A-
+14   .eh_frame            0x65D9E38    0x65D9E38    0xBEA9F8     -A-
+15   .gcc_except_table    0x71C4830    0x71C4830    0xBCBEC      -A-
+16   .note.android.ident  0x728141C    0x728141C    0x98         -A-
+17   .fini_array          0x7282048    0x7292048    0x10         WA-
+18   .data.rel.ro         0x7282060    0x7292060    0x313668     WA-
+19   .dynamic             0x7BA4470    0x7E08470    0x1D0        WA-
+20   .got                 0x75958A8    0x75A58A8    0x123B68     WA-
+21   .got.plt             0x76B9410    0x76C9410    0x10C8       WA-
+22   .data                0x76BA4D8    0x76CA4D8    0x4D7758     WA-
+23   .shstrtab            0x7B91C30    0x0          0x116        ---
+
+last section end : 0x7BA8D04
+trailing data    : 1540 B (0x7BA8D04 ~ 0x7BA9308)
+tail markers     : b'none'
+
+il2cpp section   : off=0x18290C0 vaddr=0x18290C0 size=0x43EE0C8 (67 MB)
