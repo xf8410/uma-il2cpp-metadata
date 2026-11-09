@@ -1,0 +1,46 @@
+name: il2cpp-dump
+
+# 每个 metadata-YYYYMMDD/ 目录里放了 global-metadata.fixed.dat 就自动跑一次
+on:
+  push:
+    paths:
+      - 'metadata-*/global-metadata.fixed.dat'
+      - 'tools/parse_metadata.py'
+      - '.github/workflows/dump.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Self-check + dump
+        run: |
+          set -e
+          found=0
+          for d in metadata-*/ ; do
+            f="${d}global-metadata.fixed.dat"
+            [ -f "$f" ] || continue
+            found=1
+            echo "::group::check $f"
+            python3 tools/parse_metadata.py "$f" --check | tee "${d}dump_check.txt"
+            echo "::endgroup::"
+            python3 tools/parse_metadata.py "$f" "${d}dump"
+          done
+          [ "$found" = 1 ] || { echo "没有找到 metadata-*/global-metadata.fixed.dat"; exit 1; }
+
+      - name: Commit results
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "dump: $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "no change"
+          git push
