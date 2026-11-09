@@ -1,5 +1,5 @@
 file    : metadata-20261110/libil2cpp.so
-size    : 129667848
+size    : 129667848 (0x7BA9308)
 sha256  : 19e68c4efaf04294ac4b4334faf012df056c81f5fbeec908ad539bc97351aac4
 class   : ELF64
 endian  : LE
@@ -32,8 +32,19 @@ idx  name                 offset       vaddr        size         flags
 22   .data                0x76BA4D8    0x76CA4D8    0x4D7758     WA-
 23   .shstrtab            0x7B91C30    0x0          0x116        ---
 
-last section end : 0x7BA8D04
-trailing data    : 1540 B (0x7BA8D04 ~ 0x7BA9308)
-tail markers     : b'none'
+=== 未覆盖区间（不属于任何 section）===
+  0x0 ~ 0x2E8  744 B  markers=b'none'
+  0x1A4CF ~ 0x1A4D0  1 B  markers=b'none'
+  0x2C104 ~ 0x2CC9C  2968 B  markers=b'none'
+  0x135BE20 ~ 0x135ECD0  11952 B  markers=b'none'
+  0x5C17188 ~ 0x5C17190  8 B  markers=b'none'
+  0x62D4BCD ~ 0x62D4BD0  3 B  markers=b'none'
+  0x65D9E34 ~ 0x65D9E38  4 B  markers=b'none'
+  0x72814B4 ~ 0x7282048  2964 B  markers=b'none'
+  0x7282058 ~ 0x7282060  8 B  markers=b'none'
+  0x75956C8 ~ 0x75958A8  480 B  markers=b'none'
+  0x7B91D46 ~ 0x7BA4470  75562 B  markers=b'ELF_HOOK_,stub_,MetadataCache,il2cpp_init'
+  0x7BA8D04 ~ 0x7BA9308  1540 B  markers=b'none'
+  合计 96234 B (0.1% of file)
 
-il2cpp section   : off=0x18290C0 vaddr=0x18290C0 size=0x43EE0C8 (67 MB)
+il2cpp section   : off=0x18290C0 vaddr=0x18290C0 size=0x43EE0C8 (67.9 MiB)
