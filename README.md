@@ -91,24 +91,32 @@ python3 tools/parse_metadata.py metadata-20261110/global-metadata.fixed.dat meta
 本仓 `metadata-20261110/libil2cpp.so.gz` 就是配套的那份：解压后 sha256 与仓内
 `libil2cpp.sha256` 逐位一致（`19e68c4e…351aac4`），配对已确认。
 
-### 这份 so 和 11-06 那份不是一回事
+### 这份 so 的加固情况（实测，别按直觉猜）
 
-11-06 那份（`xf8410/uma-ref-hub` 的 `raw/so-20261106/`）是**加固态**：
+`.text` **只有 4.78 MB**，游戏代码仍然在 **67.9 MB 的自定义 `il2cpp` 段**里：
 
-- `.text` 只有 5 MB，游戏代码藏在 71 MB 的自定义 `il2cpp` 段里
-- 文件尾部（`.shstrtab` 之后约 467 KB，不属于任何段）有一块 ELF hook payload，
+| 段 | offset / vaddr | size |
+|---|---|---|
+| `.text` | `0x1360E50` | 5,013,104 B |
+| `il2cpp` | `0x18290C0` | 71,237,320 B（67.9 MB） |
+
+**这是 `so_check.txt` 里 CI 实测的，不是我估的。** 用 `size` 命令看到 `text=120,069,688`
+是因为它把 `.text` + `.plt` + `il2cpp` 三段可执行段加在一起算了，别被那个数字骗了。
+
+和 11-06 那份的差别只有一处：**尾部 hook payload 没了**。
+
+- 11-06：`.shstrtab` 之后约 467 KB 不属于任何段，是一块 ELF hook payload，
   字符串含 `ELF_HOOK_LoadMetadataFile` / `ELF_HOOK_MetadataCache_Register`
+- 11-10：尾部只剩 1,540 B（`0x7BA8D04 ~ 0x7BA9308`），`tail markers: b'none'`
 
-11-10 这份（本仓）是**处理过的**：
+所以这份是**去掉 hook 壳、但代码段仍是自定义布局**的版本。
 
-- `.text` 恢复到 120,069,688 B（114.5 MiB），标准 ELF 段布局，没有自定义 `il2cpp` 段
-- BuildID `ce4115fdd4667850ed7452eed78b05033ba69641`，符号已 stripped
+**要拿代码地址（RVA），还得处理 `il2cpp` 段，或者走运行时 dump。** 别指望直接扔 IDA 就能看到游戏逻辑。
 
-结论：**代码地址（RVA）现在能拿了**，不用再处理那层壳。
+另外两边工具不是一套：
 
-但别搞混——**metadata 那边仍然是紧凑自定义布局**（见上一节），
-标准 Il2CppDumper 照样会把类型/方法/字段的归属解错。
-so 用常规工具，metadata 用本仓 `tools/parse_metadata.py`，两边工具不是一套。
+- **so**：`.text` 5MB 是 IL2CPP 运行时本体，常规工具能看；游戏逻辑在 `il2cpp` 段，要额外处理
+- **metadata**：紧凑自定义布局，Il2CppDumper 会解错类型/方法/字段归属，必须用本仓 `tools/parse_metadata.py`
 
 ## 目录约定
 
