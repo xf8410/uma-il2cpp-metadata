@@ -1,0 +1,298 @@
+file: metadata-20261110/libil2cpp.so  size: 129667848
+未覆盖区间 12 处，合计 96234 B
+
+======================================================================
+GAP 0x0 ~ 0x2E8  (744 B)
+head: 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 03 00 b7 00 01 00 00 00 50 0e 36 01 00 00 00 00 40 00 00 00 00 00 00 00 08 8d ba 07 00 00 00 00 00 00 00 00 40 00 38 00 0b 00 40 00 18 00 17 00
+strings: 0 条（≥4 字符）
+pointer-like: 54 / 93 个 8 字节槽位
+   +0x000008  -> 0x0 (.shstrtab)
+   +0x000018  -> 0x1360E50 (.text)
+   +0x000020  -> 0x40 (.shstrtab)
+   +0x000048  -> 0x0 (.shstrtab)
+   +0x000050  -> 0x0 (.shstrtab)
+   +0x000058  -> 0x0 (.shstrtab)
+   +0x000070  -> 0x10000 (.dynstr)
+   +0x000098  -> 0x90FC30 (.rela.dyn)
+   +0x0000A0  -> 0xB45FC8 (.rela.dyn)
+   +0x0000A8  -> 0x10000 (.dynstr)
+   +0x0000C0  -> 0x7E08470 (.dynamic)
+   +0x0000C8  -> 0x7E08470 (.dynamic)
+   +0x0000E0  -> 0x8 (.shstrtab)
+   +0x0000F0  -> 0x2C0E0 (.note.gnu.build-id)
+   +0x0000F8  -> 0x2C0E0 (.note.gnu.build-id)
+   +0x000100  -> 0x2C0E0 (.note.gnu.build-id)
+   +0x000108  -> 0x24 (.shstrtab)
+   +0x000110  -> 0x24 (.shstrtab)
+   +0x000118  -> 0x4 (.shstrtab)
+   +0x000128  -> 0x2C0E0 (.note.gnu.build-id)
+u32 pointer-like: 24 个，前 10：
+   +0x000004  -> 0x10102 (.dynstr)
+   +0x000010  -> 0xB70003 (.rela.dyn)
+   +0x000018  -> 0x1360E50 (.text)
+   +0x000034  -> 0x380040 (.rela.dyn)
+   +0x000038  -> 0x40000B (.rela.dyn)
+   +0x00003C  -> 0x170018 (.rela.dyn)
+   +0x000098  -> 0x90FC30 (.rela.dyn)
+   +0x0000A0  -> 0xB45FC8 (.rela.dyn)
+   +0x0000C0  -> 0x7E08470 (.dynamic)
+   +0x0000C8  -> 0x7E08470 (.dynamic)
+======================================================================
+GAP 0x1A4CF ~ 0x1A4D0  (1 B)
+head: 45
+======================================================================
+GAP 0x2C104 ~ 0x2CC9C  (2968 B)
+head: 5f 5f 73 68 69 6d 5f 74 79 70 65 5f 69 6e 66 6f 45 00 5f 5a 54 56 4e 31 30 5f 5f 63 78 78 61 62 69 76 31 31 37 5f 5f 61 72 72 61 79 5f 74 79 70 65 5f 69 6e 66 6f 45 00 5f 5a 54 56 4e 31 30 5f
+strings: 130 条（≥4 字符）
+   +0x000000  __shim_type_infoE
+   +0x000012  _ZTVN10__cxxabiv117__array_type_infoE
+   +0x000038  _ZTVN10__cxxabiv117__pbase_type_infoE
+   +0x00005E  _ZTVN10__cxxabiv119__pointer_type_infoE
+   +0x000086  _ZTVN10__cxxabiv120__function_type_infoE
+   +0x0000AF  _ZTVN10__cxxabiv123__fundamental_type_infoE
+   +0x0000DB  _ZTVN10__cxxabiv129__pointer_to_member_type_infoE
+   +0x00010D  __dynamic_cast
+   +0x00011C  _ZNKSt13bad_exception4whatEv
+   +0x000139  _ZNKSt16bad_array_length4whatEv
+   +0x000159  _ZNKSt20bad_array_new_length4whatEv
+   +0x00017D  _ZNKSt9bad_alloc4whatEv
+   +0x000195  _ZNKSt9exception4whatEv
+   +0x0001AD  _ZNSt13bad_exceptionD0Ev
+   +0x0001C6  _ZNSt13bad_exceptionD2Ev
+   +0x0001DF  _ZNSt16bad_array_lengthC1Ev
+   +0x0001FB  _ZNSt16bad_array_lengthC2Ev
+   +0x000217  _ZNSt16bad_array_lengthD0Ev
+   +0x000233  _ZNSt16bad_array_lengthD1Ev
+   +0x00024F  _ZNSt16bad_array_lengthD2Ev
+   +0x00026B  _ZNSt20bad_array_new_lengthC1Ev
+   +0x00028B  _ZNSt20bad_array_new_lengthC2Ev
+   +0x0002AB  _ZNSt20bad_array_new_lengthD0Ev
+   +0x0002CB  _ZNSt20bad_array_new_lengthD1Ev
+   +0x0002EB  _ZNSt20bad_array_new_lengthD2Ev
+   +0x00030B  _ZNSt9bad_allocC2Ev
+   +0x00031F  _ZNSt9bad_allocD0Ev
+   +0x000333  _ZNSt9bad_allocD2Ev
+   +0x000347  _ZNSt9exceptionD0Ev
+   +0x00035B  _ZNSt9exceptionD1Ev
+   +0x00036F  _ZTISt16bad_array_length
+   +0x000388  _ZTISt20bad_array_new_length
+   +0x0003A5  _ZTSSt13bad_exception
+   +0x0003BB  _ZTSSt16bad_array_length
+   +0x0003D4  _ZTSSt20bad_array_new_length
+   +0x0003F1  _ZTSSt9bad_alloc
+   +0x000402  _ZTVSt16bad_array_length
+   +0x00041B  _ZTVSt20bad_array_new_length
+   +0x000438  _ZTVSt9bad_alloc
+   +0x000449  _ZTVSt9exception
+pointer-like: 0 / 371 个 8 字节槽位
+u32 pointer-like: 26 个，前 10：
+   +0x000034  -> 0x456F66 (.rela.dyn)
+   +0x000118  -> 0x747361 (.rela.dyn)
+   +0x000384  -> 0x687467 (.rela.dyn)
+   +0x0003D0  -> 0x687467 (.rela.dyn)
+   +0x000434  -> 0x687467 (.rela.dyn)
+   +0x000484  -> 0x764531 (.rela.dyn)
+   +0x0005A4  -> 0x764530 (.rela.dyn)
+   +0x0005D8  -> 0x764532 (.rela.dyn)
+   +0x0006F8  -> 0x726F72 (.rela.dyn)
+   +0x000740  -> 0x746E65 (.rela.dyn)
+======================================================================
+GAP 0x135BE20 ~ 0x135ECD0  (11952 B)
+head: 48 95 6c 07 00 00 00 00 02 04 00 00 b9 00 00 00 00 00 00 00 00 00 00 00 50 95 6c 07 00 00 00 00 02 04 00 00 c0 00 00 00 00 00 00 00 00 00 00 00 58 95 6c 07 00 00 00 00 02 04 00 00 c9 00 00 00
+strings: 0 条（≥4 字符）
+pointer-like: 995 / 1494 个 8 字节槽位
+   +0x000000  -> 0x76C9548 (.got.plt)
+   +0x000010  -> 0x0 (.shstrtab)
+   +0x000018  -> 0x76C9550 (.got.plt)
+   +0x000028  -> 0x0 (.shstrtab)
+   +0x000030  -> 0x76C9558 (.got.plt)
+   +0x000040  -> 0x0 (.shstrtab)
+   +0x000048  -> 0x76C9560 (.got.plt)
+   +0x000058  -> 0x0 (.shstrtab)
+   +0x000060  -> 0x76C9568 (.got.plt)
+   +0x000070  -> 0x0 (.shstrtab)
+   +0x000078  -> 0x76C9570 (.got.plt)
+   +0x000088  -> 0x0 (.shstrtab)
+   +0x000090  -> 0x76C9578 (.got.plt)
+   +0x0000A0  -> 0x0 (.shstrtab)
+   +0x0000A8  -> 0x76C9580 (.got.plt)
+   +0x0000B8  -> 0x0 (.shstrtab)
+   +0x0000C0  -> 0x76C9588 (.got.plt)
+   +0x0000D0  -> 0x0 (.shstrtab)
+   +0x0000D8  -> 0x76C9590 (.got.plt)
+   +0x0000E8  -> 0x0 (.shstrtab)
+u32 pointer-like: 498 个，前 10：
+   +0x000000  -> 0x76C9548 (.got.plt)
+   +0x000018  -> 0x76C9550 (.got.plt)
+   +0x000030  -> 0x76C9558 (.got.plt)
+   +0x000048  -> 0x76C9560 (.got.plt)
+   +0x000060  -> 0x76C9568 (.got.plt)
+   +0x000078  -> 0x76C9570 (.got.plt)
+   +0x000090  -> 0x76C9578 (.got.plt)
+   +0x0000A8  -> 0x76C9580 (.got.plt)
+   +0x0000C0  -> 0x76C9588 (.got.plt)
+   +0x0000D8  -> 0x76C9590 (.got.plt)
+======================================================================
+GAP 0x5C17188 ~ 0x5C17190  (8 B)
+head: 00 00 00 00 00 00 00 00
+======================================================================
+GAP 0x62D4BCD ~ 0x62D4BD0  (3 B)
+head: 00 00 00
+======================================================================
+GAP 0x65D9E34 ~ 0x65D9E38  (4 B)
+head: 00 00 00 00
+======================================================================
+GAP 0x72814B4 ~ 0x7282048  (2964 B)
+head: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+strings: 0 条（≥4 字符）
+pointer-like: 361 / 370 个 8 字节槽位
+   +0x000000  -> 0x0 (.shstrtab)
+   +0x000008  -> 0x0 (.shstrtab)
+   +0x000010  -> 0x0 (.shstrtab)
+   +0x000018  -> 0x0 (.shstrtab)
+   +0x000020  -> 0x0 (.shstrtab)
+   +0x000028  -> 0x0 (.shstrtab)
+   +0x000030  -> 0x0 (.shstrtab)
+   +0x000038  -> 0x0 (.shstrtab)
+   +0x000040  -> 0x0 (.shstrtab)
+   +0x000048  -> 0x0 (.shstrtab)
+   +0x000050  -> 0x0 (.shstrtab)
+   +0x000058  -> 0x0 (.shstrtab)
+   +0x000060  -> 0x0 (.shstrtab)
+   +0x000068  -> 0x0 (.shstrtab)
+   +0x000070  -> 0x0 (.shstrtab)
+   +0x000078  -> 0x0 (.shstrtab)
+   +0x000080  -> 0x0 (.shstrtab)
+   +0x000088  -> 0x0 (.shstrtab)
+   +0x000090  -> 0x0 (.shstrtab)
+   +0x000098  -> 0x0 (.shstrtab)
+u32 pointer-like: 9 个，前 10：
+   +0x000B4C  -> 0x1360EAC (.text)
+   +0x000B54  -> 0x1361234 (.text)
+   +0x000B5C  -> 0x13612C0 (.text)
+   +0x000B64  -> 0x1361828 (.text)
+   +0x000B6C  -> 0x136197C (.text)
+   +0x000B74  -> 0x1361A5C (.text)
+   +0x000B7C  -> 0x1361AD4 (.text)
+   +0x000B84  -> 0x1361C24 (.text)
+   +0x000B8C  -> 0x1361C58 (.text)
+======================================================================
+GAP 0x7282058 ~ 0x7282060  (8 B)
+head: 00 00 00 00 00 00 00 00
+======================================================================
+GAP 0x75956C8 ~ 0x75958A8  (480 B)
+head: 01 00 00 00 00 00 00 00 ee 28 00 00 00 00 00 00 01 00 00 00 00 00 00 00 dd 99 01 00 00 00 00 00 01 00 00 00 00 00 00 00 ac 0e 36 01 00 00 00 00 34 12 36 01 00 00 00 00 c0 12 36 01 00 00 00 00
+======================================================================
+GAP 0x7B91D46 ~ 0x7BA4470  (75562 B)
+head: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+strings: 121 条（≥4 字符）
+   +0x00E4FE  Android
+   +0x00E50A  r27c
+   +0x00E54A  12479018
+   +0x00EFF7  __cxa_finalize
+   +0x00F006  __cxa_atexit
+   +0x00F013  xxxxXXXXxxxx
+   +0x00F046  g_tprt_pfn_array
+   +0x00F057  __errno
+   +0x00F05F  __stack_chk_fail
+   +0x00F070  vsnprintf
+   +0x00F07A  stub_decrypt_elf
+   +0x00F08B  stub_read
+   +0x00F095  stub_write
+   +0x00F0A0  stub_close
+   +0x00F0AB  stub_mmap
+   +0x00F0B5  stub_munmap
+   +0x00F0C1  stub_dlsym
+   +0x00F0CC  stub_fopen
+   +0x00F0D7  stub_fread
+   +0x00F0E2  stub_fwrite
+   +0x00F0EE  stub_fclose
+   +0x00F0FA  stub_recv
+   +0x00F104  stub_recvfrom
+   +0x00F112  stub_send
+   +0x00F11C  stub_sendto
+   +0x00F128  stub_strlen
+   +0x00F134  stub_strcmp
+   +0x00F140  stub_strstr
+   +0x00F14C  stub_strchr
+   +0x00F158  stub_strrchr
+   +0x00F165  stub_time
+   +0x00F16F  stub_gettimeofday
+   +0x00F181  stub_settimeofday
+   +0x00F193  ELF_HOOK_BRIDGE_MetadataCache_Register
+   +0x00F1BA  ELF_HOOK_MetadataCache_Register
+   +0x00F1DA  ELF_HOOK_BRIDGE_InitializeMethodMetadata
+   +0x00F203  ELF_HOOK_InitializeMethodMetadata
+   +0x00F225  ELF_HOOK_BRIDGE_InitializeAllMethodMetadata
+   +0x00F251  ELF_HOOK_InitializeAllMethodMetadata
+   +0x00F276  ELF_HOOK_BRIDGE_LoadMetadataFile
+pointer-like: 8034 / 9445 个 8 字节槽位
+   +0x000000  -> 0x0 (.shstrtab)
+   +0x000008  -> 0x0 (.shstrtab)
+   +0x000010  -> 0x0 (.shstrtab)
+   +0x000018  -> 0x0 (.shstrtab)
+   +0x000020  -> 0x0 (.shstrtab)
+   +0x000028  -> 0x0 (.shstrtab)
+   +0x000030  -> 0x0 (.shstrtab)
+   +0x000038  -> 0x0 (.shstrtab)
+   +0x000040  -> 0x0 (.shstrtab)
+   +0x000048  -> 0x0 (.shstrtab)
+   +0x000050  -> 0x0 (.shstrtab)
+   +0x000058  -> 0x0 (.shstrtab)
+   +0x000060  -> 0x0 (.shstrtab)
+   +0x000068  -> 0x0 (.shstrtab)
+   +0x000070  -> 0x0 (.shstrtab)
+   +0x000078  -> 0x0 (.shstrtab)
+   +0x000080  -> 0x0 (.shstrtab)
+   +0x000088  -> 0x0 (.shstrtab)
+   +0x000090  -> 0x0 (.shstrtab)
+   +0x000098  -> 0x0 (.shstrtab)
+u32 pointer-like: 1237 个，前 10：
+   +0x00E334  -> 0x50000 (.rela.dyn)
+   +0x00E36C  -> 0x60000 (.rela.dyn)
+   +0x00E388  -> 0x2F00000 (il2cpp)
+   +0x00E3A4  -> 0x60000 (.rela.dyn)
+   +0x00E3D8  -> 0x20000 (.dynsym)
+   +0x00E3DC  -> 0x60000 (.rela.dyn)
+   +0x00E3F8  -> 0x2000000 (il2cpp)
+   +0x00E400  -> 0x2000000 (il2cpp)
+   +0x00E408  -> 0x80000 (.rela.dyn)
+   +0x00E414  -> 0x46474 (.rela.dyn)
+======================================================================
+GAP 0x7BA8D04 ~ 0x7BA9308  (1540 B)
+head: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+strings: 0 条（≥4 字符）
+pointer-like: 39 / 192 个 8 字节槽位
+   +0x000000  -> 0x0 (.shstrtab)
+   +0x000008  -> 0x0 (.shstrtab)
+   +0x000010  -> 0x0 (.shstrtab)
+   +0x000018  -> 0x0 (.shstrtab)
+   +0x000020  -> 0x0 (.shstrtab)
+   +0x000028  -> 0x0 (.shstrtab)
+   +0x000030  -> 0x0 (.shstrtab)
+   +0x000038  -> 0x0 (.shstrtab)
+   +0x000068  -> 0x0 (.shstrtab)
+   +0x000078  -> 0x0 (.shstrtab)
+   +0x000128  -> 0x0 (.shstrtab)
+   +0x000138  -> 0x0 (.shstrtab)
+   +0x0001B8  -> 0x0 (.shstrtab)
+   +0x000268  -> 0x0 (.shstrtab)
+   +0x0002A8  -> 0x0 (.shstrtab)
+   +0x0002B8  -> 0x0 (.shstrtab)
+   +0x0002E8  -> 0x0 (.shstrtab)
+   +0x0002F8  -> 0x0 (.shstrtab)
+   +0x000328  -> 0x0 (.shstrtab)
+   +0x000338  -> 0x0 (.shstrtab)
+u32 pointer-like: 50 个，前 10：
+   +0x000054  -> 0x2C0E0 (.note.gnu.build-id)
+   +0x00005C  -> 0x2C0E0 (.note.gnu.build-id)
+   +0x000094  -> 0x7E08640 (.hash)
+   +0x0000D4  -> 0x1A4D0 (.dynsym)
+   +0x0000DC  -> 0x1A4D0 (.dynsym)
+   +0x000124  -> 0x1A1E7 (.dynstr)
+   +0x000154  -> 0x2CC9C (.gnu.version)
+   +0x00015C  -> 0x2CC9C (.gnu.version)
+   +0x000194  -> 0x2DFF0 (.gnu.version_r)
+   +0x00019C  -> 0x2DFF0 (.gnu.version_r)
+
+== 结论提示：若某 GAP 里 pointer-like 密集，说明是函数指针/跳转表；只有字符串没有指针，说明是名字表（hook 框架的符号名）==
