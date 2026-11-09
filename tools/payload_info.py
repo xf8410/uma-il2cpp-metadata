@@ -4,27 +4,28 @@
 
     python3 tools/payload_info.py metadata-YYYYMMDD/libil2cpp.so
 
-输出：每个未覆盖区间的范围/大小、hex 头部、可读字符串（带偏移）、
-以及"看起来像指针"的 8 字节值（能映射回本 so 的 vaddr），
-用来判断这块到底是「字符串表 + 配置」还是「含代码/指针表」。
+只详写「最大的那个未覆盖区间」（以及带 hook 标记的区间），其余只给一行摘要，
+避免输出过长。对目标区间给出：hex 头、u64/u32 视图、可读字符串、指针候选。
 """
 import struct
 import sys
 
-MIN_GAP = 512
+MARKERS = (b"ELF_HOOK_", b"stub_", b"MetadataCache", b"il2cpp_init")
+MAX_STR = 60
+MAX_PTR = 25
 
 
 def load_sections(d):
-    (e_type, e_machine, _v, _entry, _phoff, e_shoff, _f, _eh, _ph, _phn,
-     e_shentsize, e_shnum, e_shstrndx) = struct.unpack_from("<HHIQQQIHHHHHH", d, 16)
+    (_t, _m, _v, _e, _phoff, shoff, _f, _eh, _ph, _phn,
+     shentsize, shnum, shstrndx) = struct.unpack_from("<HHIQQQIHHHHHH", d, 16)
     secs = []
-    for i in range(e_shnum):
-        b = e_shoff + i * e_shentsize
+    for i in range(shnum):
+        b = shoff + i * shentsize
         (nm, stype, flags, addr, off, size, _l, _i, _a, _es) = \
             struct.unpack_from("<IIQQQQIIQQ", d, b)
         secs.append({"name": nm, "type": stype, "flags": flags,
                      "addr": addr, "off": off, "size": size})
-    strtab = secs[e_shstrndx]["off"]
+    strtab = secs[shstrndx]["off"]
     for s in secs:
         p = strtab + s["name"]
         e = d.find(b"\x00", p)
@@ -41,9 +42,8 @@ def in_vaddr(secs, v):
     return None
 
 
-def printable_runs(blk, minlen=4):
-    out = []
-    i, n = 0, len(blk)
+def runs(blk, minlen=4):
+    out, i, n = [], 0, len(blk)
     while i < n:
         j = i
         while j < n and 32 <= blk[j] < 127:
@@ -64,52 +64,53 @@ def main(path):
     gaps, cur = [], 0
     for a, b in spans:
         if a > cur:
-            gaps.append((cur, a))
+            gaps.append((a, b))
         cur = max(cur, b)
     if cur < n:
         gaps.append((cur, n))
 
     print("file: %s  size: %d" % (path, n))
-    print("未覆盖区间 %d 处，合计 %d B\n" % (len(gaps), sum(b - a for a, b in gaps)))
-
+    print("未覆盖区间 %d 处，合计 %d B" % (len(gaps), sum(b - a for a, b in gaps)))
     for a, b in gaps:
         blk = d[a:b]
-        print("=" * 70)
-        print("GAP 0x%X ~ 0x%X  (%d B)" % (a, b, b - a))
-        print("head:", blk[:64].hex(" "))
-        if b - a < MIN_GAP:
-            continue
+        mk = [m.decode() for m in MARKERS if m in blk]
+        print("  0x%X~0x%X  %6d B  %s" % (a, b, b - a, ",".join(mk) or "-"))
 
-        runs = printable_runs(blk)
-        print("strings: %d 条（≥4 字符）" % len(runs))
-        for off, s in runs[:40]:
-            print("   +0x%06X  %s" % (off, s))
+    target = max(gaps, key=lambda g: g[1] - g[0]) if gaps else None
+    for a, b in gaps:
+        if any(m in d[a:b] for m in MARKERS) and (b - a) > (target[1] - target[0]) * 0.2:
+            target = (a, b)
+            break
+    if not target:
+        return
+    a, b = target
+    blk = d[a:b]
+    print("\n" + "=" * 70)
+    print("重点区间 0x%X ~ 0x%X  (%d B)" % (a, b, b - a))
+    print("head:", blk[:96].hex(" "))
 
-        # 指针候选：8 字节对齐、值落在本 so 的 vaddr 范围内
-        ptrs = []
-        for i in range(0, len(blk) - 8, 8):
-            v = struct.unpack_from("<Q", blk, i)[0]
-            sec = in_vaddr(secs, v)
-            if sec:
-                ptrs.append((i, v, sec))
-        print("pointer-like: %d / %d 个 8 字节槽位" % (len(ptrs), len(blk) // 8))
-        for off, v, sec in ptrs[:20]:
-            print("   +0x%06X  -> 0x%X (%s)" % (off, v, sec))
+    print("\n-- u64 视图（前 16 个）--")
+    for i in range(0, min(len(blk), 128) - 8, 8):
+        v = struct.unpack_from("<Q", blk, i)[0]
+        tag = in_vaddr(secs, v) or ""
+        print("  +0x%04X  0x%016X %s" % (i, v, ("-> " + tag) if tag else ""))
 
-        # 4 字节指针候选（armv7 风格或压缩表）
-        p32 = []
-        for i in range(0, len(blk) - 4, 4):
-            v = struct.unpack_from("<I", blk, i)[0]
-            if v > 0x10000:
-                sec = in_vaddr(secs, v)
-                if sec:
-                    p32.append((i, v, sec))
-        if p32:
-            print("u32 pointer-like: %d 个，前 10：" % len(p32))
-            for off, v, sec in p32[:10]:
-                print("   +0x%06X  -> 0x%X (%s)" % (off, v, sec))
-    print("\n== 结论提示：若某 GAP 里 pointer-like 密集，说明是函数指针/跳转表；"
-          "只有字符串没有指针，说明是名字表（hook 框架的符号名）==")
+    print("\n-- u32 视图（前 16 个）--")
+    for i in range(0, min(len(blk), 64) - 4, 4):
+        v = struct.unpack_from("<I", blk, i)[0]
+        tag = in_vaddr(secs, v) or ""
+        print("  +0x%04X  0x%08X %s" % (i, v, ("-> " + tag) if tag else ""))
+
+    rs = runs(blk)
+    print("\n-- 可读字符串 %d 条（前 %d）--" % (len(rs), MAX_STR))
+    for off, s in rs[:MAX_STR]:
+        print("  +0x%05X  %s" % (off, s))
+
+    ptrs = [(i, struct.unpack_from("<Q", blk, i)[0]) for i in range(0, len(blk) - 8, 8)]
+    ptrs = [(i, v, in_vaddr(secs, v)) for i, v in ptrs if in_vaddr(secs, v)]
+    print("\n-- 指针候选 %d / %d 槽位（前 %d）--" % (len(ptrs), len(blk) // 8, MAX_PTR))
+    for off, v, sec in ptrs[:MAX_PTR]:
+        print("  +0x%05X  -> 0x%X (%s)" % (off, v, sec))
 
 
 if __name__ == "__main__":
