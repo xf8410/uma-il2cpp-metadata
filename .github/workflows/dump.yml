@@ -2,7 +2,7 @@ name: il2cpp-dump
 
 # metadata-*/global-metadata.fixed.dat 存在就跑解析；
 # 同目录下若有 libil2cpp*.gz / *.zip，自动解包、校验、ELF 概况、
-# hook payload 分析、CodeRegistration 扫描、codegen module 扫描。
+# hook payload 分析、CodeRegistration 扫描、codegen module 扫描、RVA 映射。
 on:
   push:
     paths:
@@ -98,8 +98,7 @@ jobs:
             m="$d/global-metadata.fixed.dat"
             [ -f "$m" ] || continue
             echo "::group::registration $f"
-            python3 tools/find_registration.py "$f" "$m" \
-              --write-rva "$d/dump/methods_rva.tsv" | tee "$d/so_registration.txt"
+            python3 tools/find_registration.py "$f" "$m" --write-rva "$d/dump/methods_rva_global.tsv" | tee "$d/so_registration.txt"
             echo "::endgroup::"
           done
 
@@ -111,6 +110,17 @@ jobs:
             [ -f "$m" ] || continue
             echo "::group::modules $f"
             python3 tools/find_modules.py "$f" "$m" | tee "$d/so_modules.txt"
+            echo "::endgroup::"
+          done
+
+      - name: RVA 映射（method index -> 代码地址）
+        run: |
+          for f in $(find metadata-* -maxdepth 3 -name '*.so' -type f) ; do
+            d=$(dirname "$f")
+            m="$d/global-metadata.fixed.dat"
+            [ -f "$m" ] || continue
+            echo "::group::rva $f"
+            python3 tools/build_rva.py "$f" "$m" "$d/dump/methods_rva.tsv" | tee "$d/so_rva.txt"
             echo "::endgroup::"
           done
 
