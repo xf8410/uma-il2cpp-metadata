@@ -4,8 +4,7 @@
 
     python3 tools/payload_info.py metadata-YYYYMMDD/libil2cpp.so
 
-只详写「最大的那个未覆盖区间」（以及带 hook 标记的区间），其余只给一行摘要，
-避免输出过长。对目标区间给出：hex 头、u64/u32 视图、可读字符串、指针候选。
+只详写「带 hook 标记的那个未覆盖区间」（没有标记时取最大），其余只给一行摘要。
 """
 import struct
 import sys
@@ -64,7 +63,7 @@ def main(path):
     gaps, cur = [], 0
     for a, b in spans:
         if a > cur:
-            gaps.append((a, b))
+            gaps.append((cur, a))
         cur = max(cur, b)
     if cur < n:
         gaps.append((cur, n))
@@ -76,13 +75,11 @@ def main(path):
         mk = [m.decode() for m in MARKERS if m in blk]
         print("  0x%X~0x%X  %6d B  %s" % (a, b, b - a, ",".join(mk) or "-"))
 
-    target = max(gaps, key=lambda g: g[1] - g[0]) if gaps else None
-    for a, b in gaps:
-        if any(m in d[a:b] for m in MARKERS) and (b - a) > (target[1] - target[0]) * 0.2:
-            target = (a, b)
-            break
-    if not target:
+    if not gaps:
         return
+    marked = [g for g in gaps if any(m in d[g[0]:g[1]] for m in MARKERS)]
+    target = max(marked, key=lambda g: g[1] - g[0]) if marked else \
+        max(gaps, key=lambda g: g[1] - g[0])
     a, b = target
     blk = d[a:b]
     print("\n" + "=" * 70)
@@ -106,11 +103,12 @@ def main(path):
     for off, s in rs[:MAX_STR]:
         print("  +0x%05X  %s" % (off, s))
 
-    ptrs = [(i, struct.unpack_from("<Q", blk, i)[0]) for i in range(0, len(blk) - 8, 8)]
-    ptrs = [(i, v, in_vaddr(secs, v)) for i, v in ptrs if in_vaddr(secs, v)]
+    ptrs = [(i, v) for i, v in
+            ((i, struct.unpack_from("<Q", blk, i)[0]) for i in range(0, len(blk) - 8, 8))
+            if in_vaddr(secs, v)]
     print("\n-- 指针候选 %d / %d 槽位（前 %d）--" % (len(ptrs), len(blk) // 8, MAX_PTR))
-    for off, v, sec in ptrs[:MAX_PTR]:
-        print("  +0x%05X  -> 0x%X (%s)" % (off, v, sec))
+    for off, v in ptrs[:MAX_PTR]:
+        print("  +0x%05X  -> 0x%X (%s)" % (off, v, in_vaddr(secs, v)))
 
 
 if __name__ == "__main__":
