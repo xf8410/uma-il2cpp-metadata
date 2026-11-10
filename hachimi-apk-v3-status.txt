@@ -1,0 +1,12 @@
+APK: apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+libhachimi: x/lib/arm64-v8a/libhachimi.so (15068464 B)
+NDK: /usr/local/lib/android/sdk/ndk/30.0.16248370
+Android (16134705, +pgo, +bolt, +lto, +mlgo, based on r574158c) clang version 21.0.0 (https://android.googlesource.com/toolchain/llvm-project 9f872551d3c681d06fd303b36f16ed5c274735eb)
+Target: aarch64-unknown-linux-android24
+tools/crashproxy/proxy.c:46:9: error: call to undeclared function 'mkdir'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   46 |         mkdir(buf, 0777);
+      |         ^
+tools/crashproxy/proxy.c:68:13: error: call to undeclared function 'backtrace'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   68 |     int n = backtrace(bt, 64);
+      |             ^
+2 errors generated.
