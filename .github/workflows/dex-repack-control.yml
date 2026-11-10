@@ -3,6 +3,9 @@ name: dex-repack-control
 # 对照 A：apktool 反编译后「什么都不改」，只把 classes3.dex 重新汇编塞回原包
 #   · 黑屏 → smali 重组这条路对腾讯这个包不可用
 #   · 正常 → 重组没问题，之前黑屏是我们插桩/改动的锅
+# 2026-11-10 接手修订：13:24 那次 run 在「对齐 + 签名」静默失败（status 只写到"重打包"），
+#   现在每一步都写进 c.log，v1 签名失败会自动回退 v2+v3；提交状态改为 pull --rebase 再 push
+#   （上一次 bot 的 push 和 HANDOVER 提交撞车，结果被 `|| true` 吞了）。
 on:
   push:
     paths:
@@ -54,6 +57,7 @@ jobs:
             https://github.com/baksmali/smali/releases/download/v2.5.2/smali-2.5.2.jar
           java -jar smali.jar assemble dec/smali_classes3 -o c3.dex >> c.log 2>&1
           echo "重汇编后 classes3.dex: $(stat -c%s c3.dex) B" >> c.log
+          echo "c3.dex 头: $(od -An -c -N8 c3.dex | tr -s ' ')" >> c.log
           withzip=$(unzip -l "$APK" classes3.dex | awk '/classes3.dex/{print $1}')
           echo "原包 classes3.dex  : ${withzip} B" >> c.log
           mkdir -p out stage
@@ -61,6 +65,8 @@ jobs:
           cp c3.dex stage/classes3.dex
           ( cd stage && zip -q -0 ../out/patched.apk classes3.dex )
           echo "重打包: $(stat -c%s out/patched.apk) B" >> c.log
+          unzip -t out/patched.apk > t.log 2>&1 || true
+          tail -2 t.log >> c.log
 
       - name: 对齐 + 签名
         if: env.READY == 'true'
@@ -68,14 +74,26 @@ jobs:
           set -e
           ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
           AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
-          "$ZA" -p -f 4 out/patched.apk out/aligned.apk
+          echo "zipalign : $ZA" >> c.log
+          echo "apksigner: $AS" >> c.log
+          echo "--- zipalign" >> c.log
+          "$ZA" -p -f 4 out/patched.apk out/aligned.apk >> c.log 2>&1
+          "$ZA" -c -p -v 4 out/aligned.apk >> c.log 2>&1 || echo "!! zipalign -c 未通过" >> c.log
           keytool -genkeypair -v -keystore c.jks -alias c -keyalg RSA -keysize 2048 \
             -validity 10000 -storepass cpass -keypass cpass \
-            -dname "CN=CTRL,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
-          "$AS" sign --ks c.jks --ks-pass pass:cpass --key-pass pass:cpass \
-            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
-            --out out/dex-repack.apk out/aligned.apk
-          "$AS" verify out/dex-repack.apk > /dev/null && echo "签名: ok" >> c.log
+            -dname "CN=CTRL,OU=Uma,O=DSH,L=NA,S=NA,C=JP" >> c.log 2>&1
+          echo "--- apksigner (v1+v2+v3)" >> c.log
+          if ! "$AS" sign --ks c.jks --ks-pass pass:cpass --key-pass pass:cpass \
+                 --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+                 --out out/dex-repack.apk out/aligned.apk >> c.log 2>&1 ; then
+            echo "!! v1+v2+v3 失败，回退 v2+v3（测试机 API>=24 够用）" >> c.log
+            rm -f out/dex-repack.apk
+            "$AS" sign --ks c.jks --ks-pass pass:cpass --key-pass pass:cpass \
+              --v1-signing-enabled false --v2-signing-enabled true --v3-signing-enabled true \
+              --out out/dex-repack.apk out/aligned.apk >> c.log 2>&1
+            echo "回退签名: 完成" >> c.log
+          fi
+          "$AS" verify out/dex-repack.apk >> c.log 2>&1 && echo "签名: ok" >> c.log
           {
             echo "输出: $(stat -c%s out/dex-repack.apk) B"
             echo "sha256: $(sha256sum out/dex-repack.apk | cut -d' ' -f1)"
@@ -88,7 +106,7 @@ jobs:
           gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
             gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
           cp out/dex-repack.apk "dex-repack-$(date -u +%m%d-%H%M).apk"
-          gh release upload builds dex-repack-*.apk -R "$GITHUB_REPOSITORY" --clobber
+          gh release upload builds dex-repack-*.apk -R "$GITHUB_REPOSITORY" --clobber >> c.log 2>&1
           echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> c.log
 
       - name: 提交状态
@@ -100,4 +118,5 @@ jobs:
           cp c.log dex-repack-status.txt
           git add dex-repack-status.txt || true
           git commit -m "ci: dex repack control ($GITHUB_RUN_ID)" || echo "no change"
-          git push || true
+          git pull --rebase --autostash >> /dev/null 2>&1 || true
+          git push || { sleep 5; git pull --rebase --autostash >> /dev/null 2>&1 || true; git push; } || true
