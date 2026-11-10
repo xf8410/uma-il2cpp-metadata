@@ -1,0 +1,114 @@
+name: dex-inject8
+
+# 路线 G：dex-only 注入（底包=原始游戏 APK，launcher 用 XML 解析找）
+on:
+  push:
+    paths:
+      - 'tools/dex_inject3.py'
+      - '.github/workflows/dex-inject8.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 装 apktool
+        run: |
+          sudo apt-get update -qq > /dev/null 2>&1
+          sudo apt-get install -y -qq zip unzip curl > /dev/null 2>&1
+          sudo curl -sSL -o /usr/local/bin/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
+          printf '#!/bin/sh\nexec java -jar /usr/local/bin/apktool.jar "$@"\n' | sudo tee /usr/local/bin/apktool > /dev/null
+          sudo chmod +x /usr/local/bin/apktool
+
+      - name: 下载输入（底包必须是 syyjsn 原版）
+        run: |
+          : > g8.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            if [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ]; then
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> g8.log 2>&1 || true
+            fi
+            if [ -z "$(find dl -name '*.zip' 2>/dev/null | head -1)" ]; then
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D dl --pattern 'zygisk-hachimi*.zip' --clobber >> g8.log 2>&1 || true
+            fi
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          Z=$(find dl -name 'zygisk-hachimi*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          { echo "APK=$APK ($( [ -n "$APK" ] && stat -c%s "$APK" || echo 0) B)"
+            echo "SO=$SO ($( [ -n "$SO" ] && stat -c%s "$SO" || echo 0) B)"; } >> g8.log
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺输入" >> g8.log; exit 0; fi
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          mkdir -p out
+          python3 tools/dex_inject3.py "$APK" "$SO" out > g8.out 2>&1 || true
+          tail -c 25000 g8.out >> g8.log
+          ls -l out >> g8.log || true
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          IN=out/patched.apk
+          [ -f "$IN" ] || { echo "::error::没生成 APK"; exit 1; }
+          "$ZA" -p -f 4 "$IN" out/aligned.apk
+          keytool -genkeypair -v -keystore g8.jks -alias g8 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g8pass -keypass g8pass \
+            -dname "CN=G8,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          "$AS" sign --ks g8.jks --ks-pass pass:g8pass --key-pass pass:g8pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/dex-inject.apk out/aligned.apk
+          "$AS" verify out/dex-inject.apk > /dev/null && echo "签名: ok" >> g8.log
+          {
+            echo "输出: $(stat -c%s out/dex-inject.apk) B"
+            echo "sha256: $(sha256sum out/dex-inject.apk | cut -d' ' -f1)"
+            echo "结果: 成功"
+          } >> g8.log
+
+      - name: 发布到 Release
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "自动发布的测试 APK" || true
+          cp out/dex-inject.apk "dex-inject-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds dex-inject-*.apk -R "$GITHUB_REPOSITORY" --clobber
+          echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> g8.log
+
+      - name: artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dex-inject-apk
+          path: out/dex-inject.apk
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g8.log ] || echo "(无)" > g8.log
+          cp g8.log dex-inject8-status.txt
+          git add dex-inject8-status.txt || true
+          git commit -m "ci: dex-inject8 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
