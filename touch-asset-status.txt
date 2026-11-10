@@ -1,0 +1,7 @@
+APK=251850328 B
+kotlin-tooling-metadata.json: 627 -> 628 B（只加一个换行）
+APK: 251845531 B
+签名: ok
+输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-asset.apk (251854436 B)
+sha256: 49453645dc680d753c70bf904870a619434da11b473ab43a1dab7d5592ecfcc5
+结果: 成功（只改一个无关文件）
