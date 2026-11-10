@@ -1,0 +1,57 @@
+name: recon-tprt
+
+# 侦察腾讯反作弊：反汇编 libtprt.so / libtersafe2.so，找校验 libmain 的代码
+on:
+  push:
+    paths:
+      - 'tools/recon_tprt.py'
+      - '.github/workflows/recon-tprt.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 装 capstone
+        run: python3 -m pip install --quiet capstone
+
+      - name: 取 APK 里的 tprt / tersafe
+        run: |
+          : > recon.log
+          mkdir -p apk-dl x
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> recon.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> recon.log; echo "READY=false" >> $GITHUB_ENV; exit 0; }
+          unzip -o -q "$APK" 'lib/arm64-v8a/lib*.so' -d x 2>/dev/null || true
+          ls -l x/lib/arm64-v8a/ >> recon.log 2>&1 || true
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 侦察
+        if: env.READY == 'true'
+        run: |
+          python3 tools/recon_tprt.py x/lib/arm64-v8a > recon.out 2>&1 || echo "(脚本异常，见下方)" >> recon.out
+          head -c 60000 recon.out >> recon.log
+          echo "" >> recon.log
+          echo "（完整输出见 recon-tprt.txt）" >> recon.log
+
+      - name: 提交报告
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f recon.out ] || echo "(无)" > recon.out
+          cp recon.out recon-tprt.txt
+          git add recon-tprt.txt recon.log || true
+          git commit -m "ci: tprt recon ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
