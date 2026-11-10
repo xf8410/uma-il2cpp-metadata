@@ -1,0 +1,112 @@
+name: dex-add-control
+
+# 新口子验证：**新增** classes5.dex（不碰任何现有 dex、不碰 lib、不改 manifest）
+#   · 能跑 ⇒ 新增 dex 不被拦 ⇒ 下一步「classes5.dex + 改 manifest 的 application 名」有戏
+#   · 黑屏 ⇒ dex 文件集合也被校验 ⇒ 无 root 注入彻底判死
+# 只加一个空壳类 Lcom/dsh/probe/Marker;，不改任何其它字节。
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-add-control.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载原版 APK
+        run: |
+          : > a.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl out stage smali/com/dsh/probe
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> a.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> a.log; exit 0; }
+          echo "APK=$APK ($(stat -c%s "$APK") B)" >> a.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 生成 classes5.dex 并加入
+        if: env.READY == 'true'
+        run: |
+          set -e
+          curl -sSL -o smali.jar \
+            https://github.com/baksmali/smali/releases/download/v2.5.2/smali-2.5.2.jar
+          cat > smali/com/dsh/probe/Marker.smali <<'SMALI'
+          .class public Lcom/dsh/probe/Marker;
+          .super Ljava/lang/Object;
+
+          .method public constructor <init>()V
+              .registers 1
+              invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+              return-void
+          .end method
+
+          .method public static ping()I
+              .registers 1
+              const/4 v0, 0x7
+              return v0
+          .end method
+          SMALI
+          java -jar smali.jar assemble smali -o classes5.dex >> a.log 2>&1
+          echo "classes5.dex: $(stat -c%s classes5.dex) B / $(od -An -c -N8 classes5.dex | tr -s ' ')" >> a.log
+          cp "$APK" out/add.apk
+          cp classes5.dex stage/classes5.dex
+          ( cd stage && zip -q ../out/add.apk classes5.dex )
+          echo "重打包: $(stat -c%s out/add.apk) B" >> a.log
+          unzip -l out/add.apk | grep -E "classes[0-9]*\.dex" >> a.log
+          unzip -t out/add.apk > t.log 2>&1 || true
+          tail -1 t.log >> a.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/add.apk out/aligned.apk >> a.log 2>&1
+          keytool -genkeypair -v -keystore a.jks -alias a -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass addpass1 -keypass addpass1 \
+            -dname "CN=ADD,OU=Uma,O=DSH,L=NA,S=NA,C=JP" >> a.log 2>&1
+          "$AS" sign --ks a.jks --ks-pass pass:addpass1 --key-pass pass:addpass1 \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/add-signed.apk out/aligned.apk >> a.log 2>&1
+          "$AS" verify out/add-signed.apk >> a.log 2>&1 && echo "签名: ok" >> a.log
+          {
+            echo "输出: $(stat -c%s out/add-signed.apk) B"
+            echo "sha256: $(sha256sum out/add-signed.apk | cut -d' ' -f1)"
+          } >> a.log
+
+      - name: 发布
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+          cp out/add-signed.apk "dex-add-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds dex-add-*.apk -R "$GITHUB_REPOSITORY" --clobber >> a.log 2>&1
+          echo "发布: 完成" >> a.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f a.log ] || echo "(无)" > a.log
+          { echo "run: $GITHUB_RUN_ID  sha: ${GITHUB_SHA:0:8}  $(date -u +%FT%TZ)";
+            echo "--- a.log ---"; tail -n 60 a.log; } > dex-add-status.txt
+          git add dex-add-status.txt || true
+          git commit -m "ci: dex add control ($GITHUB_RUN_ID)" || echo "no change"
+          git pull --rebase --autostash >> /dev/null 2>&1 || true
+          git push || { sleep 5; git pull --rebase --autostash >> /dev/null 2>&1 || true; git push; } || true
