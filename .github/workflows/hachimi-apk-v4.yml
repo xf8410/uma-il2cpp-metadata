@@ -1,0 +1,98 @@
+name: hachimi-apk-v4
+
+# 对照实验：同一个崩溃钩子 proxy，但 **不放 libhachimi.so**
+#   → proxy 的 dlopen 会失败，自动回落到原版 libmain_orig.so
+#   → 等价于「只替换 libmain、不加载 Hachimi」
+# 目的：区分「libmain 被改动」 vs 「Hachimi 加载后触发」两种死因。
+on:
+  push:
+    paths:
+      - '.github/workflows/hachimi-apk-v4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK + 编译 proxy
+        run: |
+          : > v4.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> v4.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> v4.log; exit 0; }
+          echo "APK: $APK" >> v4.log
+          NDK="${ANDROID_NDK_LATEST_HOME:-$(ls -d "$ANDROID_HOME"/ndk/* 2>/dev/null | sort -V | tail -1)}"
+          CC="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang"
+          "$CC" -O2 -shared -fPIC -o out-libmain.so tools/crashproxy/proxy.c >> v4.log 2>&1
+          ls -l out-libmain.so >> v4.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入（不含 libhachimi.so）
+        if: env.READY == 'true'
+        run: |
+          set -e
+          rm -rf work out && mkdir -p work out
+          unzip -q "$APK" -d work
+          cp "$APK" out/app-updated.apk
+          D=work/lib/arm64-v8a
+          mv "$D/libmain.so" "$D/libmain_orig.so"
+          cp out-libmain.so "$D/libmain.so"
+          ( cd work && zip -q -0 ../out/app-updated.apk \
+              lib/arm64-v8a/libmain.so lib/arm64-v8a/libmain_orig.so )
+          {
+            echo "libmain.so      : proxy $(stat -c%s out-libmain.so) B"
+            echo "libmain_orig.so : 原版 $(stat -c%s "$D/libmain_orig.so") B"
+            echo "libhachimi.so   : 不放（dlopen 会失败 → 回落原版）"
+          } >> v4.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/app-updated.apk out/app-aligned.apk
+          keytool -genkeypair -v -keystore v4.jks -alias v4 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass v4pass -keypass v4pass \
+            -dname "CN=V4,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks v4.jks --ks-pass pass:v4pass --key-pass pass:v4pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-v4.apk" out/app-aligned.apk
+          "$AS" verify "out/${NAME}-v4.apk" > /dev/null && echo "签名: ok" >> v4.log
+          {
+            echo "输出: out/${NAME}-v4.apk ($(stat -c%s "out/${NAME}-v4.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-v4.apk" | cut -d' ' -f1)"
+            echo "结果: 成功（只换 libmain，不加载 Hachimi）"
+          } >> v4.log
+          echo "OUT_APK=out/${NAME}-v4.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hachimi-patched-apk-v4
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f v4.log ] || echo "(无)" > v4.log
+          cp v4.log hachimi-apk-v4-status.txt
+          git add hachimi-apk-v4-status.txt
+          git commit -m "ci: hachimi-apk-v4 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
