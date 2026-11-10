@@ -4,10 +4,11 @@
 //   2) dlopen libhachimi.so 并把 JNI_OnLoad 转过去（Hachimi 自己会再加载 libmain_orig.so）
 //
 // 日志落盘位置（按顺序尝试，第一个写成功就用它）：
-//   /sdcard/Android/media/<包名>/dsh_crash.log   ← 别的应用可读
-//   /sdcard/Download/dsh_crash.log               ← 若应用有 legacy 存储权限
+//   /sdcard/Download/dsh_crash.log               ← 最方便（DSH 直接能读）
 //   /data/local/tmp/dsh_crash.log
+//   /sdcard/Android/media/<包名>/dsh_crash.log   ← 兜底
 
+#define _GNU_SOURCE
 #include <jni.h>
 #include <dlfcn.h>
 #include <signal.h>
@@ -18,6 +19,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <execinfo.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+// NDK 某些版本不声明 backtrace，这里补一个
+extern int backtrace(void **buffer, int size);
 
 static char g_logpath[256];
 static int g_fd = -1;
@@ -31,6 +37,7 @@ static void resolve_path(void) {
         fclose(f);
     }
     for (char *p = pkg; *p; p++) if (*p == ':') { *p = 0; break; }
+
     const char *cands[] = {
         "/sdcard/Download/dsh_crash.log",
         "/data/local/tmp/dsh_crash.log",
@@ -52,7 +59,7 @@ static void resolve_path(void) {
 
 static void wlog(const char *s) {
     if (g_fd < 0) resolve_path();
-    if (g_fd >= 0) { write(g_fd, s, strlen(s)); fsync(g_fd); }
+    if (g_fd >= 0) { ssize_t w = write(g_fd, s, strlen(s)); (void)w; fsync(g_fd); }
 }
 
 static void wfmt(const char *fmt, ...) {
@@ -79,7 +86,11 @@ __attribute__((constructor)) static void init(void) {
     resolve_path();
     wfmt("=== dsh proxy loaded, log=%s\n", g_logpath);
     static char altstack[256 * 1024];
-    stack_t ss = { .ss_sp = altstack, .ss_size = sizeof(altstack), .ss_flags = 0 };
+    stack_t ss;
+    memset(&ss, 0, sizeof(ss));
+    ss.ss_sp = altstack;
+    ss.ss_size = sizeof(altstack);
+    ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
     struct sigaction sa;
     memset(&sa, 0, sizeof(sa));
