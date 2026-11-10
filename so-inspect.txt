@@ -1,0 +1,37 @@
+zip: dl/zygisk-hachimi2020-v0.14.0-5ea0359-release.zip (39506512 B)
+-rwxr-xr-x 1 runner runner 16010992 Jun 29  2025 x/lib/x86_64/libhachimi.so
+-rwxr-xr-x 1 runner runner 15068464 Jun 29  2025 x/lib/arm64-v8a/libhachimi.so
+-rwxr-xr-x 1 runner runner 12888284 Jun 29  2025 x/lib/armeabi-v7a/libhachimi.so
+-rwxr-xr-x 1 runner runner 16332312 Jun 29  2025 x/lib/x86/libhachimi.so
+
+=== x/lib/arm64-v8a/libhachimi.so ===
+-rwxr-xr-x 1 runner runner 15068464 Jun 29  2025 x/lib/arm64-v8a/libhachimi.so
+x/lib/arm64-v8a/libhachimi.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, for Android 24, built by NDK r26b (10909125), stripped
+
+--- ELF 头 ---
+  Type:                              DYN (Shared object file)
+  Machine:                           AArch64
+  Entry point address:               0x0
+
+--- 动态导出符号（全部）---
+JNI_OnLoad
+blake3_compress_in_place_portable
+zygisk_companion_entry
+zygisk_module_entry
+
+--- 关键符号检查 ---
+  YES  JNI_OnLoad
+  YES  zygisk_module_entry
+  no   zygisk_module_entry_v2
+  no   hachimi_init
+  no   hachimi_main
+  no   android_main
+
+--- 与上游 JP proxy 对比：体积 ---
+total 14704
+-rw-r--r-- 1 runner runner 15055400 Nov 10 08:56 libmain-arm64-v8a.so
+214adfc639c051951aebac1b507712899596a60d1d970aa8902b62de11f020f4  jp/libmain-arm64-v8a.so
+5b5c6c4a426dec41331fd9696c14ced5b9f477244304de1800e6af9951e12feb  x/lib/arm64-v8a/libhachimi.so
+JP proxy 导出符号（前 20）：
+JNI_OnLoad
+blake3_compress_in_place_portable
