@@ -5,9 +5,10 @@
     pip install capstone
     python3 tools/verify_code.py <libil2cpp.so> <global-metadata.fixed.dat> <methods_rva.tsv>
 
-判据（比猜序言靠谱）：从目标地址开始反汇编，若能在 N 条指令内遇到
-`ret`（函数正常返回）或 `b <addr>`（尾调用），且反汇编过程没有明显断裂，
-就认为该地址是合法的函数入口。
+判据：从目标地址反汇编，能在 N 条指令内遇到 `ret` 或尾调用 `b <addr>` → 判为入口。
+反汇编不出任何指令时进一步区分：
+  · zero_page   —— 目标处是全 0（代码被抠掉/占位）
+  · undecodable —— 非 0 但解不开（多半说明映射指错了地方）
 """
 import struct
 import sys
@@ -54,20 +55,17 @@ def main():
         raise SystemExit("tsv 为空")
 
     md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
-    md.detail = False
 
     sample = rows[::max(1, len(rows) // 200)][:200]
-    stats = {"ret": 0, "tailcall_b": 0, "truncated": 0, "bad_offset": 0, "empty": 0}
-    examples = []
+    stats = {}
+    examples, bad_examples = [], []
     for idx, addr in sample:
         off, avail = v2o(addr, need=4)
         if off is None:
-            stats["bad_offset"] += 1
+            stats["bad_offset"] = stats.get("bad_offset", 0) + 1
             continue
         code = d[off:off + min(avail, MAX_INSN * 4)]
-        n = 0
-        verdict = "truncated"
-        first = []
+        n, verdict, first = 0, "truncated", []
         for insn in md.disasm(code, addr):
             if n < 6:
                 first.append("%s %s" % (insn.mnemonic, insn.op_str))
@@ -81,24 +79,33 @@ def main():
             if n >= MAX_INSN:
                 break
         if n == 0:
-            verdict = "empty"
+            verdict = "zero_page" if code[:64] == b"\x00" * 64 else "undecodable"
+            if len(bad_examples) < 4:
+                bad_examples.append((addr, idx, verdict, code[:16].hex(" ")))
         stats[verdict] = stats.get(verdict, 0) + 1
         if len(examples) < 3:
             examples.append((addr, idx, n, verdict, first))
 
     total = sum(stats.values()) or 1
     print("抽样 %d 个地址（共 %d 条映射）" % (len(sample), len(rows)))
-    for k in ("ret", "tailcall_b", "truncated", "empty", "bad_offset"):
+    for k in ("ret", "tailcall_b", "truncated", "zero_page", "undecodable", "bad_offset"):
         if stats.get(k):
             print("  %-12s %4d (%.1f%%)" % (k, stats[k], 100.0 * stats[k] / total))
     ok = stats.get("ret", 0) + stats.get("tailcall_b", 0)
-    print("判定为函数入口（走到 ret 或尾调用）: %d/%d = %.1f%%"
-          % (ok, total, 100.0 * ok / total))
-    print("\n样例：")
+    print("判定为函数入口: %d/%d = %.1f%%" % (ok, total, 100.0 * ok / total))
+    print("其中「反汇编不出指令」明细: zero_page=%d, undecodable=%d"
+          % (stats.get("zero_page", 0), stats.get("undecodable", 0)))
+
+    print("\n正常样例：")
     for addr, idx, n, verdict, first in examples:
-        print("  0x%X  #%d  %d 条指令 → %s" % (addr, idx, n, verdict))
-        for i, s in enumerate(first):
-            print("     %s%s" % ("  " * 0, s))
+        print("  0x%X  #%d  %d 条指令 -> %s" % (addr, idx, n, verdict))
+        for s in first:
+            print("     " + s)
+
+    if bad_examples:
+        print("\n异常样例（地址 -> 前 16 字节）：")
+        for addr, idx, verdict, hx in bad_examples:
+            print("  0x%-9X #%-7d %-12s %s" % (addr, idx, verdict, hx))
 
 
 if __name__ == "__main__":
