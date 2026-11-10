@@ -1,21 +1,23 @@
 name: hachimi-apk
 
-# 无 root 注入（按 Hachimi 官方 Manual install 流程）：
-#   1) 原版 lib/<abi>/libmain.so  →  改名 libmain_orig.so
-#   2) proxy 库 libmain-<abi>.so  →  复制为 lib/<abi>/libmain.so
-#   3) 一并放入 libhachimi*.so
+# 无 root 注入（官方 Manual install 流程）：
+#   原版 lib/<abi>/libmain.so → libmain_orig.so
+#   proxy  libmain-<abi>.so   → libmain.so
+#   可选 libhachimi*.so
 #
-# 输入（自动取）：
-#   APK   : apk-*/*.apk  →  本仓 Release 里的 *.apk
-#   proxy : 仓库里已有的 libmain-*.so / libhachi*.so
-#           →  kairusds/Hachimi-Edge、Hachimi-Hachimi/Hachimi 最新 release
+# 库来源优先级（必须 Unity2020 版！）：
+#   1) 本仓 Release 里带 "2020" 的 zip（例如 zygisk-hachimi2020-*.zip）
+#   2) 本仓 Release 里其它 zip
+#   3) kairusds/Hachimi-Edge
+#   4) Hachimi-Hachimi/Hachimi（新版，通常不兼容 Unity2020 —— 仅兜底）
 #
-# 输出：artifact `hachimi-patched-apk` + 仓库文件 `hachimi-apk-status.txt`
+# 签名：若仓里有 keystore/dsh.jks 就用它（保证各版本同一签名、可覆盖更新），否则临时生成。
 on:
   push:
     paths:
       - 'apk-*/**'
       - 'hachimi*/**'
+      - 'keystore/**'
       - '.github/workflows/hachimi-apk.yml'
   workflow_dispatch:
 
@@ -41,34 +43,60 @@ jobs:
             gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> status.log 2>&1 || true
             APK=$(find apk-dl -name '*.apk' 2>/dev/null | head -1 || true)
           fi
-          if [ -z "$APK" ]; then echo "结果: 跳过（无 APK）" >> status.log; exit 0; fi
+          [ -z "$APK" ] && { echo "结果: 跳过（无 APK）" >> status.log; exit 0; }
           echo "APK: $APK ($(stat -c%s "$APK") B)" >> status.log
           echo "APK=$APK" >> $GITHUB_ENV
 
-      - name: 取 Hachimi proxy 库
+      - name: 取 Hachimi 库（优先 2020 版）
         run: |
-          mkdir -p libs
-          for R in kairusds/Hachimi-Edge Hachimi-Hachimi/Hachimi; do
-            echo "--- $R" >> status.log
-            gh release download -R "$R" -D "libs/$(echo $R | tr / _)" --pattern '*' --clobber >> status.log 2>&1 || true
+          mkdir -p libs/own libs/edge libs/upstream
+          echo "--- 本仓 Release 里的 zip" >> status.log
+          gh release download -R "$GITHUB_REPOSITORY" -D libs/own --pattern '*.zip' --clobber >> status.log 2>&1 || true
+          echo "--- kairusds/Hachimi-Edge" >> status.log
+          gh release download -R kairusds/Hachimi-Edge -D libs/edge --pattern '*' --clobber >> status.log 2>&1 || true
+          echo "--- Hachimi-Hachimi/Hachimi" >> status.log
+          gh release download -R Hachimi-Hachimi/Hachimi -D libs/upstream --pattern '*' --clobber >> status.log 2>&1 || true
+
+          for t in libs/own libs/edge libs/upstream ; do
+            for f in "$t"/* ; do
+              [ -f "$f" ] || continue
+              case "$f" in
+                *.zip) mkdir -p "$t/unpack"; unzip -o -q "$f" -d "$t/unpack" 2>/dev/null || true ;;
+                *.tar.gz|*.tgz) tar xzf "$f" -C "$t" 2>/dev/null || true ;;
+              esac
+            done
           done
-          for f in libs/*/* ; do
-            [ -f "$f" ] || continue
-            case "$f" in
-              *.zip) unzip -o -q "$f" -d "$(dirname "$f")/unpack" 2>/dev/null || true ;;
-              *.tar.gz|*.tgz) tar xzf "$f" -C "$(dirname "$f")" 2>/dev/null || true ;;
-            esac
-          done
-          echo "候选 .so:" >> status.log
-          find libs -iname '*.so' 2>/dev/null | head -40 >> status.log || true
-          P64=$(find libs -iname 'libmain-arm64-v8a.so' 2>/dev/null | head -1 || true)
-          [ -z "$P64" ] && P64=$(find libs -iname 'libmain*.so' 2>/dev/null | head -1 || true)
-          HSO=$(find libs -iname 'libhachi*.so' 2>/dev/null | head -1 || true)
-          echo "proxy(arm64): ${P64:-<无>}" >> status.log
-          echo "libhachimi  : ${HSO:-<无>}" >> status.log
-          echo "P64=$P64" >> $GITHUB_ENV
-          echo "HSO=$HSO" >> $GITHUB_ENV
-          if [ -z "$P64" ]; then echo "结果: 跳过（无 proxy 库）" >> status.log; exit 0; fi
+          {
+            echo "本仓 zip 解包内容："
+            find libs/own/unpack -maxdepth 3 2>/dev/null | head -40
+            echo ""
+            echo "全部候选 .so："
+            find libs -iname '*.so' 2>/dev/null | head -60
+          } >> status.log
+
+          pick() {  # $1=ABI
+            ABI=$1
+            for t in libs/own libs/edge libs/upstream ; do
+              H=$(find "$t" -iname "libmain-${ABI}.so" 2>/dev/null | head -1 || true)
+              if [ -n "$H" ]; then echo "$H"; return; fi
+            done
+            echo ""
+          }
+          # 2020 版优先：路径里带 2020 的
+          P_ARM64_2020=$(find libs -iname 'libmain-arm64-v8a.so' -path '*2020*' 2>/dev/null | head -1 || true)
+          P_ARM64=$(pick arm64-v8a)
+          [ -n "$P_ARM64_2020" ] && P_ARM64="$P_ARM64_2020"
+          P_V7=$(pick armeabi-v7a)
+          HSO=$(find libs -iname 'libhachi*.so' 2>/dev/null | head -3 || true)
+          {
+            echo "选用 arm64 proxy: ${P_ARM64:-<无>}"
+            echo "选用 v7a   proxy: ${P_V7:-<无>}"
+            echo "伴随 libhachi*.so: ${HSO:-<无>}"
+            [ -n "$P_ARM64" ] && file "$P_ARM64"
+          } >> status.log
+          echo "P_ARM64=$P_ARM64" >> $GITHUB_ENV
+          echo "P_V7=$P_V7" >> $GITHUB_ENV
+          [ -z "$P_ARM64" ] && { echo "结果: 跳过（没有 arm64 proxy 库）" >> status.log; exit 0; }
           echo "READY=true" >> $GITHUB_ENV
 
       - name: 注入
@@ -77,25 +105,26 @@ jobs:
           set -e
           rm -rf work out && mkdir -p work out
           unzip -q "$APK" -d work
-          ls work/lib/ >> status.log 2>&1 || true
           N=0
           for d in work/lib/*/ ; do
             [ -f "$d/libmain.so" ] || continue
             ABI=$(basename "$d")
-            PROXY=$(find libs -iname "libmain-${ABI}.so" 2>/dev/null | head -1 || true)
-            [ -z "$PROXY" ] && [ "$ABI" = "arm64-v8a" ] && PROXY="$P64"
+            case "$ABI" in
+              arm64-v8a) PROXY="$P_ARM64" ;;
+              armeabi-v7a) PROXY="$P_V7" ;;
+              *) PROXY=$(find libs -iname "libmain-${ABI}.so" 2>/dev/null | head -1 || true) ;;
+            esac
             if [ -z "$PROXY" ]; then echo "  $ABI: 无 proxy，跳过" >> status.log; continue; fi
             mv "$d/libmain.so" "$d/libmain_orig.so"
             cp "$PROXY" "$d/libmain.so"
-            [ -n "${HSO:-}" ] && cp "$HSO" "$d/$(basename "$HSO")"
-            echo "  $ABI: libmain.so -> libmain_orig.so, proxy=$(basename "$PROXY")" >> status.log
+            for h in $HSO ; do [ -f "$h" ] && cp "$h" "$d/$(basename "$h")" ; done
+            echo "  $ABI: proxy=$(basename "$PROXY") ($(stat -c%s "$PROXY") B)" >> status.log
             N=$((N+1))
           done
-          if [ "$N" = "0" ]; then echo "::error::没有 ABI 注入成功"; exit 1; fi
+          [ "$N" = "0" ] && { echo "::error::没有 ABI 注入成功"; exit 1; }
           echo "注入 ABI 数: $N" >> status.log
-          ls -l work/lib/*/ >> status.log 2>&1 || true
 
-      - name: 打包 + 对齐 + 签名
+      - name: 打包 + 对齐 + 签名（固定 keystore 优先）
         if: env.READY == 'true'
         run: |
           set -e
@@ -104,14 +133,25 @@ jobs:
           AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
           "$ZA" -p -f 4 out/app-unsigned.apk out/app-aligned.apk
           "$ZA" -c -p 4 out/app-aligned.apk > /dev/null && echo "zipalign: ok" >> status.log
-          keytool -genkeypair -v -keystore dsh.keystore -alias dsh -keyalg RSA -keysize 2048 \
-            -validity 10000 -storepass dshpass -keypass dshpass \
-            -dname "CN=DSH,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+
+          KS=keystore/dsh.jks
+          if [ -f "$KS" ]; then
+            echo "keystore: 使用仓库内的 $KS（签名固定，可覆盖更新）" >> status.log
+            KSPASS=$(cat keystore/pass.txt 2>/dev/null || echo dshpass)
+            KEYPASS=$(cat keystore/keypass.txt 2>/dev/null || echo "$KSPASS")
+            ALIAS=$(cat keystore/alias.txt 2>/dev/null || echo dsh)
+          else
+            echo "keystore: 仓库内没有，临时生成（每次签名都会变）" >> status.log
+            KS=dsh-temp.jks; KSPASS=dshpass; KEYPASS=dshpass; ALIAS=dsh
+            keytool -genkeypair -v -keystore "$KS" -alias "$ALIAS" -keyalg RSA -keysize 2048 \
+              -validity 10000 -storepass "$KSPASS" -keypass "$KEYPASS" \
+              -dname "CN=DSH,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          fi
           NAME=$(basename "$APK" .apk)
-          "$AS" sign --ks dsh.keystore --ks-pass pass:dshpass --key-pass pass:dshpass \
-            --v2-signing-enabled true --v3-signing-enabled true \
+          "$AS" sign --ks "$KS" --ks-pass "pass:$KSPASS" --key-pass "pass:$KEYPASS" \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
             --out "out/${NAME}-hachimi.apk" out/app-aligned.apk
-          "$AS" verify "out/${NAME}-hachimi.apk" > /dev/null && echo "签名: ok" >> status.log
+          "$AS" verify --print-certs "out/${NAME}-hachimi.apk" | head -4 >> status.log
           {
             echo "输出: out/${NAME}-hachimi.apk ($(stat -c%s "out/${NAME}-hachimi.apk") B)"
             echo "sha256: $(sha256sum "out/${NAME}-hachimi.apk" | cut -d' ' -f1)"
