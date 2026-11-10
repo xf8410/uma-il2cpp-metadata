@@ -1,0 +1,61 @@
+name: publish-tests
+
+# 把历次构建的 artifact 统一发布到一个 Release 页面，
+# 免得每次都要点进 Actions → run → 滑到底 → artifact。
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/publish-tests.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 收集最近运行里的 apk
+        run: |
+          mkdir -p dl
+          # 最近 30 次运行，逐个尝试下载 artifact
+          for RUN in $(gh run list -R "$GITHUB_REPOSITORY" -L 30 --json databaseId -q '.[].databaseId'); do
+            gh run download "$RUN" -R "$GITHUB_REPOSITORY" -D "dl/$RUN" 2>/dev/null || true
+          done
+          echo "--- 找到的 apk："
+          find dl -name '*.apk' -exec ls -l {} \; | head -40
+          # 只保留体积最大的那个（去重，按内容 sha 去重）
+          mkdir -p out
+          for f in $(find dl -name '*.apk'); do
+            S=$(sha256sum "$f" | cut -d' ' -f1)
+            [ -f "out/$S.apk" ] || cp "$f" "out/$S.apk"
+          done
+          ls -l out | head -20
+
+      - name: 命名并发布到 Release
+        run: |
+          set -e
+          TAG="tests-$(date -u +%Y%m%d-%H%M)"
+          mkdir -p rel
+          i=0
+          for f in out/*.apk ; do
+            [ -f "$f" ] || continue
+            i=$((i+1))
+            NAME=$(unzip -p "$f" AndroidManifest.xml >/dev/null 2>&1 && echo "apk-$i" || echo "apk-$i")
+            # 用体积+sha 前缀做名字，便于区分
+            SZ=$(stat -c%s "$f"); SH=$(sha256sum "$f" | cut -c1-8)
+            # 尝试从原始 artifact 名推断用途
+            ORIG=$(find dl -name '*.apk' -size ${SZ}c 2>/dev/null | head -1)
+            BASE=$(basename "$(dirname "$ORIG")" 2>/dev/null || echo pkg)
+            cp "$f" "rel/${BASE}-${SH}-${SZ}.apk"
+          done
+          ls -l rel
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+            --title "测试包合集 $TAG" \
+            --notes "自动收集最近运行产出的注入测试包。每个包对应一次实验，见仓库根目录的 *-status.txt。" \
+            rel/*.apk
+          echo "已发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG"
