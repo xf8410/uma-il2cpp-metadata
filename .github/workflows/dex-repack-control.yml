@@ -1,14 +1,20 @@
 name: dex-repack-control
 
 # 对照 A：apktool 反编译后「什么都不改」，只把 classes3.dex 重新汇编塞回原包
-#   · 黑屏 → smali 重组这条路对腾讯这个包不可用
+#   · 黑屏 → smali 重组这条路不可用
 #   · 正常 → 重组没问题，之前黑屏是我们插桩/改动的锅
-# 2026-11-10 接手修订（两次）：
-#   1) 13:24 那次 run 的失败原因已定位：keytool 的 -keypass cpass 只有 5 个字符，
-#      "Key password must be at least 6 characters" —— 跟 dex/打包毫无关系，
-#      也就是说 smali 原样重组这条路从来没在真机上验证过。现改为 cpass12。
-#   2) 每一步都写进 c.log；v1 签名失败自动回退 v2+v3；提交状态 push 前先 pull --rebase；
-#      status 文件只留 c.log 末尾 200 行（上一版把 zipalign -c -v 的 6800 行全塞进去了）。
+#
+# 2026-11-10 接手记录：
+#   1) 13:24 那次 run 的"失败"其实是 keytool 的 -keypass cpass 只有 5 个字符
+#      （"Key password must be at least 6 characters"），跟 dex/打包无关 ——
+#      也就是说这条对照从来没在真机上验证过。已改 cpass12。
+#   2) 第一次真机验证（run 42827436847，产物 dex-repack-1110-1346.apk）**黑屏**。
+#      定位：smali 2.5.2 产出的是 dex 035，原包 classes3.dex 是 **037**；
+#      classes3.dex 里有 13 个「接口里带代码的方法」（Java 8 default method，
+#      Lkotlin/time/TimeSource;、Lokhttp3/CookieJar;、Lkotlinx/coroutines/... 等），
+#      035 规范不允许，ART 装载这些类时验证失败 → 黑屏（进程不死）。
+#      037 与 035 指令集相同，只要改版本号并重算 signature/checksum，
+#      所以用 tools/dex_fixver.py 把版本改回 037。产物改名 dex-repack037-* 以免混淆。
 on:
   push:
     paths:
@@ -51,7 +57,7 @@ jobs:
           echo "APK=$APK" >> $GITHUB_ENV
           echo "READY=true" >> $GITHUB_ENV
 
-      - name: 反编译 + 原样重汇编 classes3.dex
+      - name: 反编译 + 原样重汇编 classes3.dex（版本修正回 037）
         if: env.READY == 'true'
         run: |
           set -e
@@ -59,10 +65,11 @@ jobs:
           curl -sSL -o smali.jar \
             https://github.com/baksmali/smali/releases/download/v2.5.2/smali-2.5.2.jar
           java -jar smali.jar assemble dec/smali_classes3 -o c3.dex >> c.log 2>&1
-          echo "重汇编后 classes3.dex: $(stat -c%s c3.dex) B" >> c.log
-          echo "c3.dex 头: $(od -An -c -N8 c3.dex | tr -s ' ')" >> c.log
+          echo "smali 产出 classes3.dex: $(stat -c%s c3.dex) B / 版本 $(od -An -c -N8 c3.dex | tr -s ' ')" >> c.log
+          python3 tools/dex_fixver.py c3.dex 037 >> c.log 2>&1
+          echo "修正后 classes3.dex: $(stat -c%s c3.dex) B / 版本 $(od -An -c -N8 c3.dex | tr -s ' ')" >> c.log
           withzip=$(unzip -l "$APK" classes3.dex | awk '/classes3.dex/{print $1}')
-          echo "原包 classes3.dex  : ${withzip} B" >> c.log
+          echo "原包 classes3.dex  : ${withzip} B / 版本 dex 037" >> c.log
           mkdir -p out stage
           cp "$APK" out/patched.apk
           cp c3.dex stage/classes3.dex
@@ -108,8 +115,8 @@ jobs:
           set -e
           gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
             gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
-          cp out/dex-repack.apk "dex-repack-$(date -u +%m%d-%H%M).apk"
-          gh release upload builds dex-repack-*.apk -R "$GITHUB_REPOSITORY" --clobber >> c.log 2>&1
+          cp out/dex-repack.apk "dex-repack037-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds dex-repack037-*.apk -R "$GITHUB_REPOSITORY" --clobber >> c.log 2>&1
           echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> c.log
 
       - name: 提交状态
