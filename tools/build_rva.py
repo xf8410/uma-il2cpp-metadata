@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""生成 method index -> 代码地址 映射，并顺带做抽样验证 + 地址反查示例
+"""生成 method index -> 代码地址 映射 + 抽样验证 + 地址反查 + 小结
 
     python3 tools/build_rva.py <libil2cpp.so> <global-metadata.fixed.dat> <out.tsv>
 
@@ -11,11 +11,17 @@
         +0x18 u64   (另一组 count)          (+0x20 void** 另一组 ptr)
   · metadata images[].typeStart/typeCount + 类型 method_count 前缀和
     给出每个程序集在方法表里的全局起始索引与数量。
-  · 候选判定：module 的 count 必须等于 metadata 推算的方法数，且指针数组
-    绝大多数落在可执行段；名字匹配失败的再用「count 值」反查兜底。
+
+三级定位（逐层兜底）：
+  1) 名字 → 结构字段 (count, ptr)，要求 count == metadata 推算值、指针多为代码；
+  2) 名字失败 → 用 count 值在 .data.rel.ro 里反查；
+  3) 都失败 → 全量扫描「连续 code pointer 数组」，用数组长度 == count 匹配。
+
+输出：主 tsv（method_index -> address） + 同目录 so_rva_summary.txt（小结，手机上可直接看）
 """
 import struct
 import sys
+import os
 
 
 def load_sections(d):
@@ -36,10 +42,8 @@ def load_sections(d):
     return secs
 
 
-PROLOG = {
-    0xD503233F: "pacibsp", 0xD503237F: "paciasp", 0xD503201F: "nop",
-    0x910003FD: "mov x29,sp",
-}
+PROLOG = {0xD503233F: "pacibsp", 0xD503237F: "paciasp", 0xD503201F: "nop",
+          0x910003FD: "mov x29,sp"}
 
 
 def prologue_kind(w):
@@ -90,7 +94,6 @@ def main():
         e = m.find(b"\x00", p)
         return m[p:e].decode("utf-8", "replace")
 
-    # ---- metadata: 每个程序集的方法区间 ----
     toff, tn = sec(19)[0], sec(19)[1] // 88
     t_mcount = [struct.unpack_from("<I", m, toff + i * 88 + 0x40)[0] & 0xFFFF
                 for i in range(tn)]
@@ -104,8 +107,7 @@ def main():
         b = io + i * 40
         ni, _ai, ts, tc = struct.unpack_from("<IIii", m, b)
         mstart = prefix[ts] if 0 <= ts <= tn else 0
-        images.append((ms(ni), ts, tc, mstart,
-                       prefix[min(ts + tc, tn)] - mstart))
+        images.append([ms(ni), ts, tc, mstart, prefix[min(ts + tc, tn)] - mstart])
     total_md = sec(5)[1] // 32
     print("images=%d  方法数合计=%d  metadata methods=%d"
           % (len(images), sum(x[4] for x in images), total_md))
@@ -113,31 +115,29 @@ def main():
     targets = [s for s in secs if s["sname"] in (".data.rel.ro", ".data")]
 
     def grab(base, cnt_off, ptr_off, cw, pw):
-        fmt_c = "<Q" if cw == 8 else "<I"
-        fmt_p = "<Q" if pw == 8 else "<I"
-        cnt = struct.unpack_from(fmt_c, d, base + cnt_off)[0]
-        ptr = struct.unpack_from(fmt_p, d, base + ptr_off)[0]
+        cnt = struct.unpack_from("<Q" if cw == 8 else "<I", d, base + cnt_off)[0]
+        ptr = struct.unpack_from("<Q" if pw == 8 else "<I", d, base + ptr_off)[0]
         return cnt, ptr
 
-    def score(cnt, ptr):
-        """返回 (是否可用, 预计代码指针比例)"""
-        if not (0 < cnt < 400000):
-            return None
+    def code_ratio(cnt, ptr, limit=4000):
         r = v2o(ptr, need=min(cnt * 8, 16))
         if not r:
             return None
         arr = r[0]
-        n = min(cnt, 4000)
+        n = min(cnt, limit)
         hit = 0
         for k in range(n):
-            e = struct.unpack_from("<Q", d, arr + k * 8)[0] if arr + k * 8 + 8 <= len(d) else 0
+            q = arr + k * 8
+            if q + 8 > len(d):
+                break
+            e = struct.unpack_from("<Q", d, q)[0]
             if e:
-                rr = v2o(e)
+                rr = v2o(e, need=4)
                 if rr and (rr[2] & 4):
                     hit += 1
         return 100.0 * hit / n if n else 0.0
 
-    def candidates(nm):
+    def by_name(nm):
         pat = nm.encode() + b"\x00"
         out, p, seen = [], d.find(pat), 0
         while p >= 0 and seen < 6:
@@ -151,18 +151,17 @@ def main():
                     while i >= 0 and k < 4:
                         if i % 4 == 0:
                             base = s["off"] + i
-                            for cnt_off, ptr_off, cw, pw in (
-                                    (8, 16, 8, 8), (8, 16, 4, 8),
-                                    (8, 12, 4, 4), (8, 20, 8, 8),
-                                    (16, 24, 8, 8)):
+                            for co, po, cw, pw in ((8, 16, 8, 8), (8, 16, 4, 8),
+                                                   (8, 12, 4, 4), (8, 20, 8, 8),
+                                                   (16, 24, 8, 8)):
                                 try:
-                                    cnt, ptr = grab(base, cnt_off, ptr_off, cw, pw)
+                                    cnt, ptr = grab(base, co, po, cw, pw)
                                 except struct.error:
                                     continue
-                                sc = score(cnt, ptr)
+                                sc = code_ratio(cnt, ptr) if 0 < cnt < 400000 else None
                                 if sc is not None:
-                                    out.append((cnt, ptr, sc,
-                                                "%s+0x%X" % (s["sname"], base - s["off"])))
+                                    out.append([cnt, ptr, sc,
+                                                "%s+0x%X" % (s["sname"], base - s["off"])])
                         i = blk.find(struct.pack("<Q", vaddr), i + 1)
                         k += 1
             p = d.find(pat, p + 1)
@@ -170,102 +169,151 @@ def main():
         return out
 
     def by_count(mcount):
-        """名字匹配失败时，用 count 值在 .data.rel.ro 里反查"""
         for s in targets:
             blk = d[s["off"]:s["off"] + s["size"]]
             needle = struct.pack("<Q", mcount)
-            i = blk.find(needle)
-            k = 0
-            while i >= 0 and k < 20:
+            i, k = blk.find(needle), 0
+            while i >= 0 and k < 40:
                 if i % 8 == 0:
                     base = s["off"] + i
-                    for cnt_off, ptr_off in ((0, 8), (-8, 0)):
+                    for co, po in ((0, 8), (-8, 0)):
                         try:
-                            cnt, ptr = grab(base, cnt_off, ptr_off, 8, 8)
-                        except struct.error:
+                            cnt, ptr = grab(base, co, po, 8, 8)
+                        except (struct.error, ValueError):
                             continue
-                        sc = score(cnt, ptr)
+                        sc = code_ratio(cnt, ptr) if 0 < cnt < 400000 else None
                         if sc is not None and sc > 50:
-                            return [(cnt, ptr, sc, "%s+0x%X(count-scan)"
-                                     % (s["sname"], base - s["off"]))]
+                            return [[cnt, ptr, sc,
+                                     "%s+0x%X(count-scan)" % (s["sname"], base - s["off"])]]
                 i = blk.find(needle, i + 1)
                 k += 1
         return []
 
-    rows, ok, miss = [], 0, []
+    def scan_code_arrays(minlen=64):
+        out = []
+        for s in targets:
+            off0, size = s["off"], s["size"]
+            i, start, cnt = 0, -1, 0
+            while i + 8 <= size:
+                v = struct.unpack_from("<Q", d, off0 + i)[0]
+                r = v2o(v, need=4) if v else None
+                if r and (r[2] & 4):
+                    if start < 0:
+                        start, cnt = i, 0
+                    cnt += 1
+                else:
+                    if cnt >= minlen:
+                        out.append((s, off0 + start, cnt))
+                    start, cnt = -1, 0
+                i += 8
+            if cnt >= minlen:
+                out.append((s, off0 + start, cnt))
+        return out
+
+    rows, resolved, unresolved, mods = [], [], [], []
     for nm, _ts, _tc, mstart, mcount in images:
-        best, why = None, ""
-        if mcount > 0:
-            cands = candidates(nm) or by_count(mcount)
-            exact = [c for c in cands if c[0] == mcount and c[2] > 80]
-            if exact:
-                best = max(exact, key=lambda c: c[2])
-                ok += 1
-            else:
-                bad = [c for c in cands if c[0] != mcount]
-                if bad:
-                    best = max(bad, key=lambda c: c[2])
-                    why = "COUNT-MISMATCH"
-                miss.append(nm)
-        if not best:
-            print("  %-42s md=%-6d 未定位" % (nm, mcount))
+        if mcount <= 0:
+            resolved.append((nm, 0, ""))
             continue
-        cnt, ptr, sc, where = best
-        print("  %-42s md=%-6d cnt=%-6d code=%5.1f%% @%s %s"
-              % (nm, mcount, cnt, sc, where, why or "OK"))
-        r = v2o(ptr, need=min(cnt * 8, 8))
-        if not r:
+        cands = by_name(nm) or by_count(mcount)
+        exact = [c for c in cands if c[0] == mcount and c[2] > 80]
+        if exact:
+            best = max(exact, key=lambda c: c[2])
+            mods.append((nm, mstart, mcount, best[3], best[2]))
+            resolved.append((nm, mcount, best[3]))
+            for k in range(mcount):
+                e = struct.unpack_from("<Q", d, v2o(best[1])[0] + k * 8)[0]
+                if e:
+                    rows.append((mstart + k, e))
+        else:
+            unresolved.append([nm, mstart, mcount])
+
+    print("\n-- 第 3 级：全量扫 code pointer 数组（长度 == 方法数）--")
+    arrays = scan_code_arrays()
+    by_len = {}
+    for s, off, ln in arrays:
+        by_len.setdefault(ln, []).append((s, off))
+    print("发现连续 code pointer 段 %d 个，长度分布前 8：%s"
+          % (len(arrays), sorted(((l, len(v)) for l, v in by_len.items()),
+                                 key=lambda x: -x[0])[:8]))
+
+    still = []
+    for nm, mstart, mcount in unresolved:
+        got = by_len.get(mcount)
+        if not got:
+            still.append((nm, mcount))
             continue
-        arr = r[0]
-        n = cnt if cnt == mcount else min(cnt, mcount)
-        for k in range(n):
-            e = struct.unpack_from("<Q", d, arr + k * 8)[0]
+        s, off = got[0]
+        mods.append((nm, mstart, mcount, "%s+0x%X(array-scan)" % (s["sname"], off - s["off"]), 100.0))
+        for k in range(mcount):
+            e = struct.unpack_from("<Q", d, off + k * 8)[0]
             if e:
                 rows.append((mstart + k, e))
+        print("  %-42s md=%-6d → 数组匹配成功 @%s+0x%X"
+              % (nm, mcount, s["sname"], off - s["off"]))
 
-    print("\n模块对齐成功 %d/%d；未定位 %d 个" % (ok, len(images), len(miss)))
     rows.sort()
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("method_index\taddress\n")
         for idx, a in rows:
             f.write("%d\t0x%X\n" % (idx, a))
-    print("写出 %s：%d 行（覆盖 metadata 方法数 %.1f%%）"
-          % (out_path, len(rows), 100.0 * len(rows) / total_md))
+    cov = 100.0 * len(rows) / total_md
+    print("\n写出 %s：%d 行（覆盖 %.1f%%）" % (out_path, len(rows), cov))
 
-    # ---- 抽样验证：地址处的 ARM64 序言 ----
-    if rows:
-        step = max(1, len(rows) // 200)
-        kinds = {}
-        bad = 0
-        for idx, a in rows[::step][:200]:
-            r = v2o(a, need=4)
-            if not r:
-                bad += 1
-                continue
-            w = struct.unpack_from("<I", d, r[0])[0]
-            k = prologue_kind(w)
-            kinds[k] = kinds.get(k, 0) + 1
-        print("\n抽样验证 %d 个地址（每 %d 个取 1）：" % (min(200, len(rows[::step])), step))
+    # ---- 抽样验证 ----
+    kinds, bad, sample = {}, 0, rows[::max(1, len(rows) // 200)][:200] if rows else []
+    for idx, a in sample:
+        r = v2o(a, need=4)
+        if not r:
+            bad += 1
+            continue
+        k = prologue_kind(struct.unpack_from("<I", d, r[0])[0])
+        kinds[k] = kinds.get(k, 0) + 1
+    tot = max(1, sum(kinds.values()))
+    print("\n抽样验证 %d 个地址：" % len(sample))
+    for k, v in sorted(kinds.items(), key=lambda x: -x[1]):
+        print("   %-22s %d (%.1f%%)" % (k, v, 100.0 * v / tot))
+
+    # ---- 地址反查示例 ----
+    mo = sec(5)[0]
+    samples = []
+    for idx, a in rows[:10]:
+        b = mo + idx * 32
+        ni, dt = struct.unpack_from("<II", m, b)
+        tok = struct.unpack_from("<I", m, b + 0x14)[0]
+        pc = struct.unpack_from("<I", m, b + 0x1C)[0] >> 16
+        tb = toff + dt * 88
+        tnt = ms(struct.unpack_from("<I", m, tb)[0])
+        tns = ms(struct.unpack_from("<I", m, tb + 4)[0])
+        samples.append("0x%-9X %s::%s(%d)  token=0x%08X  #%d"
+                       % (a, (tns + "." + tnt) if tns else tnt, ms(ni), pc, tok, idx))
+    print("\n地址反查示例：")
+    for s in samples:
+        print("   " + s)
+
+    # ---- 小结文件 ----
+    sd = os.path.dirname(os.path.abspath(out_path))
+    with open(os.path.join(sd, "so_rva_summary.txt"), "w", encoding="utf-8") as f:
+        f.write("RVA 映射小结\n")
+        f.write("============\n")
+        f.write("metadata 方法总数 : %d\n" % total_md)
+        f.write("已映射方法数      : %d (%.1f%%)\n" % (len(rows), cov))
+        f.write("程序集            : %d 个，成功 %d，失败 %d\n"
+                % (len(images), len(images) - len(still), len(still)))
+        f.write("映射地址越界      : %d\n" % bad)
+        f.write("\n未定位的程序集：\n")
+        for nm, mc in still:
+            f.write("  %-42s md=%d\n" % (nm, mc))
+        f.write("\nARM64 序言抽样（%d 个地址）：\n" % len(sample))
         for k, v in sorted(kinds.items(), key=lambda x: -x[1]):
-            print("   %-22s %d" % (k, v))
-        good = sum(v for k, v in kinds.items() if k not in ("ZERO",))
-        print("   非零字节比例 %.1f%%；映射地址越界 %d" % (100.0 * good / max(1, sum(kinds.values())), bad))
-
-        # ---- 地址反查示例 ----
-        print("\n地址反查示例（method_index -> 类::方法）：")
-        mo, _mn = sec(5)
-        for idx, a in rows[:5]:
-            b = mo + idx * 32
-            ni = struct.unpack_from("<I", m, b)[0]
-            dt = struct.unpack_from("<I", m, b + 4)[0]
-            tok = struct.unpack_from("<I", m, b + 0x14)[0]
-            pc = struct.unpack_from("<I", m, b + 0x1C)[0] >> 16
-            tb = toff + dt * 88
-            tn_name = ms(struct.unpack_from("<I", m, tb)[0])
-            tns = ms(struct.unpack_from("<I", m, tb + 4)[0])
-            full = (tns + "." + tn_name) if tns else tn_name
-            print("   0x%-9X %s::%s(%d)  token=0x%08X  #%d"
-                  % (a, full, ms(ni), pc, tok, idx))
+            f.write("  %-22s %d (%.1f%%)\n" % (k, v, 100.0 * v / tot))
+        f.write("\n反查示例：\n")
+        for s in samples:
+            f.write("  %s\n" % s)
+        f.write("\n模块定位方式（前 20 个）：\n")
+        for nm, mstart, mcount, where, sc in mods[:20]:
+            f.write("  %-42s md=%-6d code=%5.1f%%  %s\n" % (nm, mcount, sc, where))
+    print("\n小结已写入 %s" % os.path.join(sd, "so_rva_summary.txt"))
 
 
 if __name__ == "__main__":
