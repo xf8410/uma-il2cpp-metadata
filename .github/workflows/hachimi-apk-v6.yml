@@ -1,0 +1,93 @@
+name: hachimi-apk-v6
+
+# 探测：是否只有 libmain.so 被完整性校验？
+#   libbili.so（51KB，bilibili SDK）末尾加 1 字节，其余一切不动。
+#   · 正常玩 → 说明其它 so 不被校验 → 可以把 proxy 挪到别的库上绕开 libmain 检查
+#   · 也崩   → 说明是「所有 so 都查」，那无 root 真没戏
+on:
+  push:
+    paths:
+      - '.github/workflows/hachimi-apk-v6.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK
+        run: |
+          : > v6.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> v6.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> v6.log; exit 0; }
+          echo "APK: $APK" >> v6.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 给 libbili.so 加 1 字节
+        if: env.READY == 'true'
+        run: |
+          set -e
+          rm -rf work out && mkdir -p work out
+          unzip -q "$APK" -d work
+          cp "$APK" out/app-updated.apk
+          F=work/lib/arm64-v8a/libbili.so
+          O=$(stat -c%s "$F"); printf '\0' >> "$F"; N=$(stat -c%s "$F")
+          {
+            echo "libbili.so: $O B -> $N B"
+            echo "sha256 原: $(head -c "$O" "$F" | sha256sum | cut -d' ' -f1)"
+            echo "sha256 新: $(sha256sum "$F" | cut -d' ' -f1)"
+            echo "libmain.so 保持原样（不碰）"
+          } >> v6.log
+          ( cd work && zip -q -0 ../out/app-updated.apk lib/arm64-v8a/libbili.so )
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/app-updated.apk out/app-aligned.apk
+          keytool -genkeypair -v -keystore v6.jks -alias v6 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass v6pass -keypass v6pass \
+            -dname "CN=V6,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks v6.jks --ks-pass pass:v6pass --key-pass pass:v6pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-v6.apk" out/app-aligned.apk
+          "$AS" verify "out/${NAME}-v6.apk" > /dev/null && echo "签名: ok" >> v6.log
+          {
+            echo "输出: out/${NAME}-v6.apk ($(stat -c%s "out/${NAME}-v6.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-v6.apk" | cut -d' ' -f1)"
+            echo "结果: 成功（只改 libbili.so）"
+          } >> v6.log
+          echo "OUT_APK=out/${NAME}-v6.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hachimi-patched-apk-v6
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f v6.log ] || echo "(无)" > v6.log
+          cp v6.log hachimi-apk-v6-status.txt
+          git add hachimi-apk-v6-status.txt
+          git commit -m "ci: hachimi-apk-v6 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
