@@ -1,0 +1,70 @@
+name: recon-dynsym
+
+# 列出 APK 里所有 arm64 so 的：导出符号（FUNC）、依赖库（NEEDED）、体积
+# 目的：评估「用假 so 顶替 libtersafe2.so」的可行性（要 stub 哪些函数、谁依赖它）
+on:
+  push:
+    paths:
+      - '.github/workflows/recon-dynsym.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK
+        run: |
+          : > r3.log
+          mkdir -p apk-dl x
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> r3.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> r3.log; echo "READY=false" >> $GITHUB_ENV; exit 0; }
+          unzip -o -q "$APK" 'lib/arm64-v8a/*' -d x 2>/dev/null || true
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 导出符号 + 依赖
+        if: env.READY == 'true'
+        run: |
+          {
+            echo "# APK 内 arm64 so 的导出与依赖"
+            echo ""
+            for f in x/lib/arm64-v8a/*.so ; do
+              SZ=$(stat -c%s "$f")
+              echo ""
+              echo "## $(basename "$f")  ($SZ B)"
+              echo "### NEEDED"
+              readelf -d "$f" 2>/dev/null | grep -E "NEEDED" | sed 's/.*\[//; s/\].*//' | sed 's/^/    /' | head -20
+              echo "### 导出 FUNC（前 40）"
+              readelf --dyn-syms -W "$f" 2>/dev/null \
+                | awk '$4=="FUNC" && $7!="UND" {print "    "$8}' | sort -u | head -40
+              echo "### 导出 FUNC 总数"
+              readelf --dyn-syms -W "$f" 2>/dev/null \
+                | awk '$4=="FUNC" && $7!="UND"' | wc -l | sed 's/^/    /'
+            done
+            echo ""
+            echo "## 谁依赖 libtersafe / libtprt"
+            for f in x/lib/arm64-v8a/*.so ; do
+              if readelf -d "$f" 2>/dev/null | grep -qE "libtersafe|libtprt" ; then
+                echo "   $(basename "$f") -> $(readelf -d "$f" | grep -oE 'libtersafe[^]]*|libtprt[^]]*' | tr '\n' ' ')"
+              fi
+            done
+          } > r3.out 2>&1
+          head -c 70000 r3.out >> r3.log
+
+      - name: 提交
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f r3.out ] || echo "(无)" > r3.out
+          cp r3.out recon-dynsym.txt
+          git add recon-dynsym.txt || true
+          git commit -m "ci: dynsym recon ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
