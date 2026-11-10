@@ -1,0 +1,391 @@
+## libtersafe2.so  size=5.04 MiB  关键字符串 29
+   0x295F     tss_recv_sec_signature
+   0x2AAC     tss_sdk_wait_verify
+   0x2C08     TssSDKOnRecvSignature
+   0x3C3680   mrpcs_abort.dat
+   0x3C3690   notify mrpcs, hash:0x%08x
+   0x3C36AA   sig custom, name:%s, len:%d, crc:%08x
+   0x3C36E4   ver:%s app_ver:%s code_size:%s crc:%s
+   0x3C384F   jar_ver:%s,cert_env:%s
+   0x3C3BA6   ano_cert_md5
+   0x3C4670   !%s, size:%d, crc:%08x, t:%s
+   0x3C4A95   !tcj,name:%s md5:%s,size:%d
+   0x3C4AE3   tcj_app_ver.zip
+   0x3C75D3   self_sys
+   0x3C76B6   gp4, reason:%s, raw:%s, crc:%x
+   0x3CD38E   ms_data_crc
+   0x3CD39A   mrpcs_data_crc_error
+   0x3CD3BB   mrpcs_data_len_error
+   0x3CD3E0   mrpcs_data_mode_name_len_error
+   0x3CD4ED   %s;crc:%s
+   0x3CD537   mrpcs_scan_thread_start_failed!
+   0x3CD565   mrpcs_send_data_thread_start_failed!
+   0x3CD598   mrpcs_download_data_thread_start_failed!
+   0x3CD5D1   mrpcs_single_data_not_match!
+   0x3CD5FE   mrpcs_common_data_not_match!
+   0x3CF569   !vap_2:%s, cert_md5:%s
+   0x3D8BEA   hash_cache
+   0x3E79E9   mrpcs_lib
+   0x3F2D09   spgp_verify:%d
+   0x4E49C8   .hash
+
+## 引用命中 27 处
+   0x105514   add  -> mrpcs_abort.dat
+   0x105688   add  -> notify mrpcs, hash:0x%08x
+   0x105AE0   add  -> sig custom, name:%s, len:%d, crc:%08x
+   0x1064F0   add  -> ver:%s app_ver:%s code_size:%s crc:%s
+   0x10FDB0   add  -> jar_ver:%s,cert_env:%s
+   0x116068   add  -> ano_cert_md5
+   0x11F298   add  -> !%s, size:%d, crc:%08x, t:%s
+   0x12C3EC   add  -> !tcj,name:%s md5:%s,size:%d
+   0x12D1D8   add  -> tcj_app_ver.zip
+   0x1689F4   add  -> self_sys
+   0x16D3B8   add  -> gp4, reason:%s, raw:%s, crc:%x
+   0x287A78   add  -> ms_data_crc
+   0x287A80   add  -> mrpcs_data_crc_error
+   0x287AD0   add  -> mrpcs_data_len_error
+   0x287B20   add  -> mrpcs_data_mode_name_len_error
+   0x2882D8   add  -> %s;crc:%s
+   0x2883B0   add  -> mrpcs_scan_thread_start_failed!
+   0x288400   add  -> mrpcs_send_data_thread_start_failed!
+   0x288450   add  -> mrpcs_download_data_thread_start_failed!
+   0x2884A4   add  -> mrpcs_single_data_not_match!
+   0x2884F4   add  -> mrpcs_common_data_not_match!
+   0x291CD4   str  -> mrpcs_data_mode_name_len_error
+   0x306A08   add  -> !vap_2:%s, cert_md5:%s
+   0x37292C   add  -> hash_cache
+   0x372CC8   add  -> hash_cache
+   0x37BFFC   add  -> mrpcs_lib
+   0x384130   add  -> spgp_verify:%d
+
+--- 上下文 @0x105514  (mrpcs_abort.dat) ---
+   0x1054B4  add      w11, w9, #7
+   0x1054B8  eor      w8, w10, w8
+   0x1054BC  eor      w10, w11, w9
+   0x1054C0  cmp      x0, #0
+   0x1054C4  csel     w8, w8, w10, eq
+   0x1054C8  ldr      x8, [x26, w8, uxtw #3]
+   0x1054CC  stp      w9, w11, [sp, #0x18]
+   0x1054D0  br       x8
+   0x1054D4  bl       #0x134850
+   0x1054D8  bl       #0x135844
+   0x1054DC  mov      w8, #0x4c4f
+   0x1054E0  mov      w9, #0xa0e8
+   0x1054E4  movk     w8, #0x7a06, lsl #16
+   0x1054E8  movk     w9, #0x7abb, lsl #16
+   0x1054EC  add      w10, w8, #0xc
+   0x1054F0  orr      w11, w9, #7
+   0x1054F4  eor      w8, w10, w8
+   0x1054F8  eor      w10, w11, w9
+   0x1054FC  tst      w0, #1
+   0x105500  csel     w8, w8, w10, ne
+   0x105504  ldr      x8, [x26, w8, uxtw #3]
+   0x105508  stp      w11, w9, [sp, #0x18]
+   0x10550C  br       x8
+   0x105510  adrp     x1, #0x3c3000
+   0x105514  add      x1, x1, #0x680   <<<
+   0x105518  mov      x0, x21
+   0x10551C  bl       #0x34a34c
+   0x105520  mov      w8, #0x5ea0
+   0x105524  mov      w9, #0x2867
+   0x105528  movk     w8, #0x8808, lsl #16
+   0x10552C  movk     w9, #0x9a92, lsl #16
+   0x105530  orr      w10, w8, #7
+   0x105534  add      w11, w9, #1
+   0x105538  eor      w8, w10, w8
+   0x10553C  eor      w10, w11, w9
+   0x105540  cmp      w0, #0
+   0x105544  csel     w8, w8, w10, eq
+   0x105548  ldr      x8, [x26, w8, uxtw #3]
+   0x10554C  stp      w9, w11, [sp, #0x18]
+   0x105550  br       x8
+   0x105554  bl       #0x10c448
+   0x105558  mov      w8, #0xfb0b
+   0x10555C  mov      w9, #0x9023
+   0x105560  movk     w8, #0xc48, lsl #16
+   0x105564  movk     w9, #0x135c, lsl #16
+   0x105568  add      w10, w8, #1
+   0x10556C  add      w11, w9, #6
+   0x105570  eor      w8, w10, w8
+   0x105574  eor      w10, w11, w9
+   0x105578  cmp      x0, #0
+   0x10557C  csel     w8, w8, w10, eq
+   0x105580  ldr      x8, [x26, w8, uxtw #3]
+   0x105584  stp      w11, w9, [sp, #0x18]
+   0x105588  br       x8
+   0x10558C  mov      x24, x0
+   0x105590  mov      w8, #1
+   0x105594  add      x0, x19, #8
+   0x105598  str      x0, [sp, #0x10]
+   0x10559C  str      x8, [sp]
+   0x1055A0  bl       #0xc37f0
+   0x1055A4  mov      w8, #0xb40e
+   0x1055A8  mov      w9, #0x126a
+   0x1055AC  movk     w8, #0x75a3, lsl #16
+   0x1055B0  movk     w9, #0x6639, lsl #16
+   0x1055B4  add      w10, w8, #0xa
+   0x1055B8  add      w11, w9, #2
+   0x1055BC  eor      w8, w10, w8
+   0x1055C0  eor      w10, w11, w9
+   0x1055C4  cmp      x0, #0
+   0x1055C8  csel     w8, w8, w10, eq
+   0x1055CC  ldr      x8, [x26, w8, uxtw #3]
+   0x1055D0  str      x0, [sp, #8]
+   0x1055D4  stp      w9, w11, [sp, #0x18]
+   0x1055D8  br       x8
+   0x1055DC  b        #0x105810
+   0x1055E0  mov      x25, x0
+   0x1055E4  mov      w0, w23
+   0x1055E8  bl       #0x14e9bc
+   0x1055EC  str      w0, [x25]
+   0x1055F0  mov      w0, w19
+
+--- 上下文 @0x105688  (notify mrpcs, hash:0x%08x) ---
+   0x105628  add      w9, w9, #0xa
+   0x10562C  str      w9, [sp, #0x18]
+   0x105630  br       x8
+   0x105634  mov      x1, x20
+   0x105638  mov      x2, x19
+   0x10563C  bl       #0xc42e0
+   0x105640  bl       #0x382814
+   0x105644  mov      w1, #0x11
+   0x105648  bl       #0x383c38
+   0x10564C  mov      w8, #0x989
+   0x105650  mov      w9, #0xa957
+   0x105654  movk     w8, #0xd013, lsl #16
+   0x105658  movk     w9, #0xe97b, lsl #16
+   0x10565C  add      w10, w8, #7
+   0x105660  orr      w11, w9, #8
+   0x105664  eor      w8, w10, w8
+   0x105668  eor      w10, w11, w9
+   0x10566C  cmp      w0, #0
+   0x105670  csel     w8, w8, w10, eq
+   0x105674  ldr      x8, [x26, w8, uxtw #3]
+   0x105678  stp      w11, w9, [sp, #0x18]
+   0x10567C  br       x8
+   0x105680  bl       #0x382814
+   0x105684  adrp     x1, #0x3c3000
+   0x105688  add      x1, x1, #0x690   <<<
+   0x10568C  mov      w2, w23
+   0x105690  bl       #0x382dc8
+   0x105694  bl       #0x1200b0
+   0x105698  mov      w8, #1
+   0x10569C  strb     w8, [x0, #0x11]
+   0x1056A0  mov      x2, sp
+   0x1056A4  mov      w1, #0x102
+   0x1056A8  mov      x0, x24
+   0x1056AC  bl       #0x10ce98
+   0x1056B0  ldr      x0, [sp, #8]
+   0x1056B4  bl       #0xc3aa0
+   0x1056B8  mov      w0, #0x361
+   0x1056BC  bl       #0x388934
+   0x1056C0  mov      x1, x0
+   0x1056C4  mov      x0, x21
+   0x1056C8  bl       #0x34a42c
+   0x1056CC  mov      w8, #0x9d00
+   0x1056D0  movk     w8, #0x4b0, lsl #16
+   0x1056D4  orr      w9, w8, #3
+   0x1056D8  eor      w10, w9, w8
+   0x1056DC  cmp      x0, #0
+   0x1056E0  csel     w10, wzr, w10, eq
+   0x1056E4  ldr      x10, [x26, w10, uxtw #3]
+   0x1056E8  stp      w8, w9, [sp, #0x18]
+   0x1056EC  br       x10
+   0x1056F0  mov      w0, #0x379
+   0x1056F4  bl       #0x38a314
+   0x1056F8  mov      x1, x0
+   0x1056FC  mov      x0, x21
+   0x105700  bl       #0x34a42c
+   0x105704  mov      w8, #0xd5b1
+   0x105708  mov      w9, #0xb5eb
+   0x10570C  movk     w8, #0x77e1, lsl #16
+   0x105710  movk     w9, #0x5744, lsl #16
+   0x105714  add      w10, w8, #9
+   0x105718  orr      w11, w9, #4
+   0x10571C  eor      w8, w10, w8
+   0x105720  eor      w10, w11, w9
+   0x105724  cmp      x0, #0
+   0x105728  csel     w8, w8, w10, eq
+   0x10572C  ldr      x8, [x26, w8, uxtw #3]
+   0x105730  stp      w11, w9, [sp, #0x18]
+   0x105734  br       x8
+   0x105738  mov      x0, x22
+   0x10573C  mov      x1, x21
+   0x105740  bl       #0x102f30
+   0x105744  mov      w8, #0x5e6b
+   0x105748  mov      w10, #0xfd6d
+   0x10574C  movk     w8, #0x8e22, lsl #16
+   0x105750  mov      w9, #0x12
+   0x105754  movk     w10, #0x189a, lsl #16
+   0x105758  orr      w11, w8, #0x10
+   0x10575C  orr      w9, w10, w9
+   0x105760  eor      w8, w11, w8
+   0x105764  eor      w11, w9, w10
+
+--- 上下文 @0x105AE0  (sig custom, name:%s, len:%d, crc:%08x) ---
+   0x105A80  mov      w4, w21
+   0x105A84  bl       #0x105b3c
+   0x105A88  mov      x0, sp
+   0x105A8C  mov      w2, #0x400
+   0x105A90  mov      w1, wzr
+   0x105A94  bl       #0xc3de0
+   0x105A98  mov      x1, sp
+   0x105A9C  mov      w2, #0x400
+   0x105AA0  mov      x0, x19
+   0x105AA4  bl       #0x381e14
+   0x105AA8  cbz      x0, #0x105af4
+   0x105AAC  sub      x0, x29, #0x70
+   0x105AB0  mov      x1, sp
+   0x105AB4  bl       #0x33dc48
+   0x105AB8  bl       #0x382814
+   0x105ABC  mov      w1, #0x11
+   0x105AC0  bl       #0x383c38
+   0x105AC4  cbz      w0, #0x105af4
+   0x105AC8  bl       #0x382814
+   0x105ACC  mov      x20, x0
+   0x105AD0  sub      x0, x29, #0x70
+   0x105AD4  bl       #0x33dc2c
+   0x105AD8  mov      w3, w0
+   0x105ADC  adrp     x1, #0x3c3000
+   0x105AE0  add      x1, x1, #0x6aa   <<<
+   0x105AE4  mov      x0, x20
+   0x105AE8  mov      x2, x19
+   0x105AEC  mov      w4, w21
+   0x105AF0  bl       #0x382dc8
+   0x105AF4  sub      x0, x29, #0x70
+   0x105AF8  bl       #0x33d808
+   0x105AFC  add      sp, sp, #0x420
+   0x105B00  ldp      x29, x30, [sp, #0x50]
+   0x105B04  ldp      x20, x19, [sp, #0x40]
+   0x105B08  ldp      x22, x21, [sp, #0x30]
+   0x105B0C  ldp      x24, x23, [sp, #0x20]
+   0x105B10  ldp      x26, x25, [sp, #0x10]
+   0x105B14  ldr      x28, [sp], #0x60
+   0x105B18  ret      
+   0x105B1C  b        #0x105b28
+   0x105B20  b        #0x105b28
+   0x105B24  b        #0x105b28
+   0x105B28  mov      x19, x0
+   0x105B2C  sub      x0, x29, #0x70
+   0x105B30  bl       #0x33d808
+   0x105B34  mov      x0, x19
+   0x105B38  bl       #0x3c0d9c
+   0x105B3C  sub      sp, sp, #0x70
+   0x105B40  stp      x28, x27, [sp, #0x10]
+   0x105B44  stp      x26, x25, [sp, #0x20]
+   0x105B48  stp      x24, x23, [sp, #0x30]
+   0x105B4C  stp      x22, x21, [sp, #0x40]
+   0x105B50  stp      x20, x19, [sp, #0x50]
+   0x105B54  stp      x29, x30, [sp, #0x60]
+   0x105B58  add      x29, sp, #0x60
+   0x105B5C  mov      w8, #0x1fa1
+   0x105B60  mov      w9, #0xb178
+   0x105B64  cmp      w3, #0x100, lsl #12
+   0x105B68  movk     w8, #0xf0ca, lsl #16
+   0x105B6C  movk     w9, #0x3882, lsl #16
+   0x105B70  mov      w10, #5
+   0x105B74  ccmp     x2, #0, #4, ls
+   0x105B78  orr      w11, w8, #8
+   0x105B7C  orr      w10, w9, w10
+   0x105B80  ccmp     x1, #0, #4, ne
+   0x105B84  eor      w8, w11, w8
+   0x105B88  eor      w11, w10, w9
+   0x105B8C  adrp     x26, #0x4bd000
+   0x105B90  csel     w8, w8, w11, eq
+   0x105B94  add      x26, x26, #0x330
+   0x105B98  ldr      x8, [x26, w8, uxtw #3]
+   0x105B9C  stp      w10, w9, [sp, #8]
+   0x105BA0  br       x8
+   0x105BA4  mov      x22, x0
+   0x105BA8  mov      w0, #0x18
+   0x105BAC  mov      w24, w4
+   0x105BB0  mov      w19, w3
+   0x105BB4  mov      x20, x2
+   0x105BB8  mov      x21, x1
+   0x105BBC  bl       #0xc37f0
+
+--- 上下文 @0x1064F0  (ver:%s app_ver:%s code_size:%s crc:%s) ---
+   0x106490  mov      w0, #-1
+   0x106494  cbz      x24, #0x10654c
+   0x106498  cbz      x8, #0x10654c
+   0x10649C  mov      x0, x24
+   0x1064A0  bl       #0x34a3f4
+   0x1064A4  mov      x8, x0
+   0x1064A8  mov      w0, #-1
+   0x1064AC  cbz      x26, #0x10654c
+   0x1064B0  cbz      x8, #0x10654c
+   0x1064B4  mov      x0, x26
+   0x1064B8  bl       #0x34a3f4
+   0x1064BC  cbz      x0, #0x106548
+   0x1064C0  bl       #0x14f23c
+   0x1064C4  bl       #0x151a70
+   0x1064C8  cbz      x0, #0x106548
+   0x1064CC  mov      x27, x0
+   0x1064D0  bl       #0x34a3f4
+   0x1064D4  cbz      x0, #0x106548
+   0x1064D8  bl       #0x382814
+   0x1064DC  mov      w1, #0x11
+   0x1064E0  bl       #0x383c38
+   0x1064E4  cbz      w0, #0x106508
+   0x1064E8  bl       #0x382814
+   0x1064EC  adrp     x1, #0x3c3000
+   0x1064F0  add      x1, x1, #0x6e4   <<<
+   0x1064F4  mov      x2, x23
+   0x1064F8  mov      x3, x27
+   0x1064FC  mov      x4, x25
+   0x106500  mov      x5, x24
+   0x106504  bl       #0x382dc8
+   0x106508  tbnz     w22, #0, #0x10651c
+   0x10650C  mov      x0, x23
+   0x106510  mov      x1, x27
+   0x106514  bl       #0x34a34c
+   0x106518  cbnz     w0, #0x106548
+   0x10651C  mov      x0, x21
+   0x106520  mov      x1, x26
+   0x106524  mov      x2, x24
+   0x106528  bl       #0x106568
+   0x10652C  tbz      w0, #0, #0x106548
+   0x106530  mov      x0, x21
+   0x106534  mov      x1, x20
+   0x106538  mov      x2, x19
+   0x10653C  bl       #0x1045e8
+   0x106540  mov      w0, wzr
+   0x106544  b        #0x10654c
+   0x106548  mov      w0, #-1
+   0x10654C  ldp      x29, x30, [sp, #0x50]
+   0x106550  ldp      x20, x19, [sp, #0x40]
+   0x106554  ldp      x22, x21, [sp, #0x30]
+   0x106558  ldp      x24, x23, [sp, #0x20]
+   0x10655C  ldp      x26, x25, [sp, #0x10]
+   0x106560  ldr      x27, [sp], #0x60
+   0x106564  ret      
+   0x106568  sub      sp, sp, #0x50
+   0x10656C  str      x23, [sp, #0x10]
+   0x106570  stp      x22, x21, [sp, #0x20]
+   0x106574  stp      x20, x19, [sp, #0x30]
+   0x106578  stp      x29, x30, [sp, #0x40]
+   0x10657C  add      x29, sp, #0x40
+   0x106580  mov      x22, x0
+   0x106584  mov      w0, wzr
+   0x106588  cbz      x1, #0x1066a8
+   0x10658C  mov      x19, x2
+   0x106590  cbz      x2, #0x1066a8
+   0x106594  mov      x0, x1
+   0x106598  mov      x21, x1
+   0x10659C  bl       #0x34a3f4
+   0x1065A0  cbz      x0, #0x1066a8
+   0x1065A4  mov      x0, x21
+   0x1065A8  bl       #0x34a3f4
+   0x1065AC  mov      x1, x0
+   0x1065B0  mov      x0, x21
+   0x1065B4  bl       #0x33a674
+   0x1065B8  ldr      x8, [x22, #0x1d0]
+   0x1065BC  mov      w20, w0
+   0x1065C0  cbz      x8, #0x1065f0
+   0x1065C4  mov      w9, #0x10
+   0x1065C8  mov      w10, #8
+   0x1065CC  ldr      w11, [x8, #0x18]
+
+## libtprt.so  size=1.61 MiB  关键字符串 0
+
+## 引用命中 0 处
