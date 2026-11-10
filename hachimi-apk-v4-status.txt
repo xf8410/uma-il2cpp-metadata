@@ -1,0 +1,9 @@
+APK: apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk
+-rwxr-xr-x 1 runner runner 14008 Nov 10 10:09 out-libmain.so
+libmain.so      : proxy 14008 B
+libmain_orig.so : 原版 10520 B
+libhachimi.so   : 不放（dlopen 会失败 → 回落原版）
+签名: ok
+输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-v4.apk (251891399 B)
+sha256: 22c673b0c470121735b45dc3f161e82ece158a0e8e9de403d0b26d622b4f6b4f
+结果: 成功（只换 libmain，不加载 Hachimi）
