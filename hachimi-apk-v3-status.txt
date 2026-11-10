@@ -3,13 +3,13 @@ libhachimi: x/lib/arm64-v8a/libhachimi.so (15068464 B)
 NDK: /usr/local/lib/android/sdk/ndk/30.0.16248370
 Android (16134705, +pgo, +bolt, +lto, +mlgo, based on r574158c) clang version 21.0.0 (https://android.googlesource.com/toolchain/llvm-project 9f872551d3c681d06fd303b36f16ed5c274735eb)
 Target: aarch64-unknown-linux-android24
--rwxr-xr-x 1 runner runner 11160 Nov 10 09:25 out-libmain.so
+-rwxr-xr-x 1 runner runner 12464 Nov 10 09:39 out-libmain.so
 out-libmain.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, for Android 24, built by NDK r30 (16248370), not stripped
-libmain.so      : proxy 11160 B
+libmain.so      : proxy 12464 B
 libmain_orig.so : 原版 10520 B
 libhachimi.so   : 2020 版 15068464 B
-APK: 266933165 B
+APK: 266934469 B
 签名: ok
 输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-v3.apk (266964776 B)
-sha256: 2f599e32172d65ddd5fe06be60b62a2d64aa4846d7630d22a640a02c36ec8db6
+sha256: f0e53c4f45d92b5eb38a9d8eb888a7f8ec17797513e1cc16988e949c9e8879c7
 结果: 成功（自编崩溃钩子 proxy）
