@@ -1,0 +1,111 @@
+name: dex-inject3
+
+# 路线 G（不碰 lib/）：dex 注入 + assets 放 so
+# 修正：不再依赖「最新 Release」，而是先找出真正带 .apk / .zip 的那个 Release
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-inject3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 依赖
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq apktool zip > /dev/null
+          apktool --version || true
+
+      - name: 定位并下载输入
+        run: |
+          : > g3.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          echo "--- 所有 release:" >> g3.log
+          gh release list -R "$GITHUB_REPOSITORY" -L 20 >> g3.log 2>&1 || true
+
+          REL_APK=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 --json tagName,assets \
+            -q '.[] | select([.assets[].name] | map(select(endswith(".apk"))) | length > 0) | .tagName' | head -1 || true)
+          REL_ZIP=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 --json tagName,assets \
+            -q '.[] | select([.assets[].name] | map(select(endswith(".zip"))) | length > 0) | .tagName' | head -1 || true)
+          echo "带 apk 的 release: ${REL_APK:-<无>}" >> g3.log
+          echo "带 zip 的 release: ${REL_ZIP:-<无>}" >> g3.log
+
+          if [ -n "$REL_APK" ]; then
+            gh release download "$REL_APK" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> g3.log 2>&1 || true
+          fi
+          if [ -n "$REL_ZIP" ]; then
+            gh release download "$REL_ZIP" -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> g3.log 2>&1 || true
+          fi
+
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          echo "APK=$APK ($( [ -n "$APK" ] && stat -c%s "$APK" || echo 0) B)" >> g3.log
+          echo "SO=$SO ($( [ -n "$SO" ] && stat -c%s "$SO" || echo 0) B)" >> g3.log
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺输入" >> g3.log; exit 0; fi
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          mkdir -p out
+          python3 tools/dex_inject.py "$APK" "$SO" out > g3.out 2>&1 || true
+          tail -c 20000 g3.out >> g3.log
+          ls -l out >> g3.log || true
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          IN=out/with-dex.apk
+          [ -f "$IN" ] || { echo "::error::没有生成 APK"; exit 1; }
+          "$ZA" -p -f 4 "$IN" out/aligned.apk
+          keytool -genkeypair -v -keystore g3.jks -alias g3 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g3pass -keypass g3pass \
+            -dname "CN=G3,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks g3.jks --ks-pass pass:g3pass --key-pass pass:g3pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-dexinject.apk" out/aligned.apk
+          "$AS" verify "out/${NAME}-dexinject.apk" > /dev/null && echo "签名: ok" >> g3.log
+          {
+            echo "输出: out/${NAME}-dexinject.apk ($(stat -c%s "out/${NAME}-dexinject.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-dexinject.apk" | cut -d' ' -f1)"
+            echo "结果: 成功"
+          } >> g3.log
+          echo "OUT_APK=out/${NAME}-dexinject.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dex-inject-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g3.log ] || echo "(无)" > g3.log
+          cp g3.log dex-inject3-status.txt
+          git add dex-inject3-status.txt || true
+          git commit -m "ci: dex-inject3 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
