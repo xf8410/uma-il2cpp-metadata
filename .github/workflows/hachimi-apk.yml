@@ -1,0 +1,124 @@
+name: hachimi-apk
+
+# 输入（放进仓库即可，二选一命名）：
+#   apk-YYYYMMDD/<游戏>.apk                    ← 原版游戏安装包（251MB 那种）
+#   hachimi-*/ 里放国服 Hachimi 的 release 解包内容，至少要包含：
+#       .../libhachimi.so        （任意路径，脚本会找）
+#       .../libmain.so           （Hachimi 提供的替换用 libmain，arm64-v8a）
+#
+# 输出：Actions artifact `hachimi-patched-apk`（zipalign + 自签名，可直接安装）
+#
+# 注意：签名变了，安装前需要先卸载原版游戏；每次游戏更新都要重跑一次。
+on:
+  push:
+    paths:
+      - 'apk-*/**'
+      - 'hachimi*/**'
+      - 'tools/**'
+      - '.github/workflows/hachimi-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 定位输入
+        run: |
+          set -e
+          APK=$(find apk-* -maxdepth 2 -name '*.apk' -type f 2>/dev/null | head -1 || true)
+          if [ -z "$APK" ]; then echo "::error::没有找到 apk-*/<游戏>.apk"; exit 1; fi
+          echo "APK=$APK" >> $GITHUB_ENV
+          ls -l "$APK"
+          echo "--- hachimi 相关文件："
+          find . -path ./.git -prune -o \( -iname 'libhachi*.so' -o -iname 'libmain.so' \) -print 2>/dev/null || true
+          echo "--- 目录："
+          ls -d hachim* 2>/dev/null || echo "(没有 hachimi-* 目录)"
+
+      - name: 校验 Hachimi 文件
+        run: |
+          set -e
+          HACHI=$(find . -path ./.git -prune -o -iname 'libhachi*.so' -print 2>/dev/null | head -1 || true)
+          MAIN=$(find . -path ./.git -prune -o -iname 'libmain.so' -print 2>/dev/null | head -1 || true)
+          if [ -z "$HACHI" ]; then
+            echo "::error::没找到 libhachimi*.so（把 Hachimi release 解包后放进 hachimi-<版本>/ 目录）"
+            exit 1
+          fi
+          if [ -z "$MAIN" ]; then
+            echo "::error::没找到 Hachimi 的 libmain.so（替换游戏原版用）"
+            exit 1
+          fi
+          echo "HACHI=$HACHI" >> $GITHUB_ENV
+          echo "MAIN=$MAIN" >> $GITHUB_ENV
+          file "$HACHI" "$MAIN" || true
+          echo "hachimi: $HACHI"; echo "libmain: $MAIN"
+
+      - name: 解包并注入
+        run: |
+          set -e
+          rm -rf work out && mkdir -p work out
+          unzip -q "$APK" -d work
+          echo "--- 原版 lib 目录："
+          ls work/lib/*/ | head -20 || true
+          ABI_DIR=$(dirname "$(find work/lib -name 'libmain.so' | head -1)")
+          echo "目标 ABI 目录: $ABI_DIR"
+          cp "$MAIN" "$ABI_DIR/libmain.so"
+          cp "$HACHI" "$ABI_DIR/$(basename "$HACHI")"
+          ls -l "$ABI_DIR/libmain.so" "$ABI_DIR/$(basename "$HACHI")"
+
+      - name: 重新打包 + 对齐
+        run: |
+          set -e
+          cd work
+          # .so 与 resources.arsc 不压缩（extractNativeLibs=false 的 APK 要求）
+          zip -q -r -n .arsc:.so ../out/app-unsigned.apk .
+          cd ..
+          ls -l out/
+          ZIPALIGN=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          echo "zipalign: $ZIPALIGN"
+          "$ZIPALIGN" -p -f 4 out/app-unsigned.apk out/app-aligned.apk
+          "$ZIPALIGN" -c -p -v 4 out/app-aligned.apk > /dev/null && echo "对齐校验通过"
+
+      - name: 生成签名并签名
+        run: |
+          set -e
+          keytool -genkeypair -v -keystore dsh.keystore -alias dsh -keyalg RSA \
+            -keysize 2048 -validity 10000 -storepass dshpass -keypass dshpass \
+            -dname "CN=DSH, OU=Uma, O=DSH, L=NA, S=NA, C=JP" > /dev/null 2>&1
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          echo "apksigner: $APKSIGNER"
+          APK_NAME=$(basename "$APK" .apk)
+          "$APKSIGNER" sign --ks dsh.keystore --ks-pass pass:dshpass \
+            --key-pass pass:dshpass --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${APK_NAME}-hachimi.apk" out/app-aligned.apk
+          "$APKSIGNER" verify --print-certs "out/${APK_NAME}-hachimi.apk" | head -6
+          ls -l out/
+          echo "OUT_APK=out/${APK_NAME}-hachimi.apk" >> $GITHUB_ENV
+
+      - name: 结果摘要
+        run: |
+          {
+            echo "## Hachimi 注入结果"
+            echo ""
+            echo "| 项 | 值 |"
+            echo "|---|---|"
+            echo "| 原版 APK | \`$APK\` ($(stat -c%s "$APK") B) |"
+            echo "| 注入版 | \`$OUT_APK\` ($(stat -c%s "$OUT_APK") B) |"
+            echo "| libhachimi | \`$HACHI\` |"
+            echo "| libmain | \`$MAIN\` |"
+            echo ""
+            echo "安装：先卸载原版游戏（签名不同），再装这个 APK。"
+            echo "插件目录：Hachimi 运行时会从它的插件目录读取 .so。"
+          } >> $GITHUB_STEP_SUMMARY
+
+      - name: 上传 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hachimi-patched-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
