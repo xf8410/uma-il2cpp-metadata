@@ -1,0 +1,124 @@
+name: dex-inject6
+
+# 路线 G（不碰 lib/）：dex 注入 + assets 放 so
+# 修：runner 是 Ubuntu 26.04，源里没有 apktool → 改成直接下 apktool.jar
+# 产物：发布到 Release tag=builds（可直接点下载）+ artifact
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-inject6.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 装 apktool（jar 方式）
+        run: |
+          set +e
+          sudo apt-get update -qq > /dev/null 2>&1
+          sudo apt-get install -y -qq zip unzip curl > /dev/null 2>&1
+          sudo apt-get install -y -qq apktool > /dev/null 2>&1
+          if command -v apktool > /dev/null; then
+            echo "apktool(apt): $(apktool --version)"
+          else
+            echo "源里没有 apktool，改用 jar"
+            sudo curl -sSL -o /usr/local/bin/apktool.jar \
+              https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
+            printf '#!/bin/sh\nexec java -jar /usr/local/bin/apktool.jar "$@"\n' | sudo tee /usr/local/bin/apktool > /dev/null
+            sudo chmod +x /usr/local/bin/apktool
+            echo "apktool(jar): $(apktool --version 2>&1 | tail -1)"
+          fi
+
+      - name: 下载输入
+        run: |
+          : > g6.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          gh release list -R "$GITHUB_REPOSITORY" -L 30 >> g6.log 2>&1 || true
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            if [ -z "$(find apk-dl -name '*.apk' 2>/dev/null | head -1)" ]; then
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> g6.log 2>&1 || true
+            fi
+            if [ -z "$(find dl -name '*.zip' 2>/dev/null | head -1)" ]; then
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> g6.log 2>&1 || true
+            fi
+          done
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          { echo "APK=$APK"; echo "ZIP=$Z"; echo "SO=$SO"; } >> g6.log
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺输入" >> g6.log; exit 0; fi
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          mkdir -p out
+          python3 tools/dex_inject.py "$APK" "$SO" out > g6.out 2>&1 || true
+          tail -c 25000 g6.out >> g6.log
+          ls -l out >> g6.log || true
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          IN=out/with-dex.apk
+          [ -f "$IN" ] || { echo "::error::没有生成 APK（见 g6.log）"; exit 1; }
+          "$ZA" -p -f 4 "$IN" out/aligned.apk
+          keytool -genkeypair -v -keystore g6.jks -alias g6 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g6pass -keypass g6pass \
+            -dname "CN=G6,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          "$AS" sign --ks g6.jks --ks-pass pass:g6pass --key-pass pass:g6pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/dex-inject.apk out/aligned.apk
+          "$AS" verify out/dex-inject.apk > /dev/null && echo "签名: ok" >> g6.log
+          {
+            echo "输出: out/dex-inject.apk ($(stat -c%s out/dex-inject.apk) B)"
+            echo "sha256: $(sha256sum out/dex-inject.apk | cut -d' ' -f1)"
+            echo "结果: 成功"
+          } >> g6.log
+
+      - name: 发布到 Release
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "自动发布的测试 APK" || true
+          STAMP=$(date -u +%m%d-%H%M)
+          cp out/dex-inject.apk "dex-inject-${STAMP}.apk"
+          gh release upload builds "dex-inject-${STAMP}.apk" -R "$GITHUB_REPOSITORY" --clobber
+          echo "已发布 https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> g6.log
+
+      - name: artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dex-inject-apk
+          path: out/dex-inject.apk
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g6.log ] || echo "(无)" > g6.log
+          cp g6.log dex-inject6-status.txt
+          git add dex-inject6-status.txt || true
+          git commit -m "ci: dex-inject6 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
