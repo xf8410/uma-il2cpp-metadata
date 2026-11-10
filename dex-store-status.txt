@@ -1,0 +1,27 @@
+run: 42837704398  sha: c4d843cd  2026-11-10T14:48:20Z
+--- s.log ---
+no assets match the file pattern
+no assets match the file pattern
+APK=apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+ 8174472  Defl:N  3008288  63% 2026-09-22 15:17 f1a8e020  classes3.dex
+取出 classes3.dex: 8174472 B sha256=f3f7fb7f96c15d4e
+ 8174472  Stored  8174472   0% 2026-11-10 14:47 f1a8e020  classes3.dex
+内容比对: 完全一致（只有存储方式变了）
+重打包: 257011367 B
+Generating 2048-bit RSA key pair and self-signed certificate (SHA384withRSA) with a validity of 10,000 days
+	for: CN=STORE, OU=Uma, O=DSH, L=NA, ST=NA, C=JP
+[Storing s.jks]
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.conscrypt.NativeLibraryUtil in an unnamed module (file:/usr/local/lib/android/sdk/build-tools/37.0.0/lib/apksigner.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.conscrypt.NativeLibraryUtil in an unnamed module (file:/usr/local/lib/android/sdk/build-tools/37.0.0/lib/apksigner.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+签名: ok
+输出: 257019490 B
+sha256: f8cc4b2b3ba6d014757da9fd2990a65b6fc9368f564ff3f55ac5965649211a72
+发布: 完成
