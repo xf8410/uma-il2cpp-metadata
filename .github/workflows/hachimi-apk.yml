@@ -1,13 +1,12 @@
 name: hachimi-apk
 
-# 输入（放进仓库即可）：
-#   apk-YYYYMMDD/<游戏>.apk     ← 原版游戏安装包
-#   hachimi-*/                  ← 国服 Hachimi release 解包内容，需含：
-#                                  libhachimi*.so 与 Hachimi 提供的 libmain.so
+# 输入来源（优先级从高到低，全部自动）：
+#   APK     : apk-*/*.apk  →  本仓 Release 里的 *.apk 附件
+#   Hachimi : 仓库里已有的 libhachi*.so / libmain.so
+#             →  上游 Hachimi-Hachimi/Hachimi-Unity2020 最新 release（自动下载+解压）
 #
 # 输出：Actions artifact `hachimi-patched-apk`（zipalign + 自签名，可直接安装）
-# 注意：签名变了 → 安装前先卸载原版；每次游戏更新都要重跑。
-# 没放输入时本流程会「跳过」并保持绿色，不会污染 CI。
+# 注意：签名变了 → 安装前先卸载原版；每次游戏更新重跑一次。
 on:
   push:
     paths:
@@ -22,37 +21,65 @@ permissions:
 jobs:
   inject:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: 定位输入
+      - name: 定位 / 下载输入
         run: |
           echo "READY=false" >> $GITHUB_ENV
+
+          # ---- 1) 游戏 APK ----
           APK=$(find apk-* -maxdepth 2 -name '*.apk' -type f 2>/dev/null | head -1 || true)
           if [ -z "$APK" ]; then
-            echo "::warning::没有找到 apk-*/<游戏>.apk，本流程跳过（放入输入后会自动重跑）"
+            echo "本地无 APK，尝试从本仓 Release 附件下载…"
+            mkdir -p apk-dl
+            gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber 2>&1 | tail -3 || true
+            APK=$(find apk-dl -name '*.apk' 2>/dev/null | head -1 || true)
+          fi
+          if [ -z "$APK" ]; then
+            echo "::warning::没有 APK：请把它作为本仓 Release 附件上传（网页 Draft a new release），或放进 apk-*/"
             exit 0
           fi
           echo "APK=$APK" >> $GITHUB_ENV
-          echo "READY=true" >> $GITHUB_ENV
-          ls -l "$APK"
-          echo "--- hachimi 相关 .so："
-          find . -path ./.git -prune -o \( -iname 'libhachi*.so' -o -iname 'libmain.so' \) -print 2>/dev/null || true
+          echo "APK: $APK ($(stat -c%s "$APK") B)"
 
-      - name: 校验 Hachimi 文件
-        if: env.READY == 'true'
-        run: |
+          # ---- 2) Hachimi 本体 ----
           HACHI=$(find . -path ./.git -prune -o -iname 'libhachi*.so' -print 2>/dev/null | head -1 || true)
           MAIN=$(find . -path ./.git -prune -o -iname 'libmain.so' -print 2>/dev/null | head -1 || true)
           if [ -z "$HACHI" ] || [ -z "$MAIN" ]; then
-            echo "::warning::缺少 libhachimi*.so 或 libmain.so（把 Hachimi release 解包放进 hachimi-<版本>/），跳过"
+            echo "本地无 Hachimi，从上游 release 下载…"
+            mkdir -p hachimi-dl
+            for REPO in Hachimi-Hachimi/Hachimi-Unity2020 UmamusumeResponseAnalyzer/Hachimi-Unity2020; do
+              echo "--- try $REPO"
+              gh release download -R "$REPO" -D hachimi-dl --pattern '*' --clobber 2>&1 | tail -3 || true
+              ls -la hachimi-dl || true
+            done
+            mkdir -p hachimi-dl/unpack
+            for f in hachimi-dl/* ; do
+              [ -f "$f" ] || continue
+              case "$f" in
+                *.zip) unzip -o -q "$f" -d hachimi-dl/unpack 2>/dev/null || true ;;
+                *.tar.gz|*.tgz) tar xzf "$f" -C hachimi-dl/unpack 2>/dev/null || true ;;
+                *.7z) 7z x -y "$f" -ohachimi-dl/unpack >/dev/null 2>&1 || true ;;
+              esac
+            done
+            echo "--- 下载/解压后找到的 .so："
+            find hachimi-dl -iname '*.so' 2>/dev/null | head -20 || true
+            HACHI=$(find hachimi-dl -iname 'libhachi*.so' 2>/dev/null | head -1 || true)
+            MAIN=$(find hachimi-dl -iname 'libmain.so' 2>/dev/null | head -1 || true)
+          fi
+          if [ -z "$HACHI" ] || [ -z "$MAIN" ]; then
+            echo "::warning::没拿到 Hachimi 的 libhachimi*.so / libmain.so，跳过"
             echo "READY=false" >> $GITHUB_ENV
             exit 0
           fi
           echo "HACHI=$HACHI" >> $GITHUB_ENV
           echo "MAIN=$MAIN" >> $GITHUB_ENV
-          file "$HACHI" "$MAIN" || true
+          echo "READY=true" >> $GITHUB_ENV
           echo "hachimi: $HACHI"; echo "libmain: $MAIN"
+          file "$HACHI" "$MAIN" || true
 
       - name: 解包并注入
         if: env.READY == 'true'
@@ -61,13 +88,14 @@ jobs:
           rm -rf work out && mkdir -p work out
           unzip -q "$APK" -d work
           echo "--- 原版 lib 目录："
-          ls work/lib/*/ | head -20 || true
+          ls work/lib/ 2>/dev/null || true
           MAINPATH=$(find work/lib -name 'libmain.so' | head -1)
+          if [ -z "$MAINPATH" ]; then echo "::error::APK 里没有 lib/*/libmain.so"; exit 1; fi
           ABI_DIR=$(dirname "$MAINPATH")
           echo "目标 ABI 目录: $ABI_DIR"
           cp "$MAIN" "$ABI_DIR/libmain.so"
           cp "$HACHI" "$ABI_DIR/$(basename "$HACHI")"
-          ls -l "$ABI_DIR/libmain.so" "$ABI_DIR/$(basename "$HACHI")"
+          ls -l "$ABI_DIR"
 
       - name: 重新打包 + 对齐
         if: env.READY == 'true'
@@ -115,9 +143,10 @@ jobs:
               echo ""
               echo "安装：先卸载原版（签名不同），再装注入版。"
             else
-              echo "⏭ 已跳过：仓库里还没有 \`apk-*/<游戏>.apk\` 或缺少 Hachimi 的 \`libhachimi.so\` / \`libmain.so\`。"
+              echo "⏭ 已跳过：缺输入。"
               echo ""
-              echo "放入后本流程会自动重跑。"
+              echo "APK 请上传为本仓 **Release 附件**（网页 Draft a new release → 附加 .apk），"
+              echo "Hachimi 会自动从上游 release 下载。"
             fi
           } >> $GITHUB_STEP_SUMMARY
 
