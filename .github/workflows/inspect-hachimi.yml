@@ -1,0 +1,71 @@
+name: inspect-hachimi
+
+# 拆开本仓 Release 里的 Hachimi 包，把关键信息写进 hachimi-inspect.txt：
+#   · 压缩包内文件清单
+#   · module.prop / customize.sh / verify.sh 全文（判断它是 Zygisk 还是 overlay 方案）
+#   · libhachimi.so / libmain-*.so 的 file 信息 + 版本相关字符串
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-hachimi.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载并解包
+        run: |
+          : > inspect.log
+          mkdir -p dl
+          gh release download -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> inspect.log 2>&1 || true
+          ls -l dl >> inspect.log
+          for f in dl/*.zip ; do
+            [ -f "$f" ] || continue
+            d="dl/$(basename "$f" .zip)"
+            mkdir -p "$d"
+            unzip -o -q "$f" -d "$d" 2>/dev/null || true
+            echo "" >> inspect.log
+            echo "==================== $(basename "$f") ====================" >> inspect.log
+            echo "--- 文件清单 ---" >> inspect.log
+            ( cd "$d" && find . -type f | sort | head -60 ) >> inspect.log 2>&1
+            for t in module.prop customize.sh verify.sh uninstall.sh post-fs-data.sh service.sh ; do
+              p=$(find "$d" -name "$t" | head -1 || true)
+              if [ -n "$p" ]; then
+                echo "" >> inspect.log
+                echo "--- $t ---" >> inspect.log
+                head -80 "$p" >> inspect.log
+              fi
+            done
+          done
+
+      - name: 分析 .so
+        run: |
+          for f in $(find dl -iname '*.so' 2>/dev/null | head -10) ; do
+            echo "" >> inspect.log
+            echo "=== $f ===" >> inspect.log
+            file "$f" >> inspect.log 2>&1
+            ls -l "$f" >> inspect.log
+            echo "--- 版本/标识字符串 ---" >> inspect.log
+            strings -a "$f" | grep -aiE "hachimi|unity ?20[0-9]{2}|global-metadata|il2cpp_|version|ue4|umamusume" | sort -u | head -30 >> inspect.log 2>&1
+            echo "--- 导出符号（前 30） ---" >> inspect.log
+            ( nm -D --defined-only "$f" 2>/dev/null || readelf --dyn-syms -W "$f" 2>/dev/null ) | head -30 >> inspect.log 2>&1
+          done
+
+      - name: 提交结果
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -s inspect.log ] || echo "(无内容)" > inspect.log
+          cp inspect.log hachimi-inspect.txt
+          git add hachimi-inspect.txt
+          git commit -m "ci: inspect hachimi package ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
