@@ -1,61 +1,90 @@
-images=73 方法数合计=213983（metadata methods=213983）
-定位到 codegen module: 56/73
-  mscorlib.dll                             count=10102  md=10102  OK  code=87.9%
-  System.Configuration.dll                 count=17     md=17     OK  code=100.0%
-  Mono.Security.dll                        count=19     md=19     OK  code=100.0%
-  System.Xml.dll                           count=1      md=1      OK  code=100.0%
-  System.dll                               count=1452   md=1452   OK  code=73.2%
-  System.Core.dll                          count=438    md=438    OK  code=5.7%
-  UnityEngine.SharedInternalsModule.dll    count=67     md=67     OK  code=100.0%
-  UnityEngine.InputLegacyModule.dll        count=49     md=49     OK  code=100.0%
-  UnityEngine.TextRenderingModule.dll      count=78     md=78     OK  code=100.0%
-  UnityEngine.AnimationModule.dll          count=265    md=265    OK  code=99.6%
-  UnityEngine.IMGUIModule.dll              count=241    md=241    OK  code=100.0%
-  UnityEngine.Physics2DModule.dll          count=102    md=102    OK  code=100.0%
-  UnityEngine.PhysicsModule.dll            count=177    md=177    OK  code=100.0%
-  UnityEngine.SubsystemsModule.dll         count=34     md=34     OK  code=79.4%
-  UnityEngine.UIModule.dll                 count=110    md=110    OK  code=99.1%
-  UnityEngine.AssetBundleModule.dll        count=27     md=27     OK  code=85.2%
-  UnityEngine.AudioModule.dll              count=50     md=50     OK  code=100.0%
-  UnityEngine.GameCenterModule.dll         count=84     md=84     OK  code=90.5%
-  UnityEngine.ImageConversionModule.dll    count=4      md=4      OK  code=100.0%
-  UnityEngine.JSONSerializeModule.dll      count=6      md=6      OK  code=83.3%
-  UnityEngine.ParticleSystemModule.dll     count=175    md=175    OK  code=100.0%
-  UnityEngine.TextCoreModule.dll           count=102    md=102    OK  code=98.0%
-  UnityEngine.UI.dll                       count=1766   md=1766   OK  code=93.1%
-  UnityEngine.UnityWebRequestModule.dll    count=98     md=98     OK  code=100.0%
-  UnityEngine.XRModule.dll                 count=82     md=82     OK  code=100.0%
-  System.Runtime.CompilerServices.Unsafe.dll count=9      md=9      OK  code=33.3%
-  Unity.RenderPipelines.Core.Runtime.dll   count=1708   md=1708   OK  code=84.8%
-  Fox.Core.dll                             count=159    md=159    OK  code=91.2%
-  System.Memory.dll                        count=61     md=61     OK  code=29.5%
-  Unity.Mathematics.dll                    count=91     md=91     OK  code=100.0%
-  Unity.Timeline.dll                       count=550    md=550    OK  code=92.9%
-  CriMw.CriWare.Runtime.dll                count=2320   md=2320   OK  code=98.4%
-  Cute.Core.Assembly.dll                   count=575    md=575    OK  code=99.1%
-  DOTweenPro.dll                           count=46     md=46     OK  code=80.4%
-  K4os.Compression.LZ4.dll                 count=94     md=94     OK  code=95.7%
-  K4os.Hash.xxHash.dll                     count=6      md=6      OK  code=100.0%
-  LibNative.Runtime.dll                    count=295    md=295    OK  code=96.9%
-  Unity.RenderPipelines.Universal.Runtime.dll count=1386   md=1386   OK  code=94.7%
-  BUMA_Notification.dll                    count=191    md=191    OK  code=79.1%
-  Cinemachine.dll                          count=966    md=966    OK  code=93.5%
-  Cute.Cri.Assembly.dll                    count=1192   md=1192   OK  code=98.0%
-  DebugHook.dll                            count=42     md=42     OK  code=100.0%
-  I18N.dll                                 count=105    md=105    OK  code=94.3%
-  K4os.Compression.LZ4.Streams.dll         count=116    md=116    OK  code=94.8%
-  MessagePack.dll                          count=861    md=861    OK  code=94.1%
-  SignInWithApple.dll                      count=33     md=33     OK  code=100.0%
-  System.Numerics.dll                      count=35     md=35     OK  code=100.0%
-  Unity.Burst.dll                          count=1      md=1      OK  code=100.0%
-  XNode.dll                                count=235    md=235    OK  code=97.4%
-  _Cyan.dll                                count=720    md=720    OK  code=90.1%
-  zxing.unity.dll                          count=612    md=612    OK  code=98.2%
-  CriMw.CriWare.Mcdsp.Runtime.dll          count=7      md=7      OK  code=100.0%
-  CriMw.CriWare.Vp9.Runtime.dll            count=9      md=9      OK  code=100.0%
-  Cute.AssetBundle.Assembly.dll            count=69     md=69     OK  code=100.0%
-  I18N.CJK.dll                             count=207    md=207    OK  code=99.5%
-  umamusume.dll                            count=169276 md=169276 OK  code=97.8%
+images=73  方法数合计=213983  metadata methods=213983
+  mscorlib.dll                               md=10102  cnt=10102  code= 89.8% @.data.rel.ro+0x1B8B18 OK
+  System.Configuration.dll                   md=17     cnt=17     code=100.0% @.data.rel.ro+0x1D79B0 OK
+  Mono.Security.dll                          md=19     cnt=19     code=100.0% @.data.rel.ro+0x1D7C80 OK
+  System.Xml.dll                             md=1      cnt=1      code=100.0% @.data.rel.ro+0x1D82A0 OK
+  System.dll                                 md=1452   未定位
+  System.Core.dll                            md=438    未定位
+  UnityEngine.SharedInternalsModule.dll      md=67     cnt=67     code=100.0% @.data.rel.ro+0x1D7118 OK
+  UnityEngine.CoreModule.dll                 md=3711   cnt=3711   code= 92.2% @.data.rel.ro+0x1C4F20(count-scan) OK
+  UnityEngine.InputLegacyModule.dll          md=49     cnt=49     code=100.0% @.data.rel.ro+0x1D72F0 OK
+  UnityEngine.TextRenderingModule.dll        md=78     cnt=78     code=100.0% @.data.rel.ro+0x1D6E10 OK
+  UnityEngine.AnimationModule.dll            md=265    cnt=265    code= 99.6% @.data.rel.ro+0x1D5078 OK
+  UnityEngine.IMGUIModule.dll                md=241    cnt=241    code=100.0% @.data.rel.ro+0x1D5D80 OK
+  UnityEngine.Physics2DModule.dll            md=102    cnt=102    code=100.0% @.data.rel.ro+0x1D6940 OK
+  UnityEngine.PhysicsModule.dll              md=177    cnt=177    code=100.0% @.data.rel.ro+0x1D5E10 OK
+  UnityEngine.SpriteShapeModule.dll          md=0      未定位
+  UnityEngine.SubsystemsModule.dll           md=34     未定位
+  UnityEngine.UIModule.dll                   md=110    cnt=110    code= 99.1% @.data.rel.ro+0x1D69D8 OK
+  UnityEngine.AndroidJNIModule.dll           md=405    cnt=405    code= 93.8% @.data.rel.ro+0x1D3FD0(count-scan) OK
+  UnityEngine.AssetBundleModule.dll          md=27     cnt=27     code= 85.2% @.data.rel.ro+0x1D77B0 OK
+  UnityEngine.AudioModule.dll                md=50     cnt=50     code=100.0% @.data.rel.ro+0x1D71D8 OK
+  UnityEngine.DirectorModule.dll             md=19     cnt=19     code=100.0% @.data.rel.ro+0x1D7898(count-scan) OK
+  UnityEngine.GameCenterModule.dll           md=84     cnt=84     code= 90.5% @.data.rel.ro+0x1D6D80 OK
+  UnityEngine.ImageConversionModule.dll      md=4      cnt=4      code=100.0% @.data.rel.ro+0x1D8100 OK
+  UnityEngine.InputModule.dll                md=10     cnt=10     code=100.0% @.data.rel.ro+0x1D7DA8(count-scan) OK
+  UnityEngine.JSONSerializeModule.dll        md=6      cnt=6      code= 83.3% @.data.rel.ro+0x1D7FE0 OK
+  UnityEngine.ParticleSystemModule.dll       md=175    cnt=175    code=100.0% @.data.rel.ro+0x1D5A00 OK
+  UnityEngine.SpriteMaskModule.dll           md=19     cnt=19     code=100.0% @.data.rel.ro+0x1D7898(count-scan) OK
+  UnityEngine.TextCoreModule.dll             md=102    cnt=102    code= 98.0% @.data.rel.ro+0x1D6360 OK
+  UnityEngine.UI.dll                         md=1766   cnt=1766   code= 93.1% @.data.rel.ro+0x1CA2B0 OK
+  UnityEngine.UnityWebRequestModule.dll      md=98     cnt=98     code=100.0% @.data.rel.ro+0x1D6C60 OK
+  UnityEngine.VRModule.dll                   md=15     cnt=15     code=100.0% @.data.rel.ro+0x1D76A8(count-scan) OK
+  UnityEngine.XRModule.dll                   md=82     cnt=82     code=100.0% @.data.rel.ro+0x1D6A68 OK
+  System.Runtime.CompilerServices.Unsafe.dll md=9      未定位
+  Unity.RenderPipelines.Core.Runtime.dll     md=1708   cnt=1708   code= 84.8% @.data.rel.ro+0x1C8F28 OK
+  UnityEngine.dll                            md=0      未定位
+  DOTween.dll                                md=1008   cnt=1008   code= 89.9% @.data.rel.ro+0x1CD388(count-scan) OK
+  Fox.Core.dll                               md=159    cnt=159    code= 91.2% @.data.rel.ro+0x1D6270 OK
+  System.Memory.dll                          md=61     未定位
+  Unity.Mathematics.dll                      md=91     cnt=91     code=100.0% @.data.rel.ro+0x1D6B40 OK
+  Unity.RenderPipeline.Universal.ShaderLibrary.dll md=0      未定位
+  Unity.Timeline.dll                         md=550    cnt=550    code= 92.9% @.data.rel.ro+0x1D2888 OK
+  CriMw.CriWare.Runtime.dll                  md=2320   cnt=2320   code= 98.4% @.data.rel.ro+0x1C7AE0 OK
+  Cute.Core.Assembly.dll                     md=575    cnt=575    code= 99.1% @.data.rel.ro+0x1D3208 OK
+  DOTweenPro.dll                             md=46     cnt=46     code= 80.4% @.data.rel.ro+0x1D7588 OK
+  K4os.Compression.LZ4.dll                   md=94     cnt=94     code= 95.7% @.data.rel.ro+0x1D6CF0 OK
+  K4os.Hash.xxHash.dll                       md=6      cnt=6      code=100.0% @.data.rel.ro+0x1D8070 OK
+  LibNative.Runtime.dll                      md=295    cnt=295    code= 96.9% @.data.rel.ro+0x1D5758 OK
+  Unity.Notifications.Android.dll            md=242    cnt=242    code=100.0% @.data.rel.ro+0x1D45C0(count-scan) OK
+  Unity.RenderPipelines.Universal.Runtime.dll md=1386   cnt=1386   code= 94.7% @.data.rel.ro+0x1CA340 OK
+  Unity.TextMeshPro.dll                      md=1618   cnt=1618   code= 95.6% @.data.rel.ro+0x1CA3D8(count-scan) OK
+  BUMA_Notification.dll                      md=191    未定位
+  Cinemachine.dll                            md=966    cnt=966    code= 93.5% @.data.rel.ro+0x1CD410 OK
+  Cute.Cri.Assembly.dll                      md=1192   cnt=1192   code= 98.0% @.data.rel.ro+0x1CC500 OK
+  Cute.Http.Assembly.dll                     md=357    cnt=357    code= 91.3% @.data.rel.ro+0x1D4B70(count-scan) OK
+  Cute.UI.Assembly.dll                       md=1288   cnt=1288   code= 97.7% @.data.rel.ro+0x1CD2F8(count-scan) OK
+  DebugHook.dll                              md=42     cnt=42     code=100.0% @.data.rel.ro+0x1D7618 OK
+  I18N.dll                                   md=105    cnt=105    code= 94.3% @.data.rel.ro+0x1D6BD0 OK
+  K4os.Compression.LZ4.Streams.dll           md=116    cnt=116    code= 94.8% @.data.rel.ro+0x1D6550 OK
+  MessagePack.dll                            md=861    cnt=861    code= 94.1% @.data.rel.ro+0x1D16D8 OK
+  Plugins.dll                                md=7768   cnt=7768   code= 95.0% @.data.rel.ro+0x1B8D98(count-scan) OK
+  SignInWithApple.dll                        md=33     cnt=33     code=100.0% @.data.rel.ro+0x1D74F8 OK
+  System.Numerics.dll                        md=35     cnt=35     code=100.0% @.data.rel.ro+0x1D7380 OK
+  Unity.Burst.dll                            md=1      cnt=1      code=100.0% @.data.rel.ro+0x1D8210 OK
+  XNode.dll                                  md=235    cnt=235    code= 97.4% @.data.rel.ro+0x1D5A90 OK
+  _Cyan.dll                                  md=720    cnt=720    code= 90.1% @.data.rel.ro+0x1D1768 OK
+  zxing.unity.dll                            md=612    cnt=612    code= 98.2% @.data.rel.ro+0x1D2918 OK
+  CriMw.CriWare.Mcdsp.Runtime.dll            md=7      cnt=7      code=100.0% @.data.rel.ro+0x1D7EC0 OK
+  CriMw.CriWare.Vp9.Runtime.dll              md=9      cnt=9      code=100.0% @.data.rel.ro+0x1D7E30 OK
+  Cute.AssetBundle.Assembly.dll              md=69     cnt=69     code=100.0% @.data.rel.ro+0x1D6F50 OK
+  FlashToolEditor_BUMA.dll                   md=0      未定位
+  I18N.CJK.dll                               md=207    cnt=207    code= 99.5% @.data.rel.ro+0x1D6150 OK
+  umamusume.dll                              md=169276 cnt=169276 code= 88.7% @.data.rel.ro+0x1D8620 OK
+  Assembly-CSharp.dll                        md=0      未定位
 
-count 与 metadata 完全一致: 56/56
-写出 metadata-20261110/dump/methods_rva.tsv：190831 行（占 metadata 方法数的 89.2%）
+模块对齐成功 62/73；未定位 6 个
+写出 metadata-20261110/dump/methods_rva.tsv：205234 行（覆盖 metadata 方法数 95.9%）
+
+抽样验证 200 个地址（每 1026 个取 1）：
+   other                  161
+   sub sp,sp,#n           38
+   stp x29,x30,[sp,#-n]!  1
+   非零字节比例 100.0%；映射地址越界 0
+
+地址反查示例（method_index -> 类::方法）：
+   0x20622E0   Locale::GetText(1)  token=0x06000001  #0
+   0x20622E4   Locale::GetText(2)  token=0x06000002  #1
+   0x2163150   SR::Format(2)  token=0x06000003  #2
+   0x21631CC   SR::Format(3)  token=0x06000004  #3
+   0x21516BC   Mono.Runtime::mono_runtime_install_handlers(0)  token=0x06000005  #4
