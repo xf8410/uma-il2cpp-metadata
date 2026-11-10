@@ -1,19 +1,17 @@
 RVA 映射小结
 ============
 metadata 方法总数 : 213983
-已映射方法数      : 205863 (96.2%)
-程序集            : 73 个，成功 69，失败 4
+已映射方法数      : 207419 (96.9%)
+程序集            : 73 个，成功 73，失败 0
 
 未定位的程序集：
-  System.dll                                 md=1452
-  UnityEngine.SubsystemsModule.dll           md=34
-  System.Runtime.CompilerServices.Unsafe.dll md=9
-  System.Memory.dll                          md=61
 
-ARM64 序言抽样（200 个地址，越界 0）：
-  other                  179 (89.5%)
-  sub sp,sp,#n           20 (10.0%)
-  stp x29,x30,[sp,#-n]!  1 (0.5%)
+地址质量复验（300 个抽样地址，越界 0）：
+  other                    197 (65.7%)
+  sub sp,sp,#n             48 (16.0%)
+  stp/str pre-index        38 (12.7%)
+  stp/str offset           16 (5.3%)
+  adrp (PLT stub?)         1 (0.3%)
 
 地址反查示例：
   0x20622E0   Locale::GetText(1)  token=0x06000001  #0
@@ -27,24 +25,28 @@ ARM64 序言抽样（200 个地址，越界 0）：
   0x215172C   Mono.Runtime::GetDisplayName(0)  token=0x06000009  #8
   0x2151730   Mono.Runtime::GetNativeStackTrace(1)  token=0x0600000A  #9
 
-模块定位方式（前 20）：
-  mscorlib.dll                               md=10102  code= 89.8%  .data.rel.ro+0x1B8B18
-  System.Configuration.dll                   md=17     code=100.0%  .data.rel.ro+0x1D79B0
-  Mono.Security.dll                          md=19     code=100.0%  .data.rel.ro+0x1D7C80
-  System.Xml.dll                             md=1      code=100.0%  .data.rel.ro+0x1D82A0
-  UnityEngine.SharedInternalsModule.dll      md=67     code=100.0%  .data.rel.ro+0x1D7118
-  UnityEngine.CoreModule.dll                 md=3711   code= 92.2%  .data.rel.ro+0x1C4F20(count-scan)
-  UnityEngine.InputLegacyModule.dll          md=49     code=100.0%  .data.rel.ro+0x1D72F0
-  UnityEngine.TextRenderingModule.dll        md=78     code=100.0%  .data.rel.ro+0x1D6E10
-  UnityEngine.AnimationModule.dll            md=265    code= 99.6%  .data.rel.ro+0x1D5078
-  UnityEngine.IMGUIModule.dll                md=241    code=100.0%  .data.rel.ro+0x1D5D80
-  UnityEngine.Physics2DModule.dll            md=102    code=100.0%  .data.rel.ro+0x1D6940
-  UnityEngine.PhysicsModule.dll              md=177    code=100.0%  .data.rel.ro+0x1D5E10
-  UnityEngine.UIModule.dll                   md=110    code= 99.1%  .data.rel.ro+0x1D69D8
-  UnityEngine.AndroidJNIModule.dll           md=405    code= 93.8%  .data.rel.ro+0x1D3FD0(count-scan)
-  UnityEngine.AssetBundleModule.dll          md=27     code= 85.2%  .data.rel.ro+0x1D77B0
-  UnityEngine.AudioModule.dll                md=50     code=100.0%  .data.rel.ro+0x1D71D8
-  UnityEngine.DirectorModule.dll             md=19     code=100.0%  .data.rel.ro+0x1D7898(count-scan)
-  UnityEngine.GameCenterModule.dll           md=84     code= 90.5%  .data.rel.ro+0x1D6D80
-  UnityEngine.ImageConversionModule.dll      md=4      code=100.0%  .data.rel.ro+0x1D8100
-  UnityEngine.InputModule.dll                md=10     code=100.0%  .data.rel.ro+0x1D7DA8(count-scan)
+模块定位方式（前 24）：
+  mscorlib.dll                               md=10102    89.8%  .data.rel.ro+0x1B8B18
+  System.Configuration.dll                   md=17      100.0%  .data.rel.ro+0x1D79B0
+  Mono.Security.dll                          md=19      100.0%  .data.rel.ro+0x1D7C80
+  System.Xml.dll                             md=1       100.0%  .data.rel.ro+0x1D82A0
+  UnityEngine.SharedInternalsModule.dll      md=67      100.0%  .data.rel.ro+0x1D7118
+  UnityEngine.CoreModule.dll                 md=3711     92.2%  .data.rel.ro+0x1C4F20(count-scan)
+  UnityEngine.InputLegacyModule.dll          md=49      100.0%  .data.rel.ro+0x1D72F0
+  UnityEngine.TextRenderingModule.dll        md=78      100.0%  .data.rel.ro+0x1D6E10
+  UnityEngine.AnimationModule.dll            md=265      99.6%  .data.rel.ro+0x1D5078
+  UnityEngine.IMGUIModule.dll                md=241     100.0%  .data.rel.ro+0x1D5D80
+  UnityEngine.Physics2DModule.dll            md=102     100.0%  .data.rel.ro+0x1D6940
+  UnityEngine.PhysicsModule.dll              md=177     100.0%  .data.rel.ro+0x1D5E10
+  UnityEngine.UIModule.dll                   md=110      99.1%  .data.rel.ro+0x1D69D8
+  UnityEngine.AndroidJNIModule.dll           md=405      93.8%  .data.rel.ro+0x1D3FD0(count-scan)
+  UnityEngine.AssetBundleModule.dll          md=27       85.2%  .data.rel.ro+0x1D77B0
+  UnityEngine.AudioModule.dll                md=50      100.0%  .data.rel.ro+0x1D71D8
+  UnityEngine.DirectorModule.dll             md=19      100.0%  .data.rel.ro+0x1D7898(count-scan)
+  UnityEngine.GameCenterModule.dll           md=84       90.5%  .data.rel.ro+0x1D6D80
+  UnityEngine.ImageConversionModule.dll      md=4       100.0%  .data.rel.ro+0x1D8100
+  UnityEngine.InputModule.dll                md=10      100.0%  .data.rel.ro+0x1D7DA8(count-scan)
+  UnityEngine.JSONSerializeModule.dll        md=6        83.3%  .data.rel.ro+0x1D7FE0
+  UnityEngine.ParticleSystemModule.dll       md=175     100.0%  .data.rel.ro+0x1D5A00
+  UnityEngine.SpriteMaskModule.dll           md=19      100.0%  .data.rel.ro+0x1D7898(count-scan)
+  UnityEngine.TextCoreModule.dll             md=102      98.0%  .data.rel.ro+0x1D6360

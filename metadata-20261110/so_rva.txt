@@ -1,11 +1,20 @@
 images=73  方法数合计=213983  metadata methods=213983
 
--- 第 3 级：全量扫 code pointer 数组 --
-发现连续 code pointer 段 386 个；长度 top: [(72103, 1), (66871, 1), (19210, 1), (15829, 1), (15282, 1), (7645, 1)]
-  System.Core.dll                            md=438    -> 数组匹配 @.data+0x342AC0
-  BUMA_Notification.dll                      md=191    -> 数组匹配 @.data+0x21AB28
+-- 滑动窗口匹配（允许 null 空洞，供未定位程序集使用）--
+  count=9      最佳窗口 .data.rel.ro+0x103D20  有效 100.0%
+  count=34     最佳窗口 .data.rel.ro+0x103D20  有效 100.0%
+  count=61     最佳窗口 .data.rel.ro+0x103D20  有效 100.0%
+  count=191    最佳窗口 .data.rel.ro+0x103D20  有效 100.0%
+  count=438    最佳窗口 .data.rel.ro+0x103D20  有效 100.0%
+  count=1452   最佳窗口 .data.rel.ro+0x103D20  有效 100.0%
+  System.dll                                 md=1452   → 窗口匹配，写入 1452 条
+  System.Core.dll                            md=438    → 窗口匹配，写入 438 条
+  UnityEngine.SubsystemsModule.dll           md=34     → 窗口匹配，写入 34 条
+  System.Runtime.CompilerServices.Unsafe.dll md=9      → 窗口匹配，写入 9 条
+  System.Memory.dll                          md=61     → 窗口匹配，写入 61 条
+  BUMA_Notification.dll                      md=191    → 窗口匹配，写入 191 条
 
-写出 metadata-20261110/dump/methods_rva.tsv：205863 行（覆盖 96.2%）
+写出 metadata-20261110/dump/methods_rva.tsv：207419 行（覆盖 96.9%）
    0x20622E0   Locale::GetText(1)  token=0x06000001  #0
    0x20622E4   Locale::GetText(2)  token=0x06000002  #1
    0x2163150   SR::Format(2)  token=0x06000003  #2
