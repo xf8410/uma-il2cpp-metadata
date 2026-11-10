@@ -1,0 +1,103 @@
+name: dex-repack-control
+
+# 对照 A：apktool 反编译后「什么都不改」，只把 classes3.dex 重新汇编塞回原包
+#   · 黑屏 → smali 重组这条路对腾讯这个包不可用
+#   · 正常 → 重组没问题，之前黑屏是我们插桩/改动的锅
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-repack-control.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 装 apktool
+        run: |
+          sudo apt-get update -qq > /dev/null 2>&1
+          sudo apt-get install -y -qq zip unzip curl > /dev/null 2>&1
+          sudo curl -sSL -o /usr/local/bin/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
+          printf '#!/bin/sh\nexec java -jar /usr/local/bin/apktool.jar "$@"\n' | sudo tee /usr/local/bin/apktool > /dev/null
+          sudo chmod +x /usr/local/bin/apktool
+
+      - name: 下载原版 APK
+        run: |
+          : > c.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> c.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> c.log; exit 0; }
+          echo "APK=$APK ($(stat -c%s "$APK") B)" >> c.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 反编译 + 原样重汇编 classes3.dex
+        if: env.READY == 'true'
+        run: |
+          set -e
+          apktool d -f -o dec "$APK" >> c.log 2>&1
+          curl -sSL -o smali.jar \
+            https://github.com/baksmali/smali/releases/download/v2.5.2/smali-2.5.2.jar
+          java -jar smali.jar assemble dec/smali_classes3 -o c3.dex >> c.log 2>&1
+          echo "重汇编后 classes3.dex: $(stat -c%s c3.dex) B" >> c.log
+          withzip=$(unzip -l "$APK" classes3.dex | awk '/classes3.dex/{print $1}')
+          echo "原包 classes3.dex  : ${withzip} B" >> c.log
+          mkdir -p out stage
+          cp "$APK" out/patched.apk
+          cp c3.dex stage/classes3.dex
+          ( cd stage && zip -q -0 ../out/patched.apk classes3.dex )
+          echo "重打包: $(stat -c%s out/patched.apk) B" >> c.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/patched.apk out/aligned.apk
+          keytool -genkeypair -v -keystore c.jks -alias c -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass cpass -keypass cpass \
+            -dname "CN=CTRL,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          "$AS" sign --ks c.jks --ks-pass pass:cpass --key-pass pass:cpass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/dex-repack.apk out/aligned.apk
+          "$AS" verify out/dex-repack.apk > /dev/null && echo "签名: ok" >> c.log
+          {
+            echo "输出: $(stat -c%s out/dex-repack.apk) B"
+            echo "sha256: $(sha256sum out/dex-repack.apk | cut -d' ' -f1)"
+          } >> c.log
+
+      - name: 发布
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+          cp out/dex-repack.apk "dex-repack-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds dex-repack-*.apk -R "$GITHUB_REPOSITORY" --clobber
+          echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> c.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f c.log ] || echo "(无)" > c.log
+          cp c.log dex-repack-status.txt
+          git add dex-repack-status.txt || true
+          git commit -m "ci: dex repack control ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
