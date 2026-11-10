@@ -1,0 +1,54 @@
+name: recon-tprt2
+
+on:
+  push:
+    paths:
+      - 'tools/recon2.py'
+      - '.github/workflows/recon-tprt2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: python3 -m pip install --quiet capstone
+
+      - name: 取出 libs
+        run: |
+          : > r2.log
+          mkdir -p apk-dl x
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> r2.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> r2.log; echo "READY=false" >> $GITHUB_ENV; exit 0; }
+          unzip -o -q "$APK" 'lib/arm64-v8a/lib*.so' -d x 2>/dev/null || true
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 跑侦察
+        if: env.READY == 'true'
+        run: |
+          python3 tools/recon2.py x/lib/arm64-v8a libtersafe2.so > r2.out 2>&1 || true
+          echo "" >> r2.out
+          python3 tools/recon2.py x/lib/arm64-v8a libtprt.so >> r2.out 2>&1 || true
+          head -c 70000 r2.out >> r2.log || true
+
+      - name: 提交
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f r2.out ] || echo "(无)" > r2.out
+          cp r2.out recon2-tprt.txt
+          git add recon2-tprt.txt || true
+          git commit -m "ci: recon2 ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
