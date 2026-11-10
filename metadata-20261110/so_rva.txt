@@ -1,18 +1,11 @@
 images=73  方法数合计=213983  metadata methods=213983
 
--- 第 3 级：全量扫 code pointer 数组（长度 == 方法数）--
-发现连续 code pointer 段 386 个，长度分布前 8：[(72103, 1), (66871, 1), (19210, 1), (15829, 1), (15282, 1), (7645, 1), (7153, 1), (6105, 1)]
-  System.Core.dll                            md=438    → 数组匹配成功 @.data+0x342AC0
-  BUMA_Notification.dll                      md=191    → 数组匹配成功 @.data+0x21AB28
+-- 第 3 级：全量扫 code pointer 数组 --
+发现连续 code pointer 段 386 个；长度 top: [(72103, 1), (66871, 1), (19210, 1), (15829, 1), (15282, 1), (7645, 1)]
+  System.Core.dll                            md=438    -> 数组匹配 @.data+0x342AC0
+  BUMA_Notification.dll                      md=191    -> 数组匹配 @.data+0x21AB28
 
 写出 metadata-20261110/dump/methods_rva.tsv：205863 行（覆盖 96.2%）
-
-抽样验证 200 个地址：
-   other                  179 (89.5%)
-   sub sp,sp,#n           20 (10.0%)
-   stp x29,x30,[sp,#-n]!  1 (0.5%)
-
-地址反查示例：
    0x20622E0   Locale::GetText(1)  token=0x06000001  #0
    0x20622E4   Locale::GetText(2)  token=0x06000002  #1
    0x2163150   SR::Format(2)  token=0x06000003  #2
@@ -23,5 +16,4 @@ images=73  方法数合计=213983  metadata methods=213983
    0x21516F8   Mono.Runtime::RemoveSignalHandlers(0)  token=0x06000008  #7
    0x215172C   Mono.Runtime::GetDisplayName(0)  token=0x06000009  #8
    0x2151730   Mono.Runtime::GetNativeStackTrace(1)  token=0x0600000A  #9
-
 小结已写入 /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/metadata-20261110/dump/so_rva_summary.txt
