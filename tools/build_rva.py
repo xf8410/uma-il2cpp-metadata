@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""生成 method index -> 代码地址 映射 + 抽样验证 + 地址反查 + 小结
+"""method index -> 代码地址 映射 + 地址质量复验 + 反查 + 小结
 
     python3 tools/build_rva.py <libil2cpp.so> <global-metadata.fixed.dat> <out.tsv>
 
-三级定位（逐层兜底）：
-  1) 名字 → 结构字段 (count, ptr)：count == metadata 推算值且指针多为代码；
-  2) 名字失败 → 用 count 值在 .data.rel.ro 反查；
-  3) 都失败 → 全量扫描「连续 code pointer 数组」，用数组长度 == count 匹配。
+定位策略（逐层兜底）：
+  1) 程序集名 → codegen module 字段 (count, ptr)，count 必须等于 metadata 推算值；
+  2) 名字失败 → 用 count 值在数据段反查；
+  3) 仍失败 → 全量扫「连续 code pointer 数组」，长度 == count；
+  4) 最后 → 滑动窗口匹配（允许 null 空洞），覆盖数组里夹着 null 的情况。
 """
+import bisect
 import os
 import struct
 import sys
@@ -33,17 +35,23 @@ def load_sections(d):
     return secs
 
 
-PROLOG = {0xD503233F: "pacibsp", 0xD503237F: "paciasp", 0xD503201F: "nop",
-          0x910003FD: "mov x29,sp"}
-
-
 def prologue_kind(w):
-    if w in PROLOG:
-        return PROLOG[w]
-    if (w & 0xFFC07FFF) == 0xA9807BFD:
-        return "stp x29,x30,[sp,#-n]!"
+    if w in (0xD503233F, 0xD503237F):
+        return "pacibsp/paciasp"
+    if w == 0xD503201F:
+        return "nop"
     if (w & 0xFF800000) == 0xD1000000:
         return "sub sp,sp,#n"
+    if (w & 0xFFFFFC1F) == 0x910003FD:
+        return "mov x29,sp"
+    if (w & 0x3B000000) == 0x29000000 and (w & 0xC00) == 0xC00:
+        return "stp/str pre-index"
+    if (w & 0x3B000000) == 0x29000000:
+        return "stp/str offset"
+    if (w & 0xFFFFFC1F) in (0xD61F0200, 0xD61F0220):
+        return "br x16/x17 (thunk)"
+    if (w & 0x9F000000) == 0x90000000:
+        return "adrp (PLT stub?)"
     if w == 0:
         return "ZERO"
     return "other"
@@ -55,13 +63,17 @@ def main():
     m = open(meta_path, "rb").read()
     dn = len(d)
     secs = load_sections(d)
-    segs = [(s["addr"], s["addr"] + s["size"], s["off"], s["sname"], s["flags"])
-            for s in secs if s["type"] != 8 and s["size"] and s["addr"]]
+    segs = sorted((s["addr"], s["addr"] + s["size"], s["off"], s["sname"], s["flags"])
+                  for s in secs if s["type"] != 8 and s["size"] and s["addr"])
+    addrs = [x[0] for x in segs]
 
     def v2o(v, need=1):
-        for a, b, off, nm, fl in segs:
-            if a <= v < b and v + need <= b:
-                return off + (v - a), nm, fl
+        i = bisect.bisect_right(addrs, v) - 1
+        if i < 0:
+            return None
+        a, b, off, nm, fl = segs[i]
+        if a <= v < b and v + need <= b:
+            return off + (v - a), nm, fl
         return None
 
     def o2v(o):
@@ -72,6 +84,12 @@ def main():
 
     def u64(o):
         return struct.unpack_from("<Q", d, o)[0] if 0 <= o and o + 8 <= dn else None
+
+    def is_code_ptr(v):
+        if not v:
+            return False
+        r = v2o(v, need=4)
+        return bool(r and (r[2] & 4))
 
     if d[:4] != b"\x7fELF" or struct.unpack_from("<I", m, 0)[0] != 0xFAB11BAF:
         raise SystemExit("输入不对")
@@ -109,9 +127,9 @@ def main():
 
     targets = [s for s in secs if s["sname"] in (".data.rel.ro", ".data")]
 
-    def grab(base, cnt_off, ptr_off, cw, pw):
-        cnt = struct.unpack_from("<Q" if cw == 8 else "<I", d, base + cnt_off)[0]
-        ptr = struct.unpack_from("<Q" if pw == 8 else "<I", d, base + ptr_off)[0]
+    def grab(base, co, po, cw, pw):
+        cnt = struct.unpack_from("<Q" if cw == 8 else "<I", d, base + co)[0]
+        ptr = struct.unpack_from("<Q" if pw == 8 else "<I", d, base + po)[0]
         return cnt, ptr
 
     def code_ratio(cnt, ptr, limit=4000):
@@ -120,11 +138,8 @@ def main():
             return None
         arr, n, hit = r[0], min(cnt, limit), 0
         for k in range(n):
-            e = u64(arr + k * 8)
-            if e:
-                rr = v2o(e, need=4)
-                if rr and (rr[2] & 4):
-                    hit += 1
+            if is_code_ptr(u64(arr + k * 8)):
+                hit += 1
         return 100.0 * hit / n if n else 0.0
 
     def by_name(nm):
@@ -178,34 +193,16 @@ def main():
                 k += 1
         return []
 
-    def scan_code_arrays(minlen=64):
-        out = []
-        for s in targets:
-            off0, size = s["off"], s["size"]
-            i, start, cnt = 0, -1, 0
-            while i + 8 <= size:
-                v = u64(off0 + i)
-                r = v2o(v, need=4) if v else None
-                if r and (r[2] & 4):
-                    if start < 0:
-                        start, cnt = i, 0
-                    cnt += 1
-                else:
-                    if cnt >= minlen:
-                        out.append((s, off0 + start, cnt))
-                    start, cnt = -1, 0
-                i += 8
-            if cnt >= minlen:
-                out.append((s, off0 + start, cnt))
-        return out
-
     rows, mods, still = [], [], []
 
     def emit(arr_off, mstart, mcount):
+        got = 0
         for k in range(mcount):
             e = u64(arr_off + k * 8)
             if e:
                 rows.append((mstart + k, e))
+                got += 1
+        return got
 
     for nm, _ts, _tc, mstart, mcount in images:
         if mcount <= 0:
@@ -221,26 +218,45 @@ def main():
                 continue
         still.append([nm, mstart, mcount])
 
-    print("\n-- 第 3 级：全量扫 code pointer 数组 --")
-    arrays = scan_code_arrays()
-    by_len = {}
-    for s, off, ln in arrays:
-        by_len.setdefault(ln, []).append((s, off))
-    print("发现连续 code pointer 段 %d 个；长度 top: %s"
-          % (len(arrays), sorted(((l, len(v)) for l, v in by_len.items()),
-                                 key=lambda x: -x[0])[:6]))
+    # ---- 允许 null 空洞的滑动窗口匹配（收尾用）----
+    print("\n-- 滑动窗口匹配（允许 null 空洞，供未定位程序集使用）--")
+    counts = sorted({c for _n, _s, c in still})
+    wins = {}
+    if counts:
+        for s in targets:
+            off0, size = s["off"], s["size"]
+            nslot = size // 8
+            pre = [0] * (nslot + 1)
+            acc = 0
+            for i in range(nslot):
+                if is_code_ptr(u64(off0 + i * 8)):
+                    acc += 1
+                pre[i + 1] = acc
+            for c in counts:
+                if c > nslot:
+                    continue
+                best, bi = -1, -1
+                for i in range(0, nslot - c + 1):
+                    v = pre[i + c] - pre[i]
+                    if v > best:
+                        best, bi = v, i
+                ratio = 100.0 * best / c
+                if ratio >= 90.0 and (c not in wins or ratio > wins[c][0]):
+                    wins[c] = (ratio, s, off0 + bi * 8)
+        for c in counts:
+            if c in wins:
+                r, s, off = wins[c]
+                print("  count=%-6d 最佳窗口 %s+0x%X  有效 %.1f%%" % (c, s["sname"], off - s["off"], r))
 
     left = []
     for nm, mstart, mcount in still:
-        got = by_len.get(mcount)
-        if not got:
+        if mcount in wins:
+            r, s, off = wins[mcount]
+            n = emit(off, mstart, mcount)
+            mods.append((nm, mcount, r, "%s+0x%X(window)" % (s["sname"], off - s["off"])))
+            print("  %-42s md=%-6d → 窗口匹配，写入 %d 条" % (nm, mcount, n))
+        else:
             left.append([nm, mcount])
-            continue
-        s, off = got[0]
-        emit(off, mstart, mcount)
-        mods.append((nm, mcount, 100.0, "%s+0x%X(array-scan)" % (s["sname"], off - s["off"])))
-        print("  %-42s md=%-6d -> 数组匹配 @%s+0x%X"
-              % (nm, mcount, s["sname"], off - s["off"]))
 
     rows.sort()
     with open(out_path, "w", encoding="utf-8") as f:
@@ -262,7 +278,7 @@ def main():
 
     try:
         kinds, bad = {}, 0
-        sample = rows[::max(1, len(rows) // 200)][:200]
+        sample = rows[::max(1, len(rows) // 300)][:300]
         for idx, a in sample:
             r = v2o(a, need=4)
             if not r:
@@ -271,9 +287,9 @@ def main():
             k = prologue_kind(struct.unpack_from("<I", d, r[0])[0])
             kinds[k] = kinds.get(k, 0) + 1
         tot = max(1, sum(kinds.values()))
-        lines += ["", "ARM64 序言抽样（%d 个地址，越界 %d）：" % (len(sample), bad)]
+        lines += ["", "地址质量复验（%d 个抽样地址，越界 %d）：" % (len(sample), bad)]
         for k, v in sorted(kinds.items(), key=lambda x: -x[1]):
-            lines.append("  %-22s %d (%.1f%%)" % (k, v, 100.0 * v / tot))
+            lines.append("  %-24s %d (%.1f%%)" % (k, v, 100.0 * v / tot))
 
         mo = sec(5)[0]
         samples = []
@@ -292,9 +308,9 @@ def main():
             samples.append("0x%-9X %s::%s(%d)  token=0x%08X  #%d"
                            % (a, full, ms(ni), pc, tok, idx))
         lines += ["", "地址反查示例："] + ["  " + s for s in samples]
-        lines += ["", "模块定位方式（前 20）："]
-        for nm, mc, sc, where in mods[:20]:
-            lines.append("  %-42s md=%-6d code=%5.1f%%  %s" % (nm, mc, sc, where))
+        lines += ["", "模块定位方式（前 24）："]
+        for nm, mc, sc, where in mods[:24]:
+            lines.append("  %-42s md=%-6d %6.1f%%  %s" % (nm, mc, sc, where))
         for s in samples:
             print("   " + s)
     except Exception:
