@@ -1,0 +1,74 @@
+name: inspect-so
+
+# 只做一件事：取本仓 Release 里的 zygisk zip，抽出 lib/arm64-v8a/libhachimi.so，
+# 打印体积 / 架构 / 导出符号（关键看有没有 JNI_OnLoad / zygisk_module_entry），
+# 结果写进 so-inspect.txt（很短，便于阅读）。
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-so.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取包并抽 so
+        run: |
+          : > so.log
+          mkdir -p dl x
+          gh release download -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> so.log 2>&1 || true
+          Z=$(find dl -name '*.zip' | head -1)
+          echo "zip: $Z ($(stat -c%s "$Z") B)" >> so.log
+          unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          find x -name '*.so' -exec ls -l {} \; >> so.log
+
+      - name: 分析 arm64
+        run: |
+          F=$(find x -path '*arm64-v8a*' -name '*.so' | head -1)
+          {
+            echo ""
+            echo "=== $F ==="
+            ls -l "$F"
+            file "$F"
+          } >> so.log
+          echo "" >> so.log
+          echo "--- ELF 头 ---" >> so.log
+          readelf -h "$F" 2>/dev/null | grep -E "Type|Machine|Entry" >> so.log
+          echo "" >> so.log
+          echo "--- 动态导出符号（全部）---" >> so.log
+          readelf --dyn-syms -W "$F" 2>/dev/null | awk '$4=="FUNC" && $7!="UND" {print $8}' | sort >> so.log
+          echo "" >> so.log
+          echo "--- 关键符号检查 ---" >> so.log
+          for s in JNI_OnLoad zygisk_module_entry zygisk_module_entry_v2 hachimi_init hachimi_main android_main ; do
+            if readelf --dyn-syms -W "$F" 2>/dev/null | grep -q " $s$" ; then echo "  YES  $s" >> so.log ; else echo "  no   $s" >> so.log ; fi
+          done
+          echo "" >> so.log
+          echo "--- 与上游 JP proxy 对比：体积 ---" >> so.log
+          mkdir -p jp
+          gh release download -R Hachimi-Hachimi/Hachimi -D jp --pattern 'libmain-arm64-v8a.so' --clobber >> so.log 2>&1 || true
+          ls -l jp/ >> so.log 2>&1 || true
+          PJ=$(find jp -name 'libmain-arm64-v8a.so' | head -1)
+          if [ -n "$PJ" ]; then
+            sha256sum "$PJ" "$F" >> so.log
+            echo "JP proxy 导出符号（前 20）：" >> so.log
+            readelf --dyn-syms -W "$PJ" 2>/dev/null | awk '$4=="FUNC" && $7!="UND" {print $8}' | sort | head -20 >> so.log
+          fi
+
+      - name: 提交
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -s so.log ] || echo "(无内容)" > so.log
+          cp so.log so-inspect.txt
+          git add so-inspect.txt
+          git commit -m "ci: so inspect ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
