@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""反汇编抽样验证 + XOR 0x97 加密代码页的确定性定位
+"""反汇编抽样验证 + XOR 0x97 加密区间的精细定位 + 解密复验
 
     pip install capstone
     python3 tools/verify_code.py <libil2cpp.so> <global-metadata.fixed.dat> <methods_rva.tsv>
 
-1) 抽样反汇编：能否在 N 条指令内走到 ret / 尾调用 → 判断地址是否为函数入口；
-2) 页级覆盖率：对每个 4KB 页分别按「原样」和「XOR 0x97」反汇编，用
-   「被成功解码的字节比例」判定该页是否加密（capstone 遇到解不了的字节会跳过，
-   明文代码覆盖率≈100%，加密代码原样解释时覆盖率很低）。结果写 code_xor97_pages.txt。
+流程：
+  1) 抽样 200 个 RVA，反汇编判定是「明文代码 / XOR 0x97 加密 / 长函数 / 解不开」；
+  2) 对 AX 段按 **256 字节** 粒度算 capstone 覆盖率，判定每个窗口是明文还是加密
+     （覆盖率 = 被成功解码的字节比例；加密数据原样解释时覆盖率很低）；
+  3) 合并相邻窗口 → 写 code_xor97_pages.txt；
+  4) 在内存里按该表解密，再对同一批地址复验，输出解密前后的成功率对比。
 """
 import os
 import struct
@@ -21,6 +23,7 @@ except ImportError:
 
 MAX_INSN = 400
 XOR_KEY = 0x97
+WIN = 256
 
 
 def load_sections(d):
@@ -85,31 +88,35 @@ def main():
 
     md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
 
-    # ---------- 1) 抽样反汇编 ----------
+    def classify(buf, addr):
+        off, avail = v2o(addr, need=4)
+        if off is None:
+            return None, 0, []
+        code = buf[off:off + min(avail, MAX_INSN * 4)]
+        ok, n, first = run_code(md, code, addr)
+        if ok:
+            return "ret", n, first
+        if n == 0:
+            if code[:64] == b"\x00" * 64:
+                return "zero_page", 0, []
+            if run_code(md, bytes(b ^ XOR_KEY for b in code), addr)[0]:
+                return "xor97", n, []
+            return "undecodable", 0, []
+        return ("truncated" if n >= MAX_INSN else "no_return"), n, first
+
     sample = rows[::max(1, len(rows) // 200)][:200]
     stats, examples, bad_examples = {}, [], []
     for idx, addr in sample:
-        off, avail = v2o(addr, need=4)
-        if off is None:
+        verdict, n, first = classify(d, addr)
+        if verdict is None:
             stats["bad_offset"] = stats.get("bad_offset", 0) + 1
             continue
-        code = d[off:off + min(avail, MAX_INSN * 4)]
-        ok, n, first = run_code(md, code, addr)
-        if ok:
-            verdict = "ret"
-        elif n == 0:
-            verdict = "zero_page" if code[:64] == b"\x00" * 64 else \
-                ("xor97" if run_code(md, bytes(b ^ XOR_KEY for b in code), addr)[0]
-                 else "undecodable")
-            if len(bad_examples) < 4:
-                bad_examples.append((addr, idx, verdict, code[:16].hex(" ")))
-        elif n >= MAX_INSN:
-            verdict = "truncated"
-        else:
-            verdict = "no_return"
         stats[verdict] = stats.get(verdict, 0) + 1
-        if len(examples) < 3:
-            examples.append((addr, idx, n, verdict, first))
+        if verdict in ("xor97", "undecodable") and len(bad_examples) < 5:
+            off, _ = v2o(addr, need=4)
+            bad_examples.append((addr, idx, verdict, d[off:off + 16].hex(" ")))
+        if verdict == "ret" and len(examples) < 3:
+            examples.append((addr, idx, n, first))
 
     total = sum(stats.values()) or 1
     print("抽样 %d 个地址（共 %d 条映射）" % (len(sample), len(rows)))
@@ -117,63 +124,64 @@ def main():
         if stats.get(k):
             print("  %-12s %4d (%.1f%%)" % (k, stats[k], 100.0 * stats[k] / total))
 
-    # ---------- 2) 页级覆盖率判定加密 ----------
-    print("\n页级覆盖率扫描（AX 段共 %.1f MiB）：" % (sum(s[2] for s in ax) / 1048576.0))
-    enc_pages = []
-    n_pages = 0
+    # ---------- 精细加密区间（256B 窗口）----------
+    print("\n精细扫描（%d 字节窗口，AX 段共 %.1f MiB）：" % (WIN, sum(s[2] for s in ax) / 1048576.0))
+    enc_ranges, n_win = [], 0
     for vaddr, off, size in ax:
         p = 0
-        while p + 4096 <= size:
-            blk = d[off + p: off + p + 4096]
+        while p + WIN <= size:
+            blk = d[off + p: off + p + WIN]
+            n_win += 1
             c_p = coverage(md, blk)
             if c_p < 0.90:
                 c_e = coverage(md, bytes(b ^ XOR_KEY for b in blk))
                 if c_e >= 0.90 and c_e - c_p > 0.30:
-                    enc_pages.append(off + p)
-            n_pages += 1
-            p += 4096
-
-    ranges = []
-    for off in sorted(enc_pages):
-        if ranges and off == ranges[-1][1]:
-            ranges[-1][1] = off + 4096
-        else:
-            ranges.append([off, off + 4096])
-    enc_bytes = sum(b - a for a, b in ranges)
+                    if enc_ranges and enc_ranges[-1][1] == off + p:
+                        enc_ranges[-1][1] = off + p + WIN
+                    else:
+                        enc_ranges.append([off + p, off + p + WIN])
+            p += WIN
+    enc_bytes = sum(b - a for a, b in enc_ranges)
     ax_bytes = sum(s[2] for s in ax) or 1
-    print("  扫描 %d 页；加密页 %d 页，占 AX 的 %.1f%%（%.2f MiB）"
-          % (n_pages, len(enc_pages), 100.0 * enc_bytes / ax_bytes, enc_bytes / 1048576.0))
-    print("  加密区间 %d 段，前 12 段：" % len(ranges))
-    for a, b in ranges[:12]:
+    print("  窗口 %d 个；判定为加密 %d 段，共 %.2f MiB（%.1f%% of AX）"
+          % (n_win, len(enc_ranges), enc_bytes / 1048576.0, 100.0 * enc_bytes / ax_bytes))
+    for a, b in enc_ranges[:10]:
         print("    0x%X ~ 0x%X  (%d B)" % (a, b, b - a))
-
-    # ---------- 3) 用 RVA 表复验：加密页里的方法解密后能否走到 ret ----------
-    page_set = set(enc_pages)
-    chk_plain = chk_xor = 0
-    for idx, addr in rows[::max(1, len(rows) // 3000)][:20000]:
-        off, avail = v2o(addr, need=4)
-        if off is None or (off & ~0xFFF) not in page_set:
-            continue
-        code = d[off:off + MAX_INSN * 4]
-        if run_code(md, code, addr)[0]:
-            chk_plain += 1
-        if run_code(md, bytes(b ^ XOR_KEY for b in code), addr)[0]:
-            chk_xor += 1
-    print("  加密页内的抽样方法：原样可解 %d，XOR 0x97 后解到 ret %d" % (chk_plain, chk_xor))
 
     sd = os.path.dirname(os.path.abspath(tsv))
     with open(os.path.join(sd, "code_xor97_pages.txt"), "w", encoding="utf-8") as f:
-        f.write("# start\tend\t(XOR 0x97 加密的 4KB 代码页)\n")
-        for a, b in ranges:
+        f.write("# start\tend\t(AX 段里按 XOR 0x97 加密的代码区间)\n")
+        for a, b in enc_ranges:
             f.write("0x%X\t0x%X\n" % (a, b))
 
+    # ---------- 内存解密后复验 ----------
+    buf = bytearray(d)
+    for a, b in enc_ranges:
+        buf[a:b] = bytes(x ^ XOR_KEY for x in buf[a:b])
+    after = {}
+    for idx, addr in sample:
+        verdict, _n, _f = classify(bytes(buf), addr)
+        if verdict is None:
+            continue
+        after[verdict] = after.get(verdict, 0) + 1
+    ok_before = stats.get("ret", 0)
+    ok_after = after.get("ret", 0)
+    print("\n解密后复验（同一批 %d 个地址）：" % len(sample))
+    for k in ("ret", "xor97", "truncated", "no_return", "undecodable", "zero_page"):
+        if after.get(k):
+            print("  %-12s %4d (%.1f%%)" % (k, after[k], 100.0 * after[k] / total))
+    print("  走到 ret 的比例：解密前 %d (%.1f%%) → 解密后 %d (%.1f%%)"
+          % (ok_before, 100.0 * ok_before / total, ok_after, 100.0 * ok_after / total))
+    left = after.get("undecodable", 0) + after.get("zero_page", 0)
+    print("  仍解不开：%d (%.1f%%)" % (left, 100.0 * left / total))
+
     print("\n正常样例：")
-    for addr, idx, n, verdict, first in examples:
-        print("  0x%X  #%d  %d 条指令 -> %s" % (addr, idx, n, verdict))
+    for addr, idx, n, first in examples:
+        print("  0x%X  #%d  %d 条指令" % (addr, idx, n))
         for s in first:
             print("     " + s)
     if bad_examples:
-        print("\n异常样例：")
+        print("\n加密/异常样例：")
         for addr, idx, verdict, hx in bad_examples:
             print("  0x%-9X #%-7d %-12s %s" % (addr, idx, verdict, hx))
 
