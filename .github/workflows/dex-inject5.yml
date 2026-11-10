@@ -1,0 +1,116 @@
+name: dex-inject5
+
+# 路线 G（不碰 lib/）+ 产物直接发布到 Release（不只在 artifact 里）
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-inject5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 依赖
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq apktool zip > /dev/null
+          apktool --version || true
+
+      - name: 下载输入（遍历 Release 试下载）
+        run: |
+          : > g5.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          gh release list -R "$GITHUB_REPOSITORY" -L 30 >> g5.log 2>&1 || true
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(find apk-dl -name '*.apk' 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> g5.log 2>&1 || true
+            [ -z "$(find dl -name '*.zip' 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> g5.log 2>&1 || true
+          done
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          {
+            echo "APK=${APK:-<无>}"
+            echo "ZIP=${Z:-<无>}"
+            echo "SO=${SO:-<无>}"
+            find apk-dl dl -type f 2>/dev/null | head -20
+          } >> g5.log
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺输入" >> g5.log; exit 0; fi
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          mkdir -p out
+          python3 tools/dex_inject.py "$APK" "$SO" out > g5.out 2>&1 || true
+          tail -c 20000 g5.out >> g5.log
+          ls -l out >> g5.log || true
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          IN=out/with-dex.apk
+          [ -f "$IN" ] || { echo "::error::没有生成 APK"; exit 1; }
+          "$ZA" -p -f 4 "$IN" out/aligned.apk
+          keytool -genkeypair -v -keystore g5.jks -alias g5 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g5pass -keypass g5pass \
+            -dname "CN=G5,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          "$AS" sign --ks g5.jks --ks-pass pass:g5pass --key-pass pass:g5pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/dex-inject.apk out/aligned.apk
+          "$AS" verify out/dex-inject.apk > /dev/null && echo "签名: ok" >> g5.log
+          {
+            echo "输出: out/dex-inject.apk ($(stat -c%s out/dex-inject.apk) B)"
+            echo "sha256: $(sha256sum out/dex-inject.apk | cut -d' ' -f1)"
+            echo "结果: 成功"
+          } >> g5.log
+
+      - name: 发布到 Release（可直接点下载）
+        if: env.READY == 'true'
+        run: |
+          set -e
+          TAG=builds
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create "$TAG" -R "$GITHUB_REPOSITORY" --title "构建产物" \
+              --notes "自动发布的测试 APK。文件名对应各条实验线。" || true
+          STAMP=$(date -u +%m%d-%H%M)
+          cp out/dex-inject.apk "dex-inject-${STAMP}.apk"
+          gh release upload "$TAG" "dex-inject-${STAMP}.apk" -R "$GITHUB_REPOSITORY" --clobber
+          echo "已发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG" >> g5.log
+
+      - name: 同时留 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dex-inject-apk
+          path: out/dex-inject.apk
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g5.log ] || echo "(无)" > g5.log
+          cp g5.log dex-inject5-status.txt
+          git add dex-inject5-status.txt || true
+          git commit -m "ci: dex-inject5 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
