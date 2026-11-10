@@ -1,0 +1,101 @@
+name: dex-inject9
+
+# 路线 G + Shim 落盘日志
+on:
+  push:
+    paths:
+      - 'tools/dex_inject4.py'
+      - '.github/workflows/dex-inject9.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 装 apktool
+        run: |
+          sudo apt-get update -qq > /dev/null 2>&1
+          sudo apt-get install -y -qq zip unzip curl > /dev/null 2>&1
+          sudo curl -sSL -o /usr/local/bin/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
+          printf '#!/bin/sh\nexec java -jar /usr/local/bin/apktool.jar "$@"\n' | sudo tee /usr/local/bin/apktool > /dev/null
+          sudo chmod +x /usr/local/bin/apktool
+
+      - name: 下载输入
+        run: |
+          : > g9.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> g9.log 2>&1 || true
+            [ -z "$(find dl -name 'zygisk-hachimi*.zip' 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D dl --pattern 'zygisk-hachimi*.zip' --clobber >> g9.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          Z=$(find dl -name 'zygisk-hachimi*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          echo "APK=$APK SO=$SO" >> g9.log
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺输入" >> g9.log; exit 0; fi
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          mkdir -p out
+          python3 tools/dex_inject4.py "$APK" "$SO" out > g9.out 2>&1 || true
+          tail -c 25000 g9.out >> g9.log
+          ls -l out >> g9.log || true
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          [ -f out/patched.apk ] || { echo "::error::没生成 APK"; exit 1; }
+          "$ZA" -p -f 4 out/patched.apk out/aligned.apk
+          keytool -genkeypair -v -keystore g9.jks -alias g9 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g9pass -keypass g9pass \
+            -dname "CN=G9,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          "$AS" sign --ks g9.jks --ks-pass pass:g9pass --key-pass pass:g9pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/dex-inject.apk out/aligned.apk
+          "$AS" verify out/dex-inject.apk > /dev/null && echo "签名: ok" >> g9.log
+          {
+            echo "输出: $(stat -c%s out/dex-inject.apk) B"
+            echo "sha256: $(sha256sum out/dex-inject.apk | cut -d' ' -f1)"
+            echo "结果: 成功"
+          } >> g9.log
+
+      - name: 发布到 Release
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "自动发布的测试 APK" || true
+          cp out/dex-inject.apk "dex-inject-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds dex-inject-*.apk -R "$GITHUB_REPOSITORY" --clobber
+          echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> g9.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g9.log ] || echo "(无)" > g9.log
+          cp g9.log dex-inject9-status.txt
+          git add dex-inject9-status.txt || true
+          git commit -m "ci: dex-inject9 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
