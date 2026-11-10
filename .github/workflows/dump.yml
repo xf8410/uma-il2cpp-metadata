@@ -2,7 +2,7 @@ name: il2cpp-dump
 
 # metadata-*/global-metadata.fixed.dat 存在就跑解析；
 # 同目录下若有 libil2cpp*.gz / *.zip，自动解包、校验、ELF 概况、
-# hook payload 分析、CodeRegistration 扫描、codegen module 扫描、RVA 映射。
+# hook payload 分析、CodeRegistration 扫描、codegen module 扫描、RVA 映射、反汇编抽样验证。
 on:
   push:
     paths:
@@ -10,6 +10,7 @@ on:
       - 'metadata-*/**.gz'
       - 'metadata-*/**.zip'
       - 'tools/**.py'
+      - 'requirements.txt'
       - '.github/workflows/dump.yml'
   workflow_dispatch:
 
@@ -25,6 +26,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: 装依赖
+        run: |
+          python3 -m pip install --quiet --upgrade pip
+          python3 -m pip install --quiet capstone
 
       - name: 解包 libil2cpp.so
         run: |
@@ -120,7 +126,21 @@ jobs:
             m="$d/global-metadata.fixed.dat"
             [ -f "$m" ] || continue
             echo "::group::rva $f"
-            python3 tools/build_rva.py "$f" "$m" "$d/dump/methods_rva.tsv" | tee "$d/so_rva.txt"
+            python3 tools/build_rva.py "$f" "$m" "$d/dump/methods_rva.tsv" > "$d/so_rva.txt" 2>&1 \
+              || echo "RVA 步骤退出码 $?"
+            tail -30 "$d/so_rva.txt"
+            echo "::endgroup::"
+          done
+
+      - name: 反汇编抽样验证（capstone）
+        run: |
+          for f in $(find metadata-* -maxdepth 3 -name '*.so' -type f) ; do
+            d=$(dirname "$f")
+            t="$d/dump/methods_rva.tsv"
+            [ -f "$t" ] || continue
+            echo "::group::verify $f"
+            python3 tools/verify_code.py "$f" "$d/global-metadata.fixed.dat" "$t" \
+              | tee "$d/rva_verify.txt"
             echo "::endgroup::"
           done
 
