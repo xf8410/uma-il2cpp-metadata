@@ -1,0 +1,35 @@
+no assets match the file pattern
+no assets match the file pattern
+no assets match the file pattern
+no assets match the file pattern
+APK=apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk SO=x/lib/arm64-v8a/libhachimi.so
+$ apktool d -f -o dec apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk
+I: Baksmaling classes3.dex...
+I: Baksmaling classes4.dex...
+I: Copying assets and libs...
+I: Copying unknown files...
+I: Copying original files...
+I: Copying META-INF/services directory
+launcher: com.uo.sdk.SplashActivity
+smali: 追加 onCreate 覆写（super=Ljp/co/cygames/umamusume_activity/UmamusumeActivity;）
+$ curl -sSL -o smali.jar https://github.com/baksmali/smali/releases/download/v2.5.2/smali-2.5.2.jar
+
+$ java -jar smali.jar assemble dec/smali_classes3 -o patched.dex
+
+patched classes3.dex: 8207012 B
+$ javac -nowarn -source 8 -target 8 -bootclasspath /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar -d cls src/com/dsh/Shim.java
+
+$ /usr/local/lib/android/sdk/build-tools/37.0.0/d8 --lib /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar --min-api 24 --output dexout cls/com/dsh/Shim.class
+
+现有 dex=4，Shim 作为 classes5.dex
+$ zip -q -0 /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/out/patched.apk classes3.dex classes5.dex assets/dsh/libhachimi.so
+
+zip rc=0
+final: out/patched.apk (272115659 B)
+total 265740
+-rw-r--r-- 1 runner runner 272115659 Nov 10 11:41 patched.apk
+签名: ok
+输出: 272125716 B
+sha256: 66c25ce7e209ec5dbfbc4afab39d9f7d5b111a7128ce248a1f430423af50101f
+结果: 成功
+发布: https://github.com/xf8410/uma-il2cpp-metadata/releases/tag/builds
