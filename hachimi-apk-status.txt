@@ -1,94 +1,58 @@
-run: 42775923049 (a678aac6975f984cf5a44ec1afc5210e67c0d31b)  2026-11-10T07:31:59Z
+run: 42778173893 (358d611d0c5762d378ba03d1ba584e4edd5042d4)  2026-11-10T07:51:12Z
 APK: apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+--- 本仓 Release 里的 zip
 --- kairusds/Hachimi-Edge
 --- Hachimi-Hachimi/Hachimi
-候选 .so:
-libs/Hachimi-Hachimi_Hachimi/libmain-x86_64.so
-libs/Hachimi-Hachimi_Hachimi/libmain-armeabi-v7a.so
-libs/Hachimi-Hachimi_Hachimi/libmain-arm64-v8a.so
-libs/Hachimi-Hachimi_Hachimi/libmain-x86.so
-libs/kairusds_Hachimi-Edge/libmain-arm64-v8a.so
-proxy(arm64): libs/Hachimi-Hachimi_Hachimi/libmain-arm64-v8a.so
-libhachimi  : <无>
-arm64-v8a
-armeabi-v7a
-  arm64-v8a: libmain.so -> libmain_orig.so, proxy=libmain-arm64-v8a.so
-  armeabi-v7a: libmain.so -> libmain_orig.so, proxy=libmain-armeabi-v7a.so
-注入 ABI 数: 2
-work/lib/arm64-v8a/:
-total 190024
--rw-r--r-- 1 runner runner    199272 Sep 22 15:17 libBugly_Native.so
--rw-r--r-- 1 runner runner    498176 Sep 22 15:17 libCtaApiLib.so
--rw-r--r-- 1 runner runner     19936 Sep 22 15:17 lib_burst_generated.so
--rw-r--r-- 1 runner runner     51496 Sep 22 15:17 libbili.so
--rw-r--r-- 1 runner runner    280632 Sep 22 15:17 libblkv.so
--rw-r--r-- 1 runner runner     38600 Sep 22 15:17 libbuma_xxhash.so
--rw-r--r-- 1 runner runner   1055016 Sep 22 15:17 libc++_shared.so
--rw-r--r-- 1 runner runner    399112 Sep 22 15:17 libcri_lips_unity.so
--rw-r--r-- 1 runner runner    449056 Sep 22 15:17 libcri_mana_vpx.so
--rw-r--r-- 1 runner runner   2198328 Sep 22 15:17 libcri_ware_unity.so
--rw-r--r-- 1 runner runner    936112 Sep 22 15:17 libcriafx_mcdsp.so
--rw-r--r-- 1 runner runner   2672544 Sep 22 15:17 libcrypto.1.1.so
--rw-r--r-- 1 runner runner    855416 Sep 22 15:17 libcustom_rules.so
--rw-r--r-- 1 runner runner     18200 Sep 22 15:17 libcyspringandroid.so
--rw-r--r-- 1 runner runner    182488 Sep 22 15:17 libfb.so
--rw-r--r-- 1 runner runner    313408 Sep 22 15:17 libfolly_json.so
--rw-r--r-- 1 runner runner    157872 Sep 22 15:17 libglog.so
--rw-r--r-- 1 runner runner     30784 Sep 22 15:17 libglog_init.so
--rw-r--r-- 1 runner runner 129667848 Sep 22 15:17 libil2cpp.so
--rw-r--r-- 1 runner runner    399864 Sep 22 15:17 libimagepipeline.so
--rw-r--r-- 1 runner runner   8809472 Sep 22 15:17 libjsc.so
--rw-r--r-- 1 runner runner    297040 Sep 22 15:17 libjscexecutor.so
--rw-r--r-- 1 runner runner     47160 Sep 22 15:17 libjsinspector.so
--rw-r--r-- 1 runner runner  15055400 Nov 10 07:32 libmain.so
--rw-r--r-- 1 runner runner     10520 Sep 22 15:17 libmain_orig.so
--rw-r--r-- 1 runner runner    421888 Sep 22 15:17 libmsaoaidauth.so
--rw-r--r-- 1 runner runner    696320 Sep 22 15:17 libmsaoaidsec.so
--rw-r--r-- 1 runner runner   1943680 Sep 22 15:17 libnative.so
--rw-r--r-- 1 runner runner    956616 Sep 22 15:17 libreactnativejni.so
--rw-r--r-- 1 runner runner    590168 Sep 22 15:17 libssl.1.1.so
--rw-r--r-- 1 runner runner   5285264 Sep 22 15:17 libtersafe2.so
--rw-r--r-- 1 runner runner   1692296 Sep 22 15:17 libtprt.so
--rw-r--r-- 1 runner runner  18050344 Sep 22 15:17 libunity.so
--rw-r--r-- 1 runner runner    243768 Sep 22 15:17 libyoga.so
+本仓 zip 解包内容：
+libs/own/unpack
+libs/own/unpack/lib
+libs/own/unpack/lib/x86_64
+libs/own/unpack/lib/x86_64/libhachimi.so
+libs/own/unpack/lib/x86_64/libhachimi.so.sha256
+libs/own/unpack/lib/arm64-v8a
+libs/own/unpack/lib/arm64-v8a/libhachimi.so
+libs/own/unpack/lib/arm64-v8a/libhachimi.so.sha256
+libs/own/unpack/lib/armeabi-v7a
+libs/own/unpack/lib/armeabi-v7a/libhachimi.so
+libs/own/unpack/lib/armeabi-v7a/libhachimi.so.sha256
+libs/own/unpack/lib/x86
+libs/own/unpack/lib/x86/libhachimi.so
+libs/own/unpack/lib/x86/libhachimi.so.sha256
+libs/own/unpack/customize.sh.sha256
+libs/own/unpack/verify.sh.sha256
+libs/own/unpack/module.prop
+libs/own/unpack/customize.sh
+libs/own/unpack/META-INF
+libs/own/unpack/META-INF/com
+libs/own/unpack/META-INF/com/google
+libs/own/unpack/module.prop.sha256
+libs/own/unpack/verify.sh
 
-work/lib/armeabi-v7a/:
-total 163000
--rw-r--r-- 1 runner runner    182308 Sep 22 15:17 libBugly_Native.so
--rw-r--r-- 1 runner runner    280448 Sep 22 15:17 libCtaApiLib.so
--rw-r--r-- 1 runner runner     19812 Sep 22 15:17 lib_burst_generated.so
--rw-r--r-- 1 runner runner     51000 Sep 22 15:17 libbili.so
--rw-r--r-- 1 runner runner    165516 Sep 22 15:17 libblkv.so
--rw-r--r-- 1 runner runner     54832 Sep 22 15:17 libbuma_xxhash.so
--rw-r--r-- 1 runner runner    657200 Sep 22 15:17 libc++_shared.so
--rw-r--r-- 1 runner runner    407052 Sep 22 15:17 libcri_lips_unity.so
--rw-r--r-- 1 runner runner    395380 Sep 22 15:17 libcri_mana_vpx.so
--rw-r--r-- 1 runner runner   1915868 Sep 22 15:17 libcri_ware_unity.so
--rw-r--r-- 1 runner runner   2189040 Sep 22 15:17 libcrypto.1.1.so
--rw-r--r-- 1 runner runner    526684 Sep 22 15:17 libcustom_rules.so
--rw-r--r-- 1 runner runner     26240 Sep 22 15:17 libcyspringandroid.so
--rw-r--r-- 1 runner runner    136924 Sep 22 15:17 libfb.so
--rw-r--r-- 1 runner runner    304808 Sep 22 15:17 libfolly_json.so
--rw-r--r-- 1 runner runner    112376 Sep 22 15:17 libglog.so
--rw-r--r-- 1 runner runner     18088 Sep 22 15:17 libglog_init.so
--rw-r--r-- 1 runner runner 116224584 Sep 22 15:17 libil2cpp.so
--rw-r--r-- 1 runner runner    255952 Sep 22 15:17 libimagepipeline.so
--rw-r--r-- 1 runner runner   6901812 Sep 22 15:17 libjsc.so
--rw-r--r-- 1 runner runner    226988 Sep 22 15:17 libjscexecutor.so
--rw-r--r-- 1 runner runner     34472 Sep 22 15:17 libjsinspector.so
--rw-r--r-- 1 runner runner  12883484 Nov 10 07:32 libmain.so
--rw-r--r-- 1 runner runner     18464 Sep 22 15:17 libmain_orig.so
--rw-r--r-- 1 runner runner    176128 Sep 22 15:17 libmsaoaidauth.so
--rw-r--r-- 1 runner runner    491520 Sep 22 15:17 libmsaoaidsec.so
--rw-r--r-- 1 runner runner   2018548 Sep 22 15:17 libnative.so
--rw-r--r-- 1 runner runner    763572 Sep 22 15:17 libreactnativejni.so
--rw-r--r-- 1 runner runner    469056 Sep 22 15:17 libssl.1.1.so
--rw-r--r-- 1 runner runner   3657284 Sep 22 15:17 libtersafe2.so
--rw-r--r-- 1 runner runner   1411924 Sep 22 15:17 libtprt.so
--rw-r--r-- 1 runner runner  13690600 Sep 22 15:17 libunity.so
--rw-r--r-- 1 runner runner    177832 Sep 22 15:17 libyoga.so
+全部候选 .so：
+libs/upstream/libmain-x86_64.so
+libs/upstream/libmain-armeabi-v7a.so
+libs/upstream/libmain-arm64-v8a.so
+libs/upstream/libmain-x86.so
+libs/edge/libmain-arm64-v8a.so
+libs/own/unpack/lib/x86_64/libhachimi.so
+libs/own/unpack/lib/arm64-v8a/libhachimi.so
+libs/own/unpack/lib/armeabi-v7a/libhachimi.so
+libs/own/unpack/lib/x86/libhachimi.so
+选用 arm64 proxy: libs/edge/libmain-arm64-v8a.so
+选用 v7a   proxy: libs/upstream/libmain-armeabi-v7a.so
+伴随 libhachi*.so: libs/own/unpack/lib/x86_64/libhachimi.so
+libs/own/unpack/lib/arm64-v8a/libhachimi.so
+libs/own/unpack/lib/armeabi-v7a/libhachimi.so
+libs/edge/libmain-arm64-v8a.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, for Android 24, built by NDK r27d (13750724), stripped
+  arm64-v8a: proxy=libmain-arm64-v8a.so (25428480 B)
+  armeabi-v7a: proxy=libmain-armeabi-v7a.so (12883484 B)
+注入 ABI 数: 2
 zipalign: ok
-签名: ok
-输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-hachimi.apk (501250982 B)
-sha256: 0de89e7d5156bc3941d1969434d13e1d2c8f04f5e8a730e98e45dbb66b349708
+keystore: 仓库内没有，临时生成（每次签名都会变）
+V3.0 Signer: certificate DN: CN=DSH, OU=Uma, O=DSH, L=NA, ST=NA, C=JP
+V3.0 Signer: certificate SHA-256 digest: c4b722b6b1d3228495a052b5eb3448280cddadbb2193eff856e620b0933e4177
+V3.0 Signer: certificate SHA-1 digest: d081d4ff3d7ad0306520878091d4575ffd064136
+V3.0 Signer: certificate MD5 digest: 143d240ba511d1eef04d3f6b6e6b2d34
+输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-hachimi.apk (511638438 B)
+sha256: 9aa1f5194b3ffa6b01c836b1dee7114f7c482b865162fffc6971ae9ea50c69f5
 结果: 成功
