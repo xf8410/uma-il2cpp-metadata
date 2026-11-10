@@ -1,0 +1,51 @@
+RVA 映射小结
+============
+metadata 方法总数 : 213983
+已映射方法数      : 205863 (96.2%)
+程序集            : 73 个，成功 69，失败 4
+映射地址越界      : 0
+
+未定位的程序集：
+  System.dll                                 md=1452
+  UnityEngine.SubsystemsModule.dll           md=34
+  System.Runtime.CompilerServices.Unsafe.dll md=9
+  System.Memory.dll                          md=61
+
+ARM64 序言抽样（200 个地址）：
+  other                  179 (89.5%)
+  sub sp,sp,#n           20 (10.0%)
+  stp x29,x30,[sp,#-n]!  1 (0.5%)
+
+反查示例：
+  0x20622E0   Locale::GetText(1)  token=0x06000001  #0
+  0x20622E4   Locale::GetText(2)  token=0x06000002  #1
+  0x2163150   SR::Format(2)  token=0x06000003  #2
+  0x21631CC   SR::Format(3)  token=0x06000004  #3
+  0x21516BC   Mono.Runtime::mono_runtime_install_handlers(0)  token=0x06000005  #4
+  0x21516C0   Mono.Runtime::InstallSignalHandlers(0)  token=0x06000006  #5
+  0x21516C4   Mono.Runtime::mono_runtime_cleanup_handlers(0)  token=0x06000007  #6
+  0x21516F8   Mono.Runtime::RemoveSignalHandlers(0)  token=0x06000008  #7
+  0x215172C   Mono.Runtime::GetDisplayName(0)  token=0x06000009  #8
+  0x2151730   Mono.Runtime::GetNativeStackTrace(1)  token=0x0600000A  #9
+
+模块定位方式（前 20 个）：
+  mscorlib.dll                               md=10102  code= 89.8%  .data.rel.ro+0x1B8B18
+  System.Configuration.dll                   md=17     code=100.0%  .data.rel.ro+0x1D79B0
+  Mono.Security.dll                          md=19     code=100.0%  .data.rel.ro+0x1D7C80
+  System.Xml.dll                             md=1      code=100.0%  .data.rel.ro+0x1D82A0
+  UnityEngine.SharedInternalsModule.dll      md=67     code=100.0%  .data.rel.ro+0x1D7118
+  UnityEngine.CoreModule.dll                 md=3711   code= 92.2%  .data.rel.ro+0x1C4F20(count-scan)
+  UnityEngine.InputLegacyModule.dll          md=49     code=100.0%  .data.rel.ro+0x1D72F0
+  UnityEngine.TextRenderingModule.dll        md=78     code=100.0%  .data.rel.ro+0x1D6E10
+  UnityEngine.AnimationModule.dll            md=265    code= 99.6%  .data.rel.ro+0x1D5078
+  UnityEngine.IMGUIModule.dll                md=241    code=100.0%  .data.rel.ro+0x1D5D80
+  UnityEngine.Physics2DModule.dll            md=102    code=100.0%  .data.rel.ro+0x1D6940
+  UnityEngine.PhysicsModule.dll              md=177    code=100.0%  .data.rel.ro+0x1D5E10
+  UnityEngine.UIModule.dll                   md=110    code= 99.1%  .data.rel.ro+0x1D69D8
+  UnityEngine.AndroidJNIModule.dll           md=405    code= 93.8%  .data.rel.ro+0x1D3FD0(count-scan)
+  UnityEngine.AssetBundleModule.dll          md=27     code= 85.2%  .data.rel.ro+0x1D77B0
+  UnityEngine.AudioModule.dll                md=50     code=100.0%  .data.rel.ro+0x1D71D8
+  UnityEngine.DirectorModule.dll             md=19     code=100.0%  .data.rel.ro+0x1D7898(count-scan)
+  UnityEngine.GameCenterModule.dll           md=84     code= 90.5%  .data.rel.ro+0x1D6D80
+  UnityEngine.ImageConversionModule.dll      md=4      code=100.0%  .data.rel.ro+0x1D8100
+  UnityEngine.InputModule.dll                md=10     code=100.0%  .data.rel.ro+0x1D7DA8(count-scan)
