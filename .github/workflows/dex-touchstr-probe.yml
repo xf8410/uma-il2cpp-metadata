@@ -1,0 +1,97 @@
+name: dex-touchstr-probe
+
+# 探针：把 classes3.dex 里一个「日志字符串」改 1 个字符（长度不变、偏移不动、不走 smali）
+#   · 也黑屏 ⇒ ART 不可能因为日志文本就挂 ⇒ TP 对 dex 字节做了拦截（无 root 注入死路）
+#   · 能跑    ⇒ dex 内容改动本身没问题 ⇒ 黑屏出在 smali 重组出来的 dex 上
+# 打包方式与已知能跑通的 v8（touch-asset-test）完全一致：zip -0 原位替换 + zipalign + 签名
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-touchstr-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载原版 APK
+        run: |
+          : > p.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl out stage
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> p.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> p.log; exit 0; }
+          echo "APK=$APK ($(stat -c%s "$APK") B)" >> p.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 改 1 个字符串 + 原位替换
+        if: env.READY == 'true'
+        run: |
+          set -e
+          unzip -p "$APK" classes3.dex > c3.dex
+          echo "原 classes3.dex: $(stat -c%s c3.dex) B / $(od -An -c -N8 c3.dex | tr -s ' ')" >> p.log
+          python3 tools/dex_touchstr.py c3.dex >> p.log 2>&1
+          echo "改后 classes3.dex: $(stat -c%s c3.dex) B / $(od -An -c -N8 c3.dex | tr -s ' ')" >> p.log
+          cp "$APK" out/probe.apk
+          cp c3.dex stage/classes3.dex
+          ( cd stage && zip -q -0 ../out/probe.apk classes3.dex )
+          echo "重打包: $(stat -c%s out/probe.apk) B" >> p.log
+          unzip -t out/probe.apk > t.log 2>&1 || true
+          tail -1 t.log >> p.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/probe.apk out/aligned.apk >> p.log 2>&1
+          "$ZA" -c -p 4 out/aligned.apk >> p.log 2>&1 && echo "zipalign -c: ok" >> p.log || echo "!! zipalign -c 未通过" >> p.log
+          keytool -genkeypair -v -keystore p.jks -alias p -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass probepass -keypass probepass \
+            -dname "CN=PROBE,OU=Uma,O=DSH,L=NA,S=NA,C=JP" >> p.log 2>&1
+          "$AS" sign --ks p.jks --ks-pass pass:probepass --key-pass pass:probepass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/probe-signed.apk out/aligned.apk >> p.log 2>&1
+          "$AS" verify out/probe-signed.apk >> p.log 2>&1 && echo "签名: ok" >> p.log
+          {
+            echo "输出: $(stat -c%s out/probe-signed.apk) B"
+            echo "sha256: $(sha256sum out/probe-signed.apk | cut -d' ' -f1)"
+          } >> p.log
+
+      - name: 发布
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+          cp out/probe-signed.apk "dex-probe-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds dex-probe-*.apk -R "$GITHUB_REPOSITORY" --clobber >> p.log 2>&1
+          echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> p.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f p.log ] || echo "(无)" > p.log
+          { echo "run: $GITHUB_RUN_ID  sha: ${GITHUB_SHA:0:8}  $(date -u +%FT%TZ)";
+            echo "--- p.log 末尾 120 行 ---";
+            tail -n 120 p.log; } > dex-touchstr-status.txt
+          git add dex-touchstr-status.txt || true
+          git commit -m "ci: dex touchstr probe ($GITHUB_RUN_ID)" || echo "no change"
+          git pull --rebase --autostash >> /dev/null 2>&1 || true
+          git push || { sleep 5; git pull --rebase --autostash >> /dev/null 2>&1 || true; git push; } || true
