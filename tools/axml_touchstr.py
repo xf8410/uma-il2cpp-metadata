@@ -5,7 +5,7 @@
     python3 tools/axml_touchstr.py <AndroidManifest.xml> 2.0.5 2.0.9
 
 只做字节替换，长度必须一致（AXML 的 string pool 索引/偏移才不会被破坏）。
-UTF-8 和 UTF-16LE 两种池都试；命中处数量会打印出来。
+AXML 的池可能是 UTF-8 也可能是 UTF-16LE，两种都试（本包的 manifest 是 UTF-16LE）。
 
 用途：测「TP 是否校验 AndroidManifest.xml」这个单一变量。
 比如把 versionName 2.0.5 → 2.0.9：对逻辑零影响，但文件字节变了。
@@ -22,10 +22,10 @@ def main():
     with open(path, "rb") as f:
         b = bytearray(f.read())
     total = 0
-    for enc, name in ((b"utf-8", "UTF-8"), (b"utf-16-le", "UTF-16LE")):
+    for enc, name in (("utf-8", "UTF-8"), ("utf-16-le", "UTF-16LE")):
         pat = old.encode(enc)
         rep = new.encode(enc)
-        n = b.count(pat)
+        n = bytes(b).count(pat)
         if n:
             b = bytearray(bytes(b).replace(pat, rep))
             print("%s: 替换 %d 处 %r -> %r" % (name, n, old, new))
