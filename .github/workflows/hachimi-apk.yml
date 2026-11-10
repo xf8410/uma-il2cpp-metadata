@@ -1,13 +1,16 @@
 name: hachimi-apk
 
-# 输入来源（优先级从高到低，全自动）：
-#   APK     : apk-*/*.apk  →  本仓 Release 里的 *.apk 附件
-#   Hachimi : 仓库里已有的 libhachi*.so / libmain.so
-#             →  上游 Hachimi-Hachimi/Hachimi-Unity2020 最新 release（下载+解压）
+# 无 root 注入（按 Hachimi 官方 Manual install 流程）：
+#   1) 原版 lib/<abi>/libmain.so  →  改名 libmain_orig.so
+#   2) proxy 库 libmain-<abi>.so  →  复制为 lib/<abi>/libmain.so
+#   3) 一并放入 libhachimi*.so
 #
-# 输出：
-#   · Actions artifact `hachimi-patched-apk`（注入版 APK，可直接安装）
-#   · 仓库文件 `hachimi-apk-status.txt`（每次运行的关键事实，方便不用翻日志排查）
+# 输入（自动取）：
+#   APK   : apk-*/*.apk  →  本仓 Release 里的 *.apk
+#   proxy : 仓库里已有的 libmain-*.so / libhachi*.so
+#           →  kairusds/Hachimi-Edge、Hachimi-Hachimi/Hachimi 最新 release
+#
+# 输出：artifact `hachimi-patched-apk` + 仓库文件 `hachimi-apk-status.txt`
 on:
   push:
     paths:
@@ -27,124 +30,94 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 准备状态文件
+      - name: 取 APK
         run: |
-          rm -f status.log
+          : > status.log
           echo "READY=false" >> $GITHUB_ENV
-
-      - name: 定位 / 下载输入
-        run: |
-          {
-            echo "run        : $GITHUB_RUN_ID  ($GITHUB_SHA)"
-            echo "时间        : $(date -u +%FT%TZ)"
-            echo ""
-          } >> status.log
-
-          # ---- 1) 游戏 APK ----
+          echo "run: $GITHUB_RUN_ID ($GITHUB_SHA)  $(date -u +%FT%TZ)" >> status.log
           APK=$(find apk-* -maxdepth 2 -name '*.apk' -type f 2>/dev/null | head -1 || true)
           if [ -z "$APK" ]; then
-            echo "本仓 Release 资产列表：" >> status.log
-            gh release list -R "$GITHUB_REPOSITORY" -L 5 2>&1 | head -10 >> status.log || true
-            gh release view -R "$GITHUB_REPOSITORY" --json tagName,assets 2>&1 | head -c 2000 >> status.log || true
-            echo "" >> status.log
             mkdir -p apk-dl
             gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> status.log 2>&1 || true
             APK=$(find apk-dl -name '*.apk' 2>/dev/null | head -1 || true)
           fi
-          if [ -z "$APK" ]; then
-            echo "结果        : 跳过（没拿到 APK）" >> status.log
-            echo "::warning::没有 APK：把它作为本仓 Release 附件上传"
-            exit 0
-          fi
-          echo "APK         : $APK ($(stat -c%s "$APK") B)" | tee -a status.log
+          if [ -z "$APK" ]; then echo "结果: 跳过（无 APK）" >> status.log; exit 0; fi
+          echo "APK: $APK ($(stat -c%s "$APK") B)" >> status.log
           echo "APK=$APK" >> $GITHUB_ENV
 
-          # ---- 2) Hachimi 本体 ----
-          HACHI=$(find . -path ./.git -prune -o -iname 'libhachi*.so' -print 2>/dev/null | head -1 || true)
-          MAIN=$(find . -path ./.git -prune -o -iname 'libmain.so' -print 2>/dev/null | head -1 || true)
-          if [ -z "$HACHI" ] || [ -z "$MAIN" ]; then
-            echo "上游 Hachimi 下载：" >> status.log
-            mkdir -p hachimi-dl
-            for REPO in Hachimi-Hachimi/Hachimi-Unity2020 UmamusumeResponseAnalyzer/Hachimi-Unity2020; do
-              echo "  --- $REPO" >> status.log
-              gh release download -R "$REPO" -D hachimi-dl --pattern '*' --clobber >> status.log 2>&1 || true
-            done
-            ls -l hachimi-dl >> status.log 2>&1 || true
-            mkdir -p hachimi-dl/unpack
-            for f in hachimi-dl/* ; do
-              [ -f "$f" ] || continue
-              case "$f" in
-                *.zip) unzip -o -q "$f" -d hachimi-dl/unpack 2>/dev/null || true ;;
-                *.tar.gz|*.tgz) tar xzf "$f" -C hachimi-dl/unpack 2>/dev/null || true ;;
-                *.7z) 7z x -y "$f" -ohachimi-dl/unpack >/dev/null 2>&1 || true ;;
-              esac
-            done
-            echo "解压后 .so：" >> status.log
-            find hachimi-dl -iname '*.so' 2>/dev/null | head -30 >> status.log || true
-            HACHI=$(find hachimi-dl -iname 'libhachi*.so' 2>/dev/null | head -1 || true)
-            MAIN=$(find hachimi-dl -iname 'libmain.so' 2>/dev/null | head -1 || true)
-          fi
-          if [ -z "$HACHI" ] || [ -z "$MAIN" ]; then
-            echo "结果        : 跳过（没拿到 Hachimi 的 libhachimi*.so / libmain.so）" >> status.log
-            echo "::warning::缺 Hachimi 的 libhachimi*.so / libmain.so"
-            exit 0
-          fi
-          {
-            echo "HACHI       : $HACHI"
-            echo "MAIN        : $MAIN"
-            echo "file        : $(file -b "$HACHI") / $(file -b "$MAIN")"
-          } >> status.log
-          echo "HACHI=$HACHI" >> $GITHUB_ENV
-          echo "MAIN=$MAIN" >> $GITHUB_ENV
+      - name: 取 Hachimi proxy 库
+        run: |
+          mkdir -p libs
+          for R in kairusds/Hachimi-Edge Hachimi-Hachimi/Hachimi; do
+            echo "--- $R" >> status.log
+            gh release download -R "$R" -D "libs/$(echo $R | tr / _)" --pattern '*' --clobber >> status.log 2>&1 || true
+          done
+          for f in libs/*/* ; do
+            [ -f "$f" ] || continue
+            case "$f" in
+              *.zip) unzip -o -q "$f" -d "$(dirname "$f")/unpack" 2>/dev/null || true ;;
+              *.tar.gz|*.tgz) tar xzf "$f" -C "$(dirname "$f")" 2>/dev/null || true ;;
+            esac
+          done
+          echo "候选 .so:" >> status.log
+          find libs -iname '*.so' 2>/dev/null | head -40 >> status.log || true
+          P64=$(find libs -iname 'libmain-arm64-v8a.so' 2>/dev/null | head -1 || true)
+          [ -z "$P64" ] && P64=$(find libs -iname 'libmain*.so' 2>/dev/null | head -1 || true)
+          HSO=$(find libs -iname 'libhachi*.so' 2>/dev/null | head -1 || true)
+          echo "proxy(arm64): ${P64:-<无>}" >> status.log
+          echo "libhachimi  : ${HSO:-<无>}" >> status.log
+          echo "P64=$P64" >> $GITHUB_ENV
+          echo "HSO=$HSO" >> $GITHUB_ENV
+          if [ -z "$P64" ]; then echo "结果: 跳过（无 proxy 库）" >> status.log; exit 0; fi
           echo "READY=true" >> $GITHUB_ENV
 
-      - name: 解包并注入
+      - name: 注入
         if: env.READY == 'true'
         run: |
           set -e
           rm -rf work out && mkdir -p work out
           unzip -q "$APK" -d work
-          echo "原版 lib：" >> status.log
-          ls work/lib/ 2>/dev/null >> status.log || true
-          MAINPATH=$(find work/lib -name 'libmain.so' | head -1)
-          if [ -z "$MAINPATH" ]; then echo "::error::APK 里没有 lib/*/libmain.so"; exit 1; fi
-          ABI_DIR=$(dirname "$MAINPATH")
-          echo "ABI 目录    : $ABI_DIR" >> status.log
-          cp "$MAIN" "$ABI_DIR/libmain.so"
-          cp "$HACHI" "$ABI_DIR/$(basename "$HACHI")"
-          ls -l "$ABI_DIR" >> status.log
+          ls work/lib/ >> status.log 2>&1 || true
+          N=0
+          for d in work/lib/*/ ; do
+            [ -f "$d/libmain.so" ] || continue
+            ABI=$(basename "$d")
+            PROXY=$(find libs -iname "libmain-${ABI}.so" 2>/dev/null | head -1 || true)
+            [ -z "$PROXY" ] && [ "$ABI" = "arm64-v8a" ] && PROXY="$P64"
+            if [ -z "$PROXY" ]; then echo "  $ABI: 无 proxy，跳过" >> status.log; continue; fi
+            mv "$d/libmain.so" "$d/libmain_orig.so"
+            cp "$PROXY" "$d/libmain.so"
+            [ -n "${HSO:-}" ] && cp "$HSO" "$d/$(basename "$HSO")"
+            echo "  $ABI: libmain.so -> libmain_orig.so, proxy=$(basename "$PROXY")" >> status.log
+            N=$((N+1))
+          done
+          if [ "$N" = "0" ]; then echo "::error::没有 ABI 注入成功"; exit 1; fi
+          echo "注入 ABI 数: $N" >> status.log
+          ls -l work/lib/*/ >> status.log 2>&1 || true
 
-      - name: 重新打包 + 对齐
+      - name: 打包 + 对齐 + 签名
         if: env.READY == 'true'
         run: |
           set -e
           ( cd work && zip -q -r -n .arsc:.so ../out/app-unsigned.apk . )
-          ZIPALIGN=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
-          "$ZIPALIGN" -p -f 4 out/app-unsigned.apk out/app-aligned.apk
-          "$ZIPALIGN" -c -p -v 4 out/app-aligned.apk > /dev/null
-          echo "zipalign    : ok ($ZIPALIGN)" >> status.log
-          echo "unsigned    : $(stat -c%s out/app-unsigned.apk) B" >> status.log
-
-      - name: 生成签名并签名
-        if: env.READY == 'true'
-        run: |
-          set -e
-          keytool -genkeypair -v -keystore dsh.keystore -alias dsh -keyalg RSA \
-            -keysize 2048 -validity 10000 -storepass dshpass -keypass dshpass \
-            -dname "CN=DSH, OU=Uma, O=DSH, L=NA, S=NA, C=JP" > /dev/null 2>&1
-          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
-          APK_NAME=$(basename "$APK" .apk)
-          "$APKSIGNER" sign --ks dsh.keystore --ks-pass pass:dshpass \
-            --key-pass pass:dshpass --v2-signing-enabled true --v3-signing-enabled true \
-            --out "out/${APK_NAME}-hachimi.apk" out/app-aligned.apk
-          "$APKSIGNER" verify "out/${APK_NAME}-hachimi.apk" > /dev/null
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/app-unsigned.apk out/app-aligned.apk
+          "$ZA" -c -p 4 out/app-aligned.apk > /dev/null && echo "zipalign: ok" >> status.log
+          keytool -genkeypair -v -keystore dsh.keystore -alias dsh -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass dshpass -keypass dshpass \
+            -dname "CN=DSH,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks dsh.keystore --ks-pass pass:dshpass --key-pass pass:dshpass \
+            --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-hachimi.apk" out/app-aligned.apk
+          "$AS" verify "out/${NAME}-hachimi.apk" > /dev/null && echo "签名: ok" >> status.log
           {
-            echo "签名        : ok ($APKSIGNER)"
-            echo "输出        : out/${APK_NAME}-hachimi.apk $(stat -c%s "out/${APK_NAME}-hachimi.apk") B"
-            echo "sha256      : $(sha256sum "out/${APK_NAME}-hachimi.apk" | cut -d' ' -f1)"
-            echo "结果        : 成功"
+            echo "输出: out/${NAME}-hachimi.apk ($(stat -c%s "out/${NAME}-hachimi.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-hachimi.apk" | cut -d' ' -f1)"
+            echo "结果: 成功"
           } >> status.log
-          echo "OUT_APK=out/${APK_NAME}-hachimi.apk" >> $GITHUB_ENV
+          echo "OUT_APK=out/${NAME}-hachimi.apk" >> $GITHUB_ENV
 
       - name: 上传 artifact
         if: env.READY == 'true'
@@ -155,13 +128,13 @@ jobs:
           retention-days: 14
           compression-level: 0
 
-      - name: 提交状态文件
+      - name: 提交状态
         if: always()
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          [ -f status.log ] || echo "(没有状态)" > status.log
+          [ -f status.log ] || echo "(无状态)" > status.log
           cp status.log hachimi-apk-status.txt
           git add hachimi-apk-status.txt
-          git commit -m "ci: hachimi-apk 状态 run $GITHUB_RUN_ID" || echo "no change"
+          git commit -m "ci: hachimi-apk status ($GITHUB_RUN_ID)" || echo "no change"
           git push || true
