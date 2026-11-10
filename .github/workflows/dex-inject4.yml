@@ -1,0 +1,111 @@
+name: dex-inject4
+
+# 路线 G（不碰 lib/）：dex 注入 + assets 放 so
+# 输入获取改成：遍历所有 Release，挨个试下载 *.apk / *.zip（不依赖 --json 过滤）
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-inject4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 依赖
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq apktool zip > /dev/null
+          apktool --version || true
+
+      - name: 下载输入
+        run: |
+          : > g4.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          gh release list -R "$GITHUB_REPOSITORY" -L 30 >> g4.log 2>&1 || true
+
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          echo "tags: $TAGS" >> g4.log
+
+          for T in $TAGS ; do
+            if [ -z "$(find apk-dl -name '*.apk' 2>/dev/null | head -1)" ]; then
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> g4.log 2>&1 || true
+            fi
+            if [ -z "$(find dl -name '*.zip' 2>/dev/null | head -1)" ]; then
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> g4.log 2>&1 || true
+            fi
+          done
+
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          echo "APK=$APK" >> g4.log
+          echo "ZIP=$Z" >> g4.log
+          echo "SO=$SO" >> g4.log
+          [ -n "$APK" ] && echo "APK size=$(stat -c%s "$APK")" >> g4.log
+          find apk-dl dl -type f 2>/dev/null | head -20 >> g4.log
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺输入" >> g4.log; exit 0; fi
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          mkdir -p out
+          python3 tools/dex_inject.py "$APK" "$SO" out > g4.out 2>&1 || true
+          tail -c 20000 g4.out >> g4.log
+          ls -l out >> g4.log || true
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          IN=out/with-dex.apk
+          [ -f "$IN" ] || { echo "::error::没有生成 APK"; exit 1; }
+          "$ZA" -p -f 4 "$IN" out/aligned.apk
+          keytool -genkeypair -v -keystore g4.jks -alias g4 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g4pass -keypass g4pass \
+            -dname "CN=G4,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks g4.jks --ks-pass pass:g4pass --key-pass pass:g4pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-dexinject.apk" out/aligned.apk
+          "$AS" verify "out/${NAME}-dexinject.apk" > /dev/null && echo "签名: ok" >> g4.log
+          {
+            echo "输出: out/${NAME}-dexinject.apk ($(stat -c%s "out/${NAME}-dexinject.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-dexinject.apk" | cut -d' ' -f1)"
+            echo "结果: 成功"
+          } >> g4.log
+          echo "OUT_APK=out/${NAME}-dexinject.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dex-inject-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g4.log ] || echo "(无)" > g4.log
+          cp g4.log dex-inject4-status.txt
+          git add dex-inject4-status.txt || true
+          git commit -m "ci: dex-inject4 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
