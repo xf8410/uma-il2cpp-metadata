@@ -1,0 +1,8 @@
+-rwxr-xr-x 1 runner runner 5512 Nov 10 10:55 libdshprobe.so
+新增: lib/arm64-v8a/libdshprobe.so (5512 B)
+已有文件: 全部保持原样
+APK: 251850827 B
+签名: ok
+输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-addso.apk (251870894 B)
+sha256: 9c50952f3d401c802c679c0cfb1155e59663e2da278e40558c5a109e711aa22c
+结果: 成功（仅新增 libdshprobe.so）
