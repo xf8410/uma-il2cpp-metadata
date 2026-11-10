@@ -1,0 +1,100 @@
+name: dex-store-control
+
+# 最后一个对照：classes3.dex **内容一个字节都不改**，只是把它从「deflate 压缩」改成
+# 「不压缩存储」（zip -0），走和探针包完全相同的打包链路。
+#
+#   · 能进游戏 ⇒ 内容变更才是诱因 ⇒ TP 对 dex 做了完整性校验，无 root 注入判死
+#   · 也黑屏   ⇒ 是「存储方式/打包」的问题，跟 dex 内容无关 ⇒ 之前的黑屏结论全部作废，
+#                 改成 deflate 重新打包还能继续做注入
+#
+# 背景：历史所有改过 dex 的包（dex-inject ×10、repack035/037、probe）都用 zip -0 存了 dex，
+#       而唯一验证能跑的 v8 只是改了一个非 dex 文件，dex 仍是 deflate。
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-store-control.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载原版 APK
+        run: |
+          : > s.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl out stage
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> s.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> s.log; exit 0; }
+          echo "APK=$APK ($(stat -c%s "$APK") B)" >> s.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 原样 dex 改存储方式
+        if: env.READY == 'true'
+        run: |
+          set -e
+          unzip -v "$APK" classes3.dex | grep classes3 >> s.log
+          unzip -p "$APK" classes3.dex > c3.dex
+          echo "取出 classes3.dex: $(stat -c%s c3.dex) B sha256=$(sha256sum c3.dex | cut -c1-16)" >> s.log
+          cp "$APK" out/store.apk
+          cp c3.dex stage/classes3.dex
+          ( cd stage && zip -q -0 ../out/store.apk classes3.dex )
+          unzip -v out/store.apk classes3.dex | grep classes3 >> s.log
+          unzip -p out/store.apk classes3.dex > c3b.dex
+          cmp -s c3.dex c3b.dex && echo "内容比对: 完全一致（只有存储方式变了）" >> s.log || echo "!! 内容不一致" >> s.log
+          echo "重打包: $(stat -c%s out/store.apk) B" >> s.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/store.apk out/aligned.apk >> s.log 2>&1
+          keytool -genkeypair -v -keystore s.jks -alias s -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass storepass -keypass storepass \
+            -dname "CN=STORE,OU=Uma,O=DSH,L=NA,S=NA,C=JP" >> s.log 2>&1
+          "$AS" sign --ks s.jks --ks-pass pass:storepass --key-pass pass:storepass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/store-signed.apk out/aligned.apk >> s.log 2>&1
+          "$AS" verify out/store-signed.apk >> s.log 2>&1 && echo "签名: ok" >> s.log
+          {
+            echo "输出: $(stat -c%s out/store-signed.apk) B"
+            echo "sha256: $(sha256sum out/store-signed.apk | cut -d' ' -f1)"
+          } >> s.log
+
+      - name: 发布
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+          cp out/store-signed.apk "dex-store-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds dex-store-*.apk -R "$GITHUB_REPOSITORY" --clobber >> s.log 2>&1
+          echo "发布: 完成" >> s.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f s.log ] || echo "(无)" > s.log
+          { echo "run: $GITHUB_RUN_ID  sha: ${GITHUB_SHA:0:8}  $(date -u +%FT%TZ)";
+            echo "--- s.log ---"; tail -n 60 s.log; } > dex-store-status.txt
+          git add dex-store-status.txt || true
+          git commit -m "ci: dex store control ($GITHUB_RUN_ID)" || echo "no change"
+          git pull --rebase --autostash >> /dev/null 2>&1 || true
+          git push || { sleep 5; git pull --rebase --autostash >> /dev/null 2>&1 || true; git push; } || true
