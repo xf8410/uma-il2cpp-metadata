@@ -1,58 +1,27 @@
-run: 42778173893 (358d611d0c5762d378ba03d1ba584e4edd5042d4)  2026-11-10T07:51:12Z
+run: 42778384615 (52c9770076c87946b9ac18b5578deb2be1b2bef8)  2026-11-10T07:52:56Z
 APK: apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
---- 本仓 Release 里的 zip
---- kairusds/Hachimi-Edge
---- Hachimi-Hachimi/Hachimi
-本仓 zip 解包内容：
-libs/own/unpack
-libs/own/unpack/lib
-libs/own/unpack/lib/x86_64
-libs/own/unpack/lib/x86_64/libhachimi.so
-libs/own/unpack/lib/x86_64/libhachimi.so.sha256
-libs/own/unpack/lib/arm64-v8a
-libs/own/unpack/lib/arm64-v8a/libhachimi.so
-libs/own/unpack/lib/arm64-v8a/libhachimi.so.sha256
-libs/own/unpack/lib/armeabi-v7a
-libs/own/unpack/lib/armeabi-v7a/libhachimi.so
-libs/own/unpack/lib/armeabi-v7a/libhachimi.so.sha256
-libs/own/unpack/lib/x86
-libs/own/unpack/lib/x86/libhachimi.so
-libs/own/unpack/lib/x86/libhachimi.so.sha256
-libs/own/unpack/customize.sh.sha256
-libs/own/unpack/verify.sh.sha256
-libs/own/unpack/module.prop
-libs/own/unpack/customize.sh
-libs/own/unpack/META-INF
-libs/own/unpack/META-INF/com
-libs/own/unpack/META-INF/com/google
-libs/own/unpack/module.prop.sha256
-libs/own/unpack/verify.sh
-
-全部候选 .so：
+edge 候选：
+libs/edge/libmain-arm64-v8a.so
+upstream 候选：
 libs/upstream/libmain-x86_64.so
 libs/upstream/libmain-armeabi-v7a.so
 libs/upstream/libmain-arm64-v8a.so
 libs/upstream/libmain-x86.so
-libs/edge/libmain-arm64-v8a.so
-libs/own/unpack/lib/x86_64/libhachimi.so
-libs/own/unpack/lib/arm64-v8a/libhachimi.so
-libs/own/unpack/lib/armeabi-v7a/libhachimi.so
-libs/own/unpack/lib/x86/libhachimi.so
-选用 arm64 proxy: libs/edge/libmain-arm64-v8a.so
-选用 v7a   proxy: libs/upstream/libmain-armeabi-v7a.so
-伴随 libhachi*.so: libs/own/unpack/lib/x86_64/libhachimi.so
-libs/own/unpack/lib/arm64-v8a/libhachimi.so
-libs/own/unpack/lib/armeabi-v7a/libhachimi.so
+选用来源: libs/edge
+  arm64-v8a: libs/edge/libmain-arm64-v8a.so
+  armeabi-v7a: <该来源没有>
 libs/edge/libmain-arm64-v8a.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, for Android 24, built by NDK r27d (13750724), stripped
-  arm64-v8a: proxy=libmain-arm64-v8a.so (25428480 B)
-  armeabi-v7a: proxy=libmain-armeabi-v7a.so (12883484 B)
-注入 ABI 数: 2
+  arm64-v8a: proxy=libmain-arm64-v8a.so 25428480 B
+  armeabi-v7a: 该来源无 proxy，保持原样
+替换 entries: lib/arm64-v8a/libmain.so lib/arm64-v8a/libmain_orig.so
+原 APK 大小: 251850328 B
+替换后大小 : 277281839 B
 zipalign: ok
-keystore: 仓库内没有，临时生成（每次签名都会变）
+keystore: 临时生成（签名每次变，不能覆盖更新）
 V3.0 Signer: certificate DN: CN=DSH, OU=Uma, O=DSH, L=NA, ST=NA, C=JP
-V3.0 Signer: certificate SHA-256 digest: c4b722b6b1d3228495a052b5eb3448280cddadbb2193eff856e620b0933e4177
-V3.0 Signer: certificate SHA-1 digest: d081d4ff3d7ad0306520878091d4575ffd064136
-V3.0 Signer: certificate MD5 digest: 143d240ba511d1eef04d3f6b6e6b2d34
-输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-hachimi.apk (511638438 B)
-sha256: 9aa1f5194b3ffa6b01c836b1dee7114f7c482b865162fffc6971ae9ea50c69f5
+V3.0 Signer: certificate SHA-256 digest: 6e8c62a568d0367c2ec15bb9ab2d01e7a30855f8e6ca3e9e313179a677feed52
+V3.0 Signer: certificate SHA-1 digest: 5ac67d5825d65109e10bb8004168c59fde3e03d9
+V3.0 Signer: certificate MD5 digest: c141b8f5ae22a3d09c0fd905d1f6762e
+输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-hachimi.apk (277302985 B)
+sha256: 55a5a295bdf2ca6361722ac09c7fbc86f27044069dec44fedc3e3e4c5d68793a
 结果: 成功
