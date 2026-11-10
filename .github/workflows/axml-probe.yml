@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - '.github/workflows/axml-probe.yml'
+      - 'tools/axml_touchstr.py'
   workflow_dispatch:
 
 permissions:
