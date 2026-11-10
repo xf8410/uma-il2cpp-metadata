@@ -1,0 +1,105 @@
+name: hachimi-apk-v2
+
+# 变体 B：直接把 **Unity2020 版 libhachimi.so** 当作 libmain proxy
+#   lib/arm64-v8a/libmain.so      ← 2020 版 libhachimi.so（它导出 JNI_OnLoad）
+#   lib/arm64-v8a/libmain_orig.so ← 游戏原版 libmain.so
+#   lib/arm64-v8a/libhachimi.so   ← 同文件再放一份（若它按名字 dlopen 自己）
+#
+# 依据：so-inspect.txt 显示 2020 版 libhachimi.so 导出 JNI_OnLoad，
+#       与上游 JP 的 libmain-arm64-v8a.so 同源同量级。
+on:
+  push:
+    paths:
+      - '.github/workflows/hachimi-apk-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK 与 2020 版 so
+        run: |
+          : > v2.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> v2.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> v2.log; exit 0; }
+          echo "APK: $APK ($(stat -c%s "$APK") B)" >> v2.log
+          gh release download -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> v2.log 2>&1 || true
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -z "$Z" ] && { echo "跳过：无 Hachimi zip" >> v2.log; exit 0; }
+          unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1)
+          [ -z "$SO" ] && { echo "跳过：zip 里没有 arm64 libhachimi.so" >> v2.log; exit 0; }
+          echo "SO : $SO ($(stat -c%s "$SO") B)" >> v2.log
+          file "$SO" >> v2.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          set -e
+          rm -rf work out && mkdir -p work out
+          unzip -q "$APK" -d work
+          cp "$APK" out/app-updated.apk
+          D=work/lib/arm64-v8a
+          [ -f "$D/libmain.so" ] || { echo "::error::没有 lib/arm64-v8a/libmain.so"; exit 1; }
+          mv "$D/libmain.so" "$D/libmain_orig.so"
+          cp "$SO" "$D/libmain.so"
+          cp "$SO" "$D/libhachimi.so"
+          ls -l "$D" >> v2.log
+          ( cd work && zip -q -0 ../out/app-updated.apk \
+              lib/arm64-v8a/libmain.so lib/arm64-v8a/libmain_orig.so lib/arm64-v8a/libhachimi.so )
+          echo "替换后: $(stat -c%s out/app-updated.apk) B（原 $(stat -c%s "$APK") B）" >> v2.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/app-updated.apk out/app-aligned.apk
+          keytool -genkeypair -v -keystore v2.jks -alias v2 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass v2pass -keypass v2pass \
+            -dname "CN=V2,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks v2.jks --ks-pass pass:v2pass --key-pass pass:v2pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-v2.apk" out/app-aligned.apk
+          "$AS" verify "out/${NAME}-v2.apk" > /dev/null && echo "签名: ok" >> v2.log
+          {
+            echo "输出: out/${NAME}-v2.apk ($(stat -c%s "out/${NAME}-v2.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-v2.apk" | cut -d' ' -f1)"
+            echo "结果: 成功（libmain.so = 2020 版 libhachimi.so）"
+          } >> v2.log
+          echo "OUT_APK=out/${NAME}-v2.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hachimi-patched-apk-v2
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f v2.log ] || echo "(无)" > v2.log
+          cp v2.log hachimi-apk-v2-status.txt
+          git add hachimi-apk-v2-status.txt
+          git commit -m "ci: hachimi-apk-v2 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
