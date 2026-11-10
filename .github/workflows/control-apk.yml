@@ -1,0 +1,84 @@
+name: control-apk
+
+# 对照组：只重新打包 + 重新签名，**不做任何注入**。
+# 用途：判断「加了 Hachimi 才崩」还是「重打包/换签名本身就会崩（反作弊）」。
+#
+# 输入：apk-*/*.apk 或本仓 Release 里的 *.apk
+# 输出：artifact `control-repack-apk` + 仓库文件 `control-apk-status.txt`
+on:
+  push:
+    paths:
+      - '.github/workflows/control-apk.yml'
+      - 'apk-*/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  control:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK
+        run: |
+          : > status.log
+          APK=$(find apk-* -maxdepth 2 -name '*.apk' -type f 2>/dev/null | head -1 || true)
+          if [ -z "$APK" ]; then
+            mkdir -p apk-dl
+            gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> status.log 2>&1 || true
+            APK=$(find apk-dl -name '*.apk' 2>/dev/null | head -1 || true)
+          fi
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> status.log; echo "READY=false" >> $GITHUB_ENV; exit 0; }
+          echo "APK: $APK ($(stat -c%s "$APK") B)" >> status.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 原样重打包 + 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          mkdir -p out
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          # 注意：不对内容做任何改动，只走 zipalign（幂等）+ 签名
+          "$ZA" -p -f 4 "$APK" out/control-aligned.apk
+          keytool -genkeypair -v -keystore ctrl.jks -alias ctrl -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass ctrlpass -keypass ctrlpass \
+            -dname "CN=CTRL,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks ctrl.jks --ks-pass pass:ctrlpass --key-pass pass:ctrlpass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-control.apk" out/control-aligned.apk
+          "$AS" verify "out/${NAME}-control.apk" > /dev/null
+          {
+            echo "说明: 此包不含 Hachimi，仅重新签名"
+            echo "原 APK : $(stat -c%s "$APK") B"
+            echo "对照包 : out/${NAME}-control.apk ($(stat -c%s "out/${NAME}-control.apk") B)"
+            echo "sha256 : $(sha256sum "out/${NAME}-control.apk" | cut -d' ' -f1)"
+            echo "结果   : 成功"
+          } >> status.log
+          echo "OUT_APK=out/${NAME}-control.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: control-repack-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f status.log ] || echo "(无状态)" > status.log
+          cp status.log control-apk-status.txt
+          git add control-apk-status.txt
+          git commit -m "ci: control-apk status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
