@@ -1,0 +1,83 @@
+name: remove-tp2
+
+# 实验：删掉 libtersafe2.so（腾讯 TP 的 Java 侧库），其它不改
+#   修 remove-tp 的 heredoc 问题：逻辑移到 tools/remove_entry.py
+on:
+  push:
+    paths:
+      - 'tools/remove_entry.py'
+      - '.github/workflows/remove-tp2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载原版 APK
+        run: |
+          : > t2.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl out
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> t2.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> t2.log; exit 0; }
+          echo "APK=$APK ($(stat -c%s "$APK") B)" >> t2.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 删除 libtersafe2.so
+        if: env.READY == 'true'
+        run: |
+          python3 tools/remove_entry.py "$APK" out/no-tp.apk libtersafe2.so >> t2.log 2>&1
+          echo "原包 $(stat -c%s "$APK") B → 新包 $(stat -c%s out/no-tp.apk) B" >> t2.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/no-tp.apk out/aligned.apk
+          keytool -genkeypair -v -keystore t2.jks -alias t2 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass t2pass -keypass t2pass \
+            -dname "CN=NOTP2,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          "$AS" sign --ks t2.jks --ks-pass pass:t2pass --key-pass pass:t2pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/no-tp-signed.apk out/aligned.apk
+          "$AS" verify out/no-tp-signed.apk > /dev/null && echo "签名: ok" >> t2.log
+          {
+            echo "输出: $(stat -c%s out/no-tp-signed.apk) B"
+            echo "sha256: $(sha256sum out/no-tp-signed.apk | cut -d' ' -f1)"
+          } >> t2.log
+
+      - name: 发布
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+          cp out/no-tp-signed.apk "no-tp-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds no-tp-*.apk -R "$GITHUB_REPOSITORY" --clobber
+          echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> t2.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f t2.log ] || echo "(无)" > t2.log
+          cp t2.log remove-tp2-status.txt
+          git add remove-tp2-status.txt || true
+          git commit -m "ci: remove-tp2 ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
