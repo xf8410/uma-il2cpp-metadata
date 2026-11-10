@@ -1,0 +1,170 @@
+name: dex-inject
+
+# 路线 G：完全不碰 lib/ —— 从 dex 里把 Hachimi 拉起来
+#   1) Hachimi 的 libhachimi.so 放进 assets/dsh/（普通数据文件）
+#   2) 新增 classes3.dex：com.dsh.Shim.load(Context) —— 从 assets 复制到 codeCacheDir 再 System.load
+#   3) apktool 解包，在主 Activity 的 onCreate 开头插 invoke-static Ldsh→Shim.load(this)
+#   4) apktool 打包 → 追加 classes3.dex → zipalign → 签名
+on:
+  push:
+    paths:
+      - '.github/workflows/dex-inject.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 依赖
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq apktool > /dev/null
+          apktool --version || true
+          java -version 2>&1 | head -2
+
+      - name: 取 APK 与 Hachimi so
+        run: |
+          : > g1.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> g1.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          gh release download -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> g1.log 2>&1 || true
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺 APK 或 libhachimi.so" >> g1.log; exit 0; fi
+          cp "$SO" libhachimi.so
+          echo "APK=$(stat -c%s "$APK") B" >> g1.log
+          echo "so =$(stat -c%s libhachimi.so) B" >> g1.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 编译 Shim（Java → dex）
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ANDROID_JAR=$(ls "$ANDROID_HOME"/platforms/*/android.jar | sort -V | tail -1)
+          D8=$(ls "$ANDROID_HOME"/build-tools/*/d8 2>/dev/null | sort -V | tail -1)
+          echo "android.jar=$ANDROID_JAR" >> g1.log
+          echo "d8=$D8" >> g1.log
+          mkdir -p src/com/dsh cls
+          cat > src/com/dsh/Shim.java <<'JAVA'
+package com.dsh;
+import android.content.Context;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+public final class Shim {
+    public static void load(Context ctx) {
+        try {
+            File dir = ctx.getCodeCacheDir();
+            if (dir == null) dir = ctx.getFilesDir();
+            File out = new File(dir, "libhachimi.so");
+            InputStream in = ctx.getAssets().open("dsh/libhachimi.so");
+            FileOutputStream fo = new FileOutputStream(out);
+            byte[] buf = new byte[1 << 16];
+            int n;
+            while ((n = in.read(buf)) > 0) fo.write(buf, 0, n);
+            fo.close(); in.close();
+            System.load(out.getAbsolutePath());
+        } catch (Throwable t) {
+            android.util.Log.e("DSH", "Shim.load failed: " + t, t);
+        }
+    }
+}
+JAVA
+          javac -source 8 -target 8 -bootclasspath "$ANDROID_JAR" -d cls src/com/dsh/Shim.java 2>&1 | tail -5 >> g1.log
+          mkdir -p dexout
+          "$D8" --lib "$ANDROID_JAR" --min-api 24 --output dexout cls/com/dsh/Shim.class 2>&1 | tail -5 >> g1.log
+          ls -l dexout >> g1.log
+          cp dexout/classes.dex classes3.dex
+          ls -l classes3.dex >> g1.log
+
+      - name: apktool 解包 + 插桩
+        if: env.READY == 'true'
+        run: |
+          set -e
+          apktool d -f -o dec "$APK" > apktool_d.log 2>&1 || true
+          tail -5 apktool_d.log >> g1.log
+          APP=$(python3 - <<'PY'
+import re,sys
+try:
+    t=open('dec/AndroidManifest.xml',encoding='utf-8').read()
+except Exception:
+    print(''); raise SystemExit
+m=re.search(r'<application[^>]*android:name="([^"]+)"',t)
+name=m.group(1) if m else None
+# 找 LAUNCHER activity
+acts=re.findall(r'<activity[^>]*android:name="([^"]+)"(.{0,1200}?)</activity>',t,re.S)
+for a,body in acts:
+    if 'android.intent.action.MAIN' in body and 'LAUNCHER' in body:
+        print((name or '')+'|'+a)
+        raise SystemExit
+print((name or '')+'|')
+PY
+)
+          echo "APP|ACT = $APP" >> g1.log
+          ACT=$(echo "$APP" | cut -d'|' -f2)
+          if [ -z "$ACT" ]; then echo "::error::没找到 LAUNCHER activity"; exit 1; fi
+          SM=$(find dec -name "*.smali" -path "*${ACT//.//}.smali" | head -1)
+          echo "activity smali = $SM" >> g1.log
+          [ -z "$SM" ] && { echo "::error::找不到 activity 的 smali"; exit 1; }
+          python3 tools/inject_call.py "$SM" >> g1.log 2>&1
+          mkdir -p dec/assets/dsh
+          cp libhachimi.so dec/assets/dsh/libhachimi.so
+          ls -l dec/assets/dsh >> g1.log
+          apktool b dec -o out/base.apk > apktool_b.log 2>&1 || true
+          tail -5 apktool_b.log >> g1.log
+          ls -l out/base.apk >> g1.log
+
+      - name: 追加 dex + 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          cp out/base.apk out/final.apk
+          ( cd out && zip -q -0 final.apk ../classes3.dex )
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/final.apk out/aligned.apk
+          keytool -genkeypair -v -keystore g1.jks -alias g1 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g1pass -keypass g1pass \
+            -dname "CN=G1,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks g1.jks --ks-pass pass:g1pass --key-pass pass:g1pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-dex.apk" out/aligned.apk
+          "$AS" verify "out/${NAME}-dex.apk" > /dev/null && echo "签名: ok" >> g1.log
+          {
+            echo "输出: out/${NAME}-dex.apk ($(stat -c%s "out/${NAME}-dex.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-dex.apk" | cut -d' ' -f1)"
+            echo "结果: 成功（dex 注入 + assets 放 so）"
+          } >> g1.log
+          echo "OUT_APK=out/${NAME}-dex.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dex-inject-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g1.log ] || echo "(无)" > g1.log
+          cp g1.log dex-inject-status.txt
+          git add dex-inject-status.txt || true
+          git commit -m "ci: dex-inject status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
