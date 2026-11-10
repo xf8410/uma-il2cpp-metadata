@@ -1,0 +1,24 @@
+run: 42825125086  sha=3539baa1  2026-11-10T13:31Z  job 129860331514  success
+APK: apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+删除(按关键词 libtersafe2.so 命中 2 条):
+  lib/armeabi-v7a/libtersafe2.so  未压缩 3657284 / 压缩 1668204  CRC ccfe5e28
+  lib/arm64-v8a/libtersafe2.so    未压缩 5285264 / 压缩 1937764  CRC e9daf193
+输出: out/no-tp-signed.apk 250338742 B
+sha256: 27c5088933a79cc43ee7ce93d3b1658d33a51e5f7c0a541f4a28c5f1bf961dc5
+发布: https://github.com/xf8410/uma-il2cpp-metadata/releases/tag/builds （no-tp-1110-1331.apk，与上面 sha256 一致）
+
+核对（接手方在本机把发布件与原包逐 entry 比对，2026-11-10 21:41）:
+  6795 → 6793 entries
+  除 META-INF 外所有 entry 的名称+CRC 与原包完全一致；差异只有上面两条 libtersafe2 被删除
+  META-INF/BILIGAME.SF + BILIGAME.RSA → META-INF/T2.SF + T2.RSA（apksigner 换签名，预期内）
+
+体积账（重要，别被"只小 1.5 MB"误导）:
+  两条 libtersafe2 压缩共 3605968 B，但成品只小 1511586 B
+  原因: tools/remove_entry.py 用 Python zipfile 把每个 entry 都重写了一遍（重新 deflate，
+  默认 level 6），其它 .so 的压缩后体积合计涨了约 2.09 MB。entry 内容 CRC 不变，语义仍是
+  "只删了 libtersafe2"，但和 control-repack 相比多了一层重压缩。
+
+结果: 待真机验证（卸载原签名 → 装 no-tp → 看是否 1~12 秒被静默杀掉 / 还是能进登录页）
+
+说明: 本文件不是 CI 写的 —— 原 run 的「提交状态」步骤 git push 与 21:31:12 的 HANDOVER 提交
+撞车，push 失败被 `|| true` 吞掉，所以仓库里查不到这次记录。补写以免被误判成"没跑"。
