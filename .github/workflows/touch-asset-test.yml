@@ -1,0 +1,96 @@
+name: touch-asset-test
+
+# v8：只改一个**与代码无关的文本文件**（kotlin-tooling-metadata.json 末尾加 1 字节）
+#   · 若也 12 秒崩 → 证明是「APK 内容整体完整性」，无 root 注入彻底无解
+#   · 若正常      → 说明只校验个别目录/文件，还有戏
+on:
+  push:
+    paths:
+      - '.github/workflows/touch-asset-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK
+        run: |
+          : > b1.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> b1.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> b1.log; exit 0; }
+          echo "APK=$(stat -c%s "$APK") B" >> b1.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 改一个无关文件
+        if: env.READY == 'true'
+        run: |
+          set -e
+          rm -rf work out && mkdir -p work out
+          unzip -q "$APK" -d work
+          cp "$APK" out/app-updated.apk
+          T=work/kotlin-tooling-metadata.json
+          if [ -f "$T" ]; then
+            O=$(stat -c%s "$T"); printf '\n' >> "$T"; N=$(stat -c%s "$T")
+            echo "kotlin-tooling-metadata.json: $O -> $N B（只加一个换行）" >> b1.log
+            ENTRY=kotlin-tooling-metadata.json
+          else
+            T=work/assets/__tpinfo.tsd
+            O=$(stat -c%s "$T"); printf '\0' >> "$T"; N=$(stat -c%s "$T")
+            echo "assets/__tpinfo.tsd: $O -> $N B" >> b1.log
+            ENTRY=assets/__tpinfo.tsd
+          fi
+          ( cd work && zip -q -0 ../out/app-updated.apk "$ENTRY" )
+          echo "APK: $(stat -c%s out/app-updated.apk) B" >> b1.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/app-updated.apk out/app-aligned.apk
+          keytool -genkeypair -v -keystore b1.jks -alias b1 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass b1pass -keypass b1pass \
+            -dname "CN=B1,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks b1.jks --ks-pass pass:b1pass --key-pass pass:b1pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-asset.apk" out/app-aligned.apk
+          "$AS" verify "out/${NAME}-asset.apk" > /dev/null && echo "签名: ok" >> b1.log
+          {
+            echo "输出: out/${NAME}-asset.apk ($(stat -c%s "out/${NAME}-asset.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-asset.apk" | cut -d' ' -f1)"
+            echo "结果: 成功（只改一个无关文件）"
+          } >> b1.log
+          echo "OUT_APK=out/${NAME}-asset.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: touch-asset-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f b1.log ] || echo "(无)" > b1.log
+          cp b1.log touch-asset-status.txt
+          git add touch-asset-status.txt
+          git commit -m "ci: touch-asset test ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
