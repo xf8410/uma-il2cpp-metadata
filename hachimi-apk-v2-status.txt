@@ -1,0 +1,44 @@
+APK: apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+SO : x/lib/arm64-v8a/libhachimi.so (15068464 B)
+x/lib/arm64-v8a/libhachimi.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, for Android 24, built by NDK r26b (10909125), stripped
+total 204752
+-rw-r--r-- 1 runner runner    199272 Sep 22 15:17 libBugly_Native.so
+-rw-r--r-- 1 runner runner    498176 Sep 22 15:17 libCtaApiLib.so
+-rw-r--r-- 1 runner runner     19936 Sep 22 15:17 lib_burst_generated.so
+-rw-r--r-- 1 runner runner     51496 Sep 22 15:17 libbili.so
+-rw-r--r-- 1 runner runner    280632 Sep 22 15:17 libblkv.so
+-rw-r--r-- 1 runner runner     38600 Sep 22 15:17 libbuma_xxhash.so
+-rw-r--r-- 1 runner runner   1055016 Sep 22 15:17 libc++_shared.so
+-rw-r--r-- 1 runner runner    399112 Sep 22 15:17 libcri_lips_unity.so
+-rw-r--r-- 1 runner runner    449056 Sep 22 15:17 libcri_mana_vpx.so
+-rw-r--r-- 1 runner runner   2198328 Sep 22 15:17 libcri_ware_unity.so
+-rw-r--r-- 1 runner runner    936112 Sep 22 15:17 libcriafx_mcdsp.so
+-rw-r--r-- 1 runner runner   2672544 Sep 22 15:17 libcrypto.1.1.so
+-rw-r--r-- 1 runner runner    855416 Sep 22 15:17 libcustom_rules.so
+-rw-r--r-- 1 runner runner     18200 Sep 22 15:17 libcyspringandroid.so
+-rw-r--r-- 1 runner runner    182488 Sep 22 15:17 libfb.so
+-rw-r--r-- 1 runner runner    313408 Sep 22 15:17 libfolly_json.so
+-rw-r--r-- 1 runner runner    157872 Sep 22 15:17 libglog.so
+-rw-r--r-- 1 runner runner     30784 Sep 22 15:17 libglog_init.so
+-rwxr-xr-x 1 runner runner  15068464 Nov 10 08:58 libhachimi.so
+-rw-r--r-- 1 runner runner 129667848 Sep 22 15:17 libil2cpp.so
+-rw-r--r-- 1 runner runner    399864 Sep 22 15:17 libimagepipeline.so
+-rw-r--r-- 1 runner runner   8809472 Sep 22 15:17 libjsc.so
+-rw-r--r-- 1 runner runner    297040 Sep 22 15:17 libjscexecutor.so
+-rw-r--r-- 1 runner runner     47160 Sep 22 15:17 libjsinspector.so
+-rwxr-xr-x 1 runner runner  15068464 Nov 10 08:58 libmain.so
+-rw-r--r-- 1 runner runner     10520 Sep 22 15:17 libmain_orig.so
+-rw-r--r-- 1 runner runner    421888 Sep 22 15:17 libmsaoaidauth.so
+-rw-r--r-- 1 runner runner    696320 Sep 22 15:17 libmsaoaidsec.so
+-rw-r--r-- 1 runner runner   1943680 Sep 22 15:17 libnative.so
+-rw-r--r-- 1 runner runner    956616 Sep 22 15:17 libreactnativejni.so
+-rw-r--r-- 1 runner runner    590168 Sep 22 15:17 libssl.1.1.so
+-rw-r--r-- 1 runner runner   5285264 Sep 22 15:17 libtersafe2.so
+-rw-r--r-- 1 runner runner   1692296 Sep 22 15:17 libtprt.so
+-rw-r--r-- 1 runner runner  18050344 Sep 22 15:17 libunity.so
+-rw-r--r-- 1 runner runner    243768 Sep 22 15:17 libyoga.so
+替换后: 281990469 B（原 251850328 B）
+签名: ok
+输出: out/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41-v2.apk (282021672 B)
+sha256: 05b0431c00ef1e6a72b92b76bb48dcd6238c0923e14a5719fce59d554832f3ba
+结果: 成功（libmain.so = 2020 版 libhachimi.so）
