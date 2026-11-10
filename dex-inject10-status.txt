@@ -1,0 +1,38 @@
+no assets match the file pattern
+no assets match the file pattern
+no assets match the file pattern
+no assets match the file pattern
+APK=apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk SO=x/lib/arm64-v8a/libhachimi.so
+$ apktool d -f -o dec apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk
+I: Baksmaling classes4.dex...
+I: Copying assets and libs...
+I: Copying unknown files...
+I: Copying original files...
+I: Copying META-INF/services directory
+launcher=com.uo.sdk.SplashActivity  application=com.bili.sdk.App
+$ javac -nowarn -source 8 -target 8 -bootclasspath /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar -d cls src/com/dsh/Shim.java
+
+$ /usr/local/lib/android/sdk/build-tools/37.0.0/d8 --lib /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar --min-api 24 --output dexout cls/com/dsh/Shim.class
+
+$ curl -sSL -o baksmali.jar https://github.com/baksmali/smali/releases/download/v2.5.2/baksmali-2.5.2.jar
+
+$ java -jar baksmali.jar disassemble dexout/classes.dex -o shim_smali
+
+Shim smali 已并入 smali_classes3
+  ✓ 追加 onCreate 覆写: SplashActivity.smali (super=Ljp/co/cygames/umamusume_activity/UmamusumeActivity;)
+  ✓ 已存在 onCreate，插入调用: App.smali
+$ curl -sSL -o smali.jar https://github.com/baksmali/smali/releases/download/v2.5.2/smali-2.5.2.jar
+
+$ java -jar smali.jar assemble dec/smali_classes3 -o patched.dex
+
+patched classes3.dex: 8208060 B
+$ zip -q -0 /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/out/patched.apk classes3.dex assets/dsh/libhachimi.so
+
+zip rc=0  final=272113595 B
+total 265736
+-rw-r--r-- 1 runner runner 272113595 Nov 10 11:53 patched.apk
+签名: ok
+输出: 272125636 B
+sha256: cc9c2f4725473ddbba71d1ddec7e86bf247fdae652a003a83bf91f89a047c035
+结果: 成功
+发布: https://github.com/xf8410/uma-il2cpp-metadata/releases/tag/builds
