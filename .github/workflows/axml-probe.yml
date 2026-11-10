@@ -1,0 +1,95 @@
+name: axml-probe
+
+# 单变量：只改 AndroidManifest.xml 里的 versionName 2.0.5 → 2.0.9（等长 UTF-16LE 替换）
+#   能进游戏 ⇒ manifest 不在 TP 的校验范围（debuggable 这条思路才有前置条件）
+#   也黑屏   ⇒ manifest 也被校验，JDWP 那条线当场判死
+# dex / lib / assets 一个字节都不动，打包链路同 v8。
+on:
+  push:
+    paths:
+      - '.github/workflows/axml-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载原版 APK
+        run: |
+          : > x.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl out stage
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> x.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> x.log; exit 0; }
+          echo "APK=$APK ($(stat -c%s "$APK") B)" >> x.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 改 manifest 的 versionName
+        if: env.READY == 'true'
+        run: |
+          set -e
+          unzip -p "$APK" AndroidManifest.xml > AndroidManifest.xml
+          echo "原 manifest: $(stat -c%s AndroidManifest.xml) B" >> x.log
+          python3 tools/axml_touchstr.py AndroidManifest.xml 2.0.5 2.0.9 >> x.log 2>&1
+          echo "改后 manifest: $(stat -c%s AndroidManifest.xml) B" >> x.log
+          cp "$APK" out/probe.apk
+          cp AndroidManifest.xml stage/AndroidManifest.xml
+          ( cd stage && zip -q ../out/probe.apk AndroidManifest.xml )
+          echo "重打包: $(stat -c%s out/probe.apk) B" >> x.log
+          unzip -t out/probe.apk > t.log 2>&1 || true
+          tail -1 t.log >> x.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/probe.apk out/aligned.apk >> x.log 2>&1
+          keytool -genkeypair -v -keystore x.jks -alias x -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass axmlpass -keypass axmlpass \
+            -dname "CN=AXML,OU=Uma,O=DSH,L=NA,S=NA,C=JP" >> x.log 2>&1
+          "$AS" sign --ks x.jks --ks-pass pass:axmlpass --key-pass pass:axmlpass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/probe-signed.apk out/aligned.apk >> x.log 2>&1
+          "$AS" verify out/probe-signed.apk >> x.log 2>&1 && echo "签名: ok" >> x.log
+          {
+            echo "输出: $(stat -c%s out/probe-signed.apk) B"
+            echo "sha256: $(sha256sum out/probe-signed.apk | cut -d' ' -f1)"
+          } >> x.log
+
+      - name: 发布
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+          cp out/probe-signed.apk "axml-probe-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds axml-probe-*.apk -R "$GITHUB_REPOSITORY" --clobber >> x.log 2>&1
+          echo "发布: 完成" >> x.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f x.log ] || echo "(无)" > x.log
+          { echo "run: $GITHUB_RUN_ID  sha: ${GITHUB_SHA:0:8}  $(date -u +%FT%TZ)";
+            echo "--- x.log ---"; tail -n 60 x.log; } > axml-probe-status.txt
+          git add axml-probe-status.txt || true
+          git commit -m "ci: axml probe ($GITHUB_RUN_ID)" || echo "no change"
+          git pull --rebase --autostash >> /dev/null 2>&1 || true
+          git push || { sleep 5; git pull --rebase --autostash >> /dev/null 2>&1 || true; git push; } || true
