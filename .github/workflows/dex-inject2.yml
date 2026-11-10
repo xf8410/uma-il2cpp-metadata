@@ -1,0 +1,96 @@
+name: dex-inject2
+
+# 路线 G（不碰 lib/）：调 tools/dex_inject.py
+on:
+  push:
+    paths:
+      - 'tools/dex_inject.py'
+      - '.github/workflows/dex-inject2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 依赖
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq apktool zip > /dev/null
+          apktool --version || true
+
+      - name: 取 APK + so
+        run: |
+          : > g2.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> g2.log 2>&1 || true
+          gh release download -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> g2.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -n "$Z" ] && unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1 || true)
+          if [ -z "$APK" ] || [ -z "$SO" ]; then echo "跳过：缺输入" >> g2.log; exit 0; fi
+          echo "APK=$(stat -c%s "$APK") B  so=$(stat -c%s "$SO") B" >> g2.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入（apktool + dex）
+        if: env.READY == 'true'
+        run: |
+          mkdir -p out
+          python3 tools/dex_inject.py "$APK" "$SO" out > g2.out 2>&1 || true
+          tail -c 20000 g2.out >> g2.log
+          ls -l out >> g2.log || true
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          ls -l out
+          IN=out/with-dex.apk
+          [ -f "$IN" ] || { echo "::error::没有生成 APK"; exit 1; }
+          "$ZA" -p -f 4 "$IN" out/aligned.apk
+          keytool -genkeypair -v -keystore g2.jks -alias g2 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass g2pass -keypass g2pass \
+            -dname "CN=G2,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks g2.jks --ks-pass pass:g2pass --key-pass pass:g2pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-dexinject.apk" out/aligned.apk
+          "$AS" verify "out/${NAME}-dexinject.apk" > /dev/null && echo "签名: ok" >> g2.log
+          {
+            echo "输出: out/${NAME}-dexinject.apk ($(stat -c%s "out/${NAME}-dexinject.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-dexinject.apk" | cut -d' ' -f1)"
+            echo "结果: 成功"
+          } >> g2.log
+          echo "OUT_APK=out/${NAME}-dexinject.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dex-inject-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f g2.log ] || echo "(无)" > g2.log
+          cp g2.log dex-inject2-status.txt
+          git add dex-inject2-status.txt || true
+          git commit -m "ci: dex-inject2 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
