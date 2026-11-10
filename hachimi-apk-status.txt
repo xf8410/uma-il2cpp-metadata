@@ -1,0 +1,16 @@
+run        : 42775377951  (53ce0977c15b4a1c97343968b5c92fafcd0edc30)
+时间        : 2026-11-10T07:27:16Z
+
+本仓 Release 资产列表：
+v0.14.0。	Latest	v0.14.0。	2026-11-10T07:26:06Z
+{"assets":[{"apiUrl":"https://api.github.com/repos/xf8410/uma-il2cpp-metadata/releases/assets/730479304","contentType":"application/vnd.android.package-archive","createdAt":"2026-11-10T07:12:05Z","digest":"sha256:86f3dbf4b9bc8f977c2f73605c4be6923541101703a0d06b07741bb6e9f4afe3","downloadCount":0,"id":"RA_kwDOVoqXG84rijrI","label":"","name":"syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk","size":251850328,"state":"uploaded","updatedAt":"2026-11-10T07:15:56Z","url":"https://github.com/xf8410/uma-il2cpp-metadata/releases/download/v0.14.0%E3%80%82/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk"},{"apiUrl":"https://api.github.com/repos/xf8410/uma-il2cpp-metadata/releases/assets/730489045","contentType":"application/zip","createdAt":"2026-11-10T07:15:56Z","digest":"sha256:b5d88485890e58986dd2f0f514ee42cc7eee714ef19fd6316e9a84f47927f1dc","downloadCount":0,"id":"RA_kwDOVoqXG84rimDV","label":"","name":"zygisk-hachimi2020-v0.14.0-5ea0359-release.zip","size":39506512,"state":"uploaded","updatedAt":"2026-11-10T07:16:55Z","url":"https://github.com/xf8410/uma-il2cpp-metadata/releases/download/v0.14.0%E3%80%82/zygisk-hachimi2020-v0.14.0-5ea0359-release.zip"}],"tagName":"v0.14.0。"}
+
+APK         : apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+上游 Hachimi 下载：
+  --- Hachimi-Hachimi/Hachimi-Unity2020
+release not found
+  --- UmamusumeResponseAnalyzer/Hachimi-Unity2020
+release not found
+total 0
+解压后 .so：
+结果        : 跳过（没拿到 Hachimi 的 libhachimi*.so / libmain.so）
