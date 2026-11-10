@@ -1,0 +1,92 @@
+name: add-so-test
+
+# v7：只往 APK 里**新增**一个 so（不改动任何已有文件）
+#   · 若能正常登录玩 → TP 只核对已有文件 → 后续可用 wrap.sh / dex 注入（不碰已有文件）
+#   · 若也崩       → TP 连新增文件都查
+on:
+  push:
+    paths:
+      - '.github/workflows/add-so-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK + 编译一个无害 so
+        run: |
+          : > a1.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> a1.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> a1.log; exit 0; }
+          NDK="${ANDROID_NDK_LATEST_HOME:-$(ls -d "$ANDROID_HOME"/ndk/* 2>/dev/null | sort -V | tail -1)}"
+          CC="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang"
+          printf 'int dsh_probe(void){return 42;}\n' > probe.c
+          "$CC" -O2 -shared -fPIC -o libdshprobe.so probe.c
+          ls -l libdshprobe.so >> a1.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入（只新增，不替换）
+        if: env.READY == 'true'
+        run: |
+          set -e
+          rm -rf work out && mkdir -p work out
+          unzip -q "$APK" -d work
+          cp "$APK" out/app-updated.apk
+          cp libdshprobe.so work/lib/arm64-v8a/libdshprobe.so
+          echo "新增: lib/arm64-v8a/libdshprobe.so ($(stat -c%s libdshprobe.so) B)" >> a1.log
+          echo "已有文件: 全部保持原样" >> a1.log
+          ( cd work && zip -q -0 ../out/app-updated.apk lib/arm64-v8a/libdshprobe.so )
+          echo "APK: $(stat -c%s out/app-updated.apk) B" >> a1.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/app-updated.apk out/app-aligned.apk
+          keytool -genkeypair -v -keystore a1.jks -alias a1 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass a1pass -keypass a1pass \
+            -dname "CN=A1,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks a1.jks --ks-pass pass:a1pass --key-pass pass:a1pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-addso.apk" out/app-aligned.apk
+          "$AS" verify "out/${NAME}-addso.apk" > /dev/null && echo "签名: ok" >> a1.log
+          {
+            echo "输出: out/${NAME}-addso.apk ($(stat -c%s "out/${NAME}-addso.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-addso.apk" | cut -d' ' -f1)"
+            echo "结果: 成功（仅新增 libdshprobe.so）"
+          } >> a1.log
+          echo "OUT_APK=out/${NAME}-addso.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: addso-test-apk
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f a1.log ] || echo "(无)" > a1.log
+          cp a1.log addso-status.txt
+          git add addso-status.txt
+          git commit -m "ci: add-so test ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
