@@ -1,0 +1,33 @@
+no assets match the file pattern
+APK=apk-dl/hachimi-patched-apk-55a5a295-277302985.apk
+SO=x/lib/arm64-v8a/libhachimi.so
+$ apktool d -f -o dec apk-dl/hachimi-patched-apk-55a5a295-277302985.apk
+I: Baksmaling classes3.dex...
+I: Baksmaling classes4.dex...
+I: Copying assets and libs...
+I: Copying unknown files...
+I: Copying original files...
+I: Copying META-INF/services directory
+launcher: com.bilibili.umamusu.wxapi.WXPayEntryActivity
+smali: 追加 onCreate 覆写（super=Lcom/gsc/cashier_h5/BaseWXEntryActivity;）
+$ curl -sSL -o smali.jar https://github.com/baksmali/smali/releases/download/v2.5.2/smali-2.5.2.jar
+
+$ java -jar smali.jar assemble dec/smali -o patched.dex
+
+patched classes.dex: 9688620 B
+$ javac -nowarn -source 8 -target 8 -bootclasspath /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar -d cls src/com/dsh/Shim.java
+
+$ /usr/local/lib/android/sdk/build-tools/37.0.0/d8 --lib /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar --min-api 24 --output dexout cls/com/dsh/Shim.class
+
+现有 dex=4，Shim 作为 classes5.dex
+$ zip -q -0 /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/out/patched.apk classes.dex classes5.dex assets/dsh/libhachimi.so
+
+zip rc=0
+final: out/patched.apk (298367987 B)
+total 291376
+-rw-r--r-- 1 runner runner 298367987 Nov 10 11:25 patched.apk
+签名: ok
+输出: 298373007 B
+sha256: 1fadacd90db64c05a770a64ffe1665a389b89ff5ce7a5bc864d50905a8c63ea4
+结果: 成功
+发布: https://github.com/xf8410/uma-il2cpp-metadata/releases/tag/builds
