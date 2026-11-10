@@ -1,0 +1,29 @@
+run: 42834085333  sha: 2ed5c584  2026-11-10T14:27:03Z
+--- p.log 末尾 120 行 ---
+no assets match the file pattern
+no assets match the file pattern
+APK=apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+原 classes3.dex: 8174472 B /  d e x \n 0 3 7 \0
+字符串 #1278: '  check process fail' -> '  eheck process fail'
+已写回并重算 signature/checksum
+改后 classes3.dex: 8174472 B /  d e x \n 0 3 7 \0
+重打包: 257011367 B
+No errors detected in compressed data of out/probe.apk.
+zipalign -c: ok
+Generating 2048-bit RSA key pair and self-signed certificate (SHA384withRSA) with a validity of 10,000 days
+	for: CN=PROBE, OU=Uma, O=DSH, L=NA, ST=NA, C=JP
+[Storing p.jks]
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.conscrypt.NativeLibraryUtil in an unnamed module (file:/usr/local/lib/android/sdk/build-tools/37.0.0/lib/apksigner.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.conscrypt.NativeLibraryUtil in an unnamed module (file:/usr/local/lib/android/sdk/build-tools/37.0.0/lib/apksigner.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+签名: ok
+输出: 257019490 B
+sha256: dd3e220966f9c8c1a7ddc72b318648e13890bd2033e7a47374c787a7bf3ba276
+发布: https://github.com/xf8410/uma-il2cpp-metadata/releases/tag/builds
