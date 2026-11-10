@@ -1,0 +1,116 @@
+name: hachimi-apk-v3
+
+# 变体 C：libmain.so = 自编的崩溃钩子 proxy（tools/crashproxy/proxy.c）
+#   · 装 SIGSEGV/SIGABRT 处理器 → 崩溃信息写到公共目录
+#   · dlopen libhachimi.so（Unity2020 版）并转发 JNI_OnLoad
+#   · libmain_orig.so = 游戏原版
+on:
+  push:
+    paths:
+      - 'tools/crashproxy/**'
+      - '.github/workflows/hachimi-apk-v3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取 APK / libhachimi / 编译 proxy
+        run: |
+          : > v3.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl dl x
+
+          gh release download -R "$GITHUB_REPOSITORY" -D apk-dl --pattern '*.apk' --clobber >> v3.log 2>&1 || true
+          APK=$(find apk-dl -name '*.apk' | head -1 || true)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> v3.log; exit 0; }
+          echo "APK: $APK ($(stat -c%s "$APK") B)" >> v3.log
+
+          gh release download -R "$GITHUB_REPOSITORY" -D dl --pattern '*.zip' --clobber >> v3.log 2>&1 || true
+          Z=$(find dl -name '*.zip' | head -1 || true)
+          [ -z "$Z" ] && { echo "跳过：无 Hachimi zip" >> v3.log; exit 0; }
+          unzip -o -q "$Z" 'lib/*' -d x 2>/dev/null || true
+          SO=$(find x -path '*arm64-v8a*' -name 'libhachimi.so' | head -1)
+          [ -z "$SO" ] && { echo "跳过：无 arm64 libhachimi.so" >> v3.log; exit 0; }
+          echo "libhachimi: $SO ($(stat -c%s "$SO") B)" >> v3.log
+
+          NDK="${ANDROID_NDK_LATEST_HOME:-$(ls -d "$ANDROID_HOME"/ndk/* 2>/dev/null | sort -V | tail -1)}"
+          echo "NDK: $NDK" >> v3.log
+          CC="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang"
+          "$CC" --version | head -2 >> v3.log
+          "$CC" -O2 -shared -fPIC -o out-libmain.so tools/crashproxy/proxy.c >> v3.log 2>&1
+          ls -l out-libmain.so >> v3.log
+          file out-libmain.so >> v3.log || true
+
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "SO=$SO" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 注入
+        if: env.READY == 'true'
+        run: |
+          set -e
+          rm -rf work out && mkdir -p work out
+          unzip -q "$APK" -d work
+          cp "$APK" out/app-updated.apk
+          D=work/lib/arm64-v8a
+          mv "$D/libmain.so" "$D/libmain_orig.so"
+          cp out-libmain.so "$D/libmain.so"
+          cp "$SO" "$D/libhachimi.so"
+          ( cd work && zip -q -0 ../out/app-updated.apk \
+              lib/arm64-v8a/libmain.so lib/arm64-v8a/libmain_orig.so lib/arm64-v8a/libhachimi.so )
+          {
+            echo "libmain.so      : proxy $(stat -c%s out-libmain.so) B"
+            echo "libmain_orig.so : 原版 $(stat -c%s "$D/libmain_orig.so") B"
+            echo "libhachimi.so   : 2020 版 $(stat -c%s "$D/libhachimi.so") B"
+            echo "APK: $(stat -c%s out/app-updated.apk) B"
+          } >> v3.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/app-updated.apk out/app-aligned.apk
+          keytool -genkeypair -v -keystore v3.jks -alias v3 -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass v3pass -keypass v3pass \
+            -dname "CN=V3,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          NAME=$(basename "$APK" .apk)
+          "$AS" sign --ks v3.jks --ks-pass pass:v3pass --key-pass pass:v3pass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out "out/${NAME}-v3.apk" out/app-aligned.apk
+          "$AS" verify "out/${NAME}-v3.apk" > /dev/null && echo "签名: ok" >> v3.log
+          {
+            echo "输出: out/${NAME}-v3.apk ($(stat -c%s "out/${NAME}-v3.apk") B)"
+            echo "sha256: $(sha256sum "out/${NAME}-v3.apk" | cut -d' ' -f1)"
+            echo "结果: 成功（自编崩溃钩子 proxy）"
+          } >> v3.log
+          echo "OUT_APK=out/${NAME}-v3.apk" >> $GITHUB_ENV
+
+      - name: 上传 artifact
+        if: env.READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hachimi-patched-apk-v3
+          path: ${{ env.OUT_APK }}
+          retention-days: 14
+          compression-level: 0
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f v3.log ] || echo "(无)" > v3.log
+          cp v3.log hachimi-apk-v3-status.txt
+          git add hachimi-apk-v3-status.txt
+          git commit -m "ci: hachimi-apk-v3 status ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
