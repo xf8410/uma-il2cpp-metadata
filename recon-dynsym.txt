@@ -1,0 +1,1411 @@
+# APK 内 arm64 so 的导出与依赖
+
+
+## libBugly_Native.so  (199272 B)
+### NEEDED
+    liblog.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    GetAbortMessageAfterQ
+    GetAbortMessageBeforeQ
+    GetAndUpdateAnrState
+    HandleAnr
+    JNI_OnLoad
+    SendSigquitToSignalCatcher
+    UnblockSigquit
+    _UPT_access_fpreg
+    _UPT_access_mem
+    _UPT_access_reg
+    _UPT_create
+    _UPT_destroy
+    _UPT_find_proc_info
+    _UPT_get_dyn_info_list_addr
+    _UPT_get_proc_name
+    _UPT_put_unwind_info
+    _UPT_resume
+    _Uaarch64_create_addr_space
+    _Uaarch64_destroy_addr_space
+    _Uaarch64_dwarf_find_debug_frame
+    _Uaarch64_dwarf_find_unwind_table
+    _Uaarch64_dwarf_search_unwind_table
+    _Uaarch64_flush_cache
+    _Uaarch64_get_accessors
+    _Uaarch64_get_elf_image
+    _Uaarch64_get_reg
+    _Uaarch64_handle_signal_frame
+    _Uaarch64_init_local
+    _Uaarch64_is_fpreg
+    _Uaarch64_is_signal_frame
+    _Uaarch64_local_access_addr_space_init
+    _Uaarch64_regname
+    _Uaarch64_resume
+    _Uaarch64_step
+    _Uelf64_memory_read
+    __emutls_get_address
+    __emutls_register_common
+    appendNativeLog
+    appendWholeNativeLog
+    backtraceStack
+### 导出 FUNC 总数
+    192
+
+## libCtaApiLib.so  (498176 B)
+### NEEDED
+    liblog.so
+    libm.so
+    libstdc++.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _Unwind_Backtrace
+    _Unwind_DeleteException
+    _Unwind_FindEnclosingFunction
+    _Unwind_Find_FDE
+    _Unwind_ForcedUnwind
+    _Unwind_GetCFA
+    _Unwind_GetDataRelBase
+    _Unwind_GetGR
+    _Unwind_GetIP
+    _Unwind_GetIPInfo
+    _Unwind_GetLanguageSpecificData
+    _Unwind_GetRegionStart
+    _Unwind_GetTextRelBase
+    _Unwind_RaiseException
+    _Unwind_Resume
+    _Unwind_Resume_or_Rethrow
+    _Unwind_SetGR
+    _Unwind_SetIP
+    _ZN10__cxxabiv111__terminateEPFvvE
+    _ZN10__cxxabiv112__unexpectedEPFvvE
+    _ZN10__cxxabiv115__forced_unwindD0Ev
+    _ZN10__cxxabiv115__forced_unwindD1Ev
+    _ZN10__cxxabiv115__forced_unwindD2Ev
+    _ZN10__cxxabiv117__class_type_infoD0Ev
+    _ZN10__cxxabiv117__class_type_infoD1Ev
+    _ZN10__cxxabiv117__class_type_infoD2Ev
+    _ZN10__cxxabiv119__foreign_exceptionD0Ev
+    _ZN10__cxxabiv119__foreign_exceptionD1Ev
+    _ZN10__cxxabiv119__foreign_exceptionD2Ev
+    _ZN10__cxxabiv120__si_class_type_infoD0Ev
+    _ZN10__cxxabiv120__si_class_type_infoD1Ev
+    _ZN10__cxxabiv120__si_class_type_infoD2Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD0Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD1Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD2Ev
+    _ZN9__gnu_cxx20recursive_init_errorD0Ev
+    _ZN9__gnu_cxx20recursive_init_errorD1Ev
+    _ZN9__gnu_cxx20recursive_init_errorD2Ev
+    _ZN9__gnu_cxx27__verbose_terminate_handlerEv
+### 导出 FUNC 总数
+    166
+
+## lib_burst_generated.so  (19936 B)
+### NEEDED
+    libm.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    2dda287267d80e7591bab7f467cada40
+    63b51640644604ca768f5518325996d4
+    8c2be93e18276203cbd918daa2748a10
+    96bea6d38a246db7cf510d0d425401f8
+    burst.initialize
+    burst.initialize0
+    burst.initialize1
+    e4653de1be4a868b5709553e440f8723
+### 导出 FUNC 总数
+    8
+
+## libbili.so  (51496 B)
+### NEEDED
+    liblog.so
+    libdl.so
+    libc.so
+    libm.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    JNI_OnUnload
+    android_getCpuCount
+    android_getCpuFamily
+    android_getCpuFeatures
+    android_setCpu
+### 导出 FUNC 总数
+    6
+
+## libblkv.so  (280632 B)
+### NEEDED
+    liblog.so
+    libm.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _ZN10__cxxabiv119__getExceptionClassEPK17_Unwind_Exception
+    _ZN10__cxxabiv119__setExceptionClassEP17_Unwind_Exceptionm
+    _ZN10__cxxabiv121__isOurExceptionClassEPK17_Unwind_Exception
+    _ZNKSt10bad_typeid4whatEv
+    _ZNKSt11logic_error4whatEv
+    _ZNKSt13bad_exception4whatEv
+    _ZNKSt13runtime_error4whatEv
+    _ZNKSt20bad_array_new_length4whatEv
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE12find_last_ofEPKcmm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE13find_first_ofEPKcmm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE16find_last_not_ofEPKcmm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE17find_first_not_ofEPKcmm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE2atEm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4copyEPcmm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4findEPKcmm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4findEcm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5rfindEPKcmm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5rfindEcm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7compareEPKc
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7compareEmmPKc
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7compareEmmPKcm
+    _ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7compareEmmRKS5_mm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE12find_last_ofEPKwmm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE13find_first_ofEPKwmm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE16find_last_not_ofEPKwmm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE17find_first_not_ofEPKwmm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE2atEm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE4copyEPwmm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE4findEPKwmm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE4findEwm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5rfindEPKwmm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5rfindEwm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE7compareEPKw
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE7compareEmmPKw
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE7compareEmmPKwm
+    _ZNKSt6__ndk112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE7compareEmmRKS5_mm
+    _ZNKSt6__ndk121__basic_string_commonILb1EE20__throw_out_of_rangeEv
+    _ZNKSt8bad_cast4whatEv
+    _ZNKSt9bad_alloc4whatEv
+### 导出 FUNC 总数
+    273
+
+## libbuma_xxhash.so  (38600 B)
+### NEEDED
+    libm.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    Java_com_bili_sdk_BumaDownloadAlgorithms_xxh64FileNative
+### 导出 FUNC 总数
+    1
+
+## libc++_shared.so  (1055016 B)
+### NEEDED
+    libc.so
+    libdl.so
+### 导出 FUNC（前 40）
+    _ZNKSt10bad_typeid4whatEv
+    _ZNKSt11logic_error4whatEv
+    _ZNKSt12bad_any_cast4whatEv
+    _ZNKSt12experimental15fundamentals_v112bad_any_cast4whatEv
+    _ZNKSt13bad_exception4whatEv
+    _ZNKSt13runtime_error4whatEv
+    _ZNKSt16bad_array_length4whatEv
+    _ZNKSt16nested_exception14rethrow_nestedEv
+    _ZNKSt18bad_variant_access4whatEv
+    _ZNKSt19bad_optional_access4whatEv
+    _ZNKSt20bad_array_new_length4whatEv
+    _ZNKSt6__ndk110__time_put8__do_putEPcRS1_PK2tmcc
+    _ZNKSt6__ndk110__time_put8__do_putEPwRS1_PK2tmcc
+    _ZNKSt6__ndk110error_code7messageEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE11do_groupingEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE13do_neg_formatEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE13do_pos_formatEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE14do_curr_symbolEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE14do_frac_digitsEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE16do_decimal_pointEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE16do_negative_signEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE16do_positive_signEv
+    _ZNKSt6__ndk110moneypunctIcLb0EE16do_thousands_sepEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE11do_groupingEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE13do_neg_formatEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE13do_pos_formatEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE14do_curr_symbolEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE14do_frac_digitsEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE16do_decimal_pointEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE16do_negative_signEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE16do_positive_signEv
+    _ZNKSt6__ndk110moneypunctIcLb1EE16do_thousands_sepEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE11do_groupingEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE13do_neg_formatEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE13do_pos_formatEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE14do_curr_symbolEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE14do_frac_digitsEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE16do_decimal_pointEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE16do_negative_signEv
+    _ZNKSt6__ndk110moneypunctIwLb0EE16do_positive_signEv
+sort: write failed: 'standard output': Broken pipe
+### 导出 FUNC 总数
+    1536
+
+## libcri_lips_unity.so  (399112 B)
+### NEEDED
+    libc.so
+    libm.so
+    libstdc++.so
+    libdl.so
+### 导出 FUNC（前 40）
+    criBaseVersion_ImplantVersionInformation
+    criCrw_GetVersion
+    criCrw_MemClear
+    criCrw_Memcpy
+    criCrw_Memset
+    criCrw_Sprintf
+    criCrw_Sscanf
+    criCrw_Strcat
+    criCrw_Strcpy
+    criCrw_Strlen
+    criCrw_Strncat
+    criCrw_Strncpy
+    criCrw_Vsprintf
+    criCs_Create
+    criCs_CreateAndPlace
+    criCs_Destroy
+    criCs_Enter
+    criCs_GetVersionString
+    criCs_IsInCriticalSection
+    criCs_Leave
+    criErr_ConvertIdToMessage
+    criErr_ConvertIdToMessageInternal
+    criErr_ConvertIdToMsg
+    criErr_GetErrorCount
+    criErr_GetLoggingCallback
+    criErr_Notify
+    criErr_Notify1
+    criErr_Notify2
+    criErr_NotifyErrorSimple
+    criErr_NotifyGeneric
+    criErr_NotifyPrmArray
+    criErr_NotifyWarningSimple
+    criErr_ResetErrorCount
+    criErr_SetCallback
+    criErr_SetErrorNotificationLevel
+    criErr_SetLoggingCallback
+    criError_IsSetFunction
+    criFixedAllocator_Allocate
+    criFixedAllocator_Create
+    criFixedAllocator_Destroy
+### 导出 FUNC 总数
+    303
+
+## libcri_mana_vpx.so  (449056 B)
+### NEEDED
+    libstdc++.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    arm_cpu_caps
+    average_split_mvs
+    clamp_mv_to_umv_border_sb
+    criBaseVersion_ImplantVersionInformation
+    criCrw_GetVersion
+    criCrw_MemClear
+    criCrw_Memcpy
+    criCrw_Memset
+    criCrw_Sprintf
+    criCrw_Sscanf
+    criCrw_Strcat
+    criCrw_Strcpy
+    criCrw_Strlen
+    criCrw_Strncat
+    criCrw_Strncpy
+    criCrw_Vsprintf
+    criCs_Create
+    criCs_CreateAndPlace
+    criCs_Destroy
+    criCs_Enter
+    criCs_GetVersionString
+    criCs_IsInCriticalSection
+    criCs_Leave
+    criErr_GetErrorCount
+    criErr_GetLoggingCallback
+    criErr_Notify
+    criErr_Notify1
+    criErr_Notify2
+    criErr_NotifyErrorSimple
+    criErr_NotifyGeneric
+    criErr_NotifyPrmArray
+    criErr_NotifyWarningSimple
+    criErr_ResetErrorCount
+    criErr_SetCallback
+    criErr_SetErrorNotificationLevel
+    criErr_SetLoggingCallback
+    criError_IsSetFunction
+    criFixedAllocator_Allocate
+    criFixedAllocator_Create
+    criFixedAllocator_Destroy
+### 导出 FUNC 总数
+    455
+
+## libcri_ware_unity.so  (2198328 B)
+### NEEDED
+    libGLESv2.so
+    libEGL.so
+    libOpenSLES.so
+    liblog.so
+    libandroid.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    CRIWARE006DE47A
+    CRIWARE03B60C4D
+    CRIWARE040E03CA
+    CRIWARE079E6B56
+    CRIWARE087F5823
+    CRIWARE101C5C87
+    CRIWARE1145CE48
+    CRIWARE11C48EB4
+    CRIWARE1219435B
+    CRIWARE14DA5C2A
+    CRIWARE15AB9C28
+    CRIWARE17FC9486
+    CRIWARE19F35641
+    CRIWARE19F8D883
+    CRIWARE1A01B071
+    CRIWARE1BD5C76E
+    CRIWARE1D3492AE
+    CRIWARE1E4148C4
+    CRIWARE1F905429
+    CRIWARE20038ADA
+    CRIWARE20F5428F
+    CRIWARE215EC12B
+    CRIWARE22315D5B
+    CRIWARE225B6BED
+    CRIWARE24BC3588
+    CRIWARE24FC57B7
+    CRIWARE286B2059
+    CRIWARE28A5C6B1
+    CRIWARE29304515
+    CRIWARE2B5126E7
+    CRIWARE2B61BE90
+    CRIWARE2E46BE7C
+    CRIWARE2E6B0094
+    CRIWARE30ED06AE
+    CRIWARE310ABCEC
+    CRIWARE32A8A9DF
+    CRIWARE34DEC54D
+    CRIWARE3583F3B0
+    CRIWARE36AE5E65
+    CRIWARE381B7A71
+### 导出 FUNC 总数
+    633
+
+## libcriafx_mcdsp.so  (936112 B)
+### NEEDED
+    libc.so
+    libm.so
+    libstdc++.so
+    libdl.so
+### 导出 FUNC（前 40）
+    McDSP_AE600_CommonApplyParameters
+    _Unwind_Backtrace
+    _Unwind_DeleteException
+    _Unwind_FindEnclosingFunction
+    _Unwind_Find_FDE
+    _Unwind_ForcedUnwind
+    _Unwind_GetCFA
+    _Unwind_GetDataRelBase
+    _Unwind_GetGR
+    _Unwind_GetIP
+    _Unwind_GetIPInfo
+    _Unwind_GetLanguageSpecificData
+    _Unwind_GetRegionStart
+    _Unwind_GetTextRelBase
+    _Unwind_RaiseException
+    _Unwind_Resume
+    _Unwind_Resume_or_Rethrow
+    _Unwind_SetGR
+    _Unwind_SetIP
+    _Z13ML1_m_ProcessP16SML1_Alg_ContextP26ML1_M_Alg_BufferForProcess
+    _Z13ML1_s_ProcessP16SML1_Alg_ContextP26ML1_S_Alg_BufferForProcess
+    _Z13SA2_m_ProcessP16SSA2_Alg_ContextP27SSA2_M_Alg_BufferForProcess
+    _Z13SA2_s_ProcessP16SSA2_Alg_ContextP27SSA2_S_Alg_BufferForProcess
+    _Z15AE600_m_ProcessP18SAE600_Alg_ContextP29SAE600_M_Alg_BufferForProcess
+    _Z15AE600_s_ProcessP18SAE600_Alg_ContextP29SAE600_S_Alg_BufferForProcess
+    _Z15McDSP_ML1_StartPv
+    _Z15McDSP_SA2_StartPv
+    _Z15SA2_Comp_StereoiPfS_S_P20SSA2_Comp_ParametersP14SSA2_Comp_DataP15SSA2_Comp_State
+    _Z16McDSP_ML1_CreatePK15CriAfxConfigTagPvi
+    _Z16McDSP_SA2_CreatePK15CriAfxConfigTagPvi
+    _Z17FutzBox_m_ProcessP20SFutzBox_Alg_ContextP31SFutzBox_M_Alg_BufferForProcess
+    _Z17FutzBox_s_ProcessP20SFutzBox_Alg_ContextP31SFutzBox_S_Alg_BufferForProcess
+    _Z17McDSP_AE600_StartPv
+    _Z17McDSP_ML1_DestroyPv
+    _Z17McDSP_ML1_ProcessPvPKPKfPKPfjiPi
+    _Z17McDSP_SA2_DestroyPv
+    _Z17McDSP_SA2_ProcessPvPKPKfPKPfjiPi
+    _Z18Distortion_ProcessiPdP17SMcDSP_DistortionP23SMcDSP_Distortion_State
+    _Z18McDSP_AE600_CreatePK15CriAfxConfigTagPvi
+    _Z19McDSP_AE600_DestroyPv
+### 导出 FUNC 总数
+    616
+
+## libcrypto.1.1.so  (2672544 B)
+### NEEDED
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    ACCESS_DESCRIPTION_free@@OPENSSL_1_1_0
+    ACCESS_DESCRIPTION_new@@OPENSSL_1_1_0
+    ADMISSIONS_free@@OPENSSL_1_1_1
+    ADMISSIONS_get0_admissionAuthority@@OPENSSL_1_1_1
+    ADMISSIONS_get0_namingAuthority@@OPENSSL_1_1_1
+    ADMISSIONS_get0_professionInfos@@OPENSSL_1_1_1
+    ADMISSIONS_new@@OPENSSL_1_1_1
+    ADMISSIONS_set0_admissionAuthority@@OPENSSL_1_1_1
+    ADMISSIONS_set0_namingAuthority@@OPENSSL_1_1_1
+    ADMISSIONS_set0_professionInfos@@OPENSSL_1_1_1
+    ADMISSION_SYNTAX_free@@OPENSSL_1_1_1
+    ADMISSION_SYNTAX_get0_admissionAuthority@@OPENSSL_1_1_1
+    ADMISSION_SYNTAX_get0_contentsOfAdmissions@@OPENSSL_1_1_1
+    ADMISSION_SYNTAX_new@@OPENSSL_1_1_1
+    ADMISSION_SYNTAX_set0_admissionAuthority@@OPENSSL_1_1_1
+    ADMISSION_SYNTAX_set0_contentsOfAdmissions@@OPENSSL_1_1_1
+    AES_bi_ige_encrypt@@OPENSSL_1_1_0
+    AES_cbc_encrypt@@OPENSSL_1_1_0
+    AES_cfb128_encrypt@@OPENSSL_1_1_0
+    AES_cfb1_encrypt@@OPENSSL_1_1_0
+    AES_cfb8_encrypt@@OPENSSL_1_1_0
+    AES_decrypt@@OPENSSL_1_1_0
+    AES_ecb_encrypt@@OPENSSL_1_1_0
+    AES_encrypt@@OPENSSL_1_1_0
+    AES_ige_encrypt@@OPENSSL_1_1_0
+    AES_ofb128_encrypt@@OPENSSL_1_1_0
+    AES_options@@OPENSSL_1_1_0
+    AES_set_decrypt_key@@OPENSSL_1_1_0
+    AES_set_encrypt_key@@OPENSSL_1_1_0
+    AES_unwrap_key@@OPENSSL_1_1_0
+    AES_wrap_key@@OPENSSL_1_1_0
+    ASIdOrRange_free@@OPENSSL_1_1_0
+    ASIdOrRange_new@@OPENSSL_1_1_0
+    ASIdentifierChoice_free@@OPENSSL_1_1_0
+    ASIdentifierChoice_new@@OPENSSL_1_1_0
+    ASIdentifiers_free@@OPENSSL_1_1_0
+    ASIdentifiers_new@@OPENSSL_1_1_0
+    ASN1_BIT_STRING_check@@OPENSSL_1_1_0
+    ASN1_BIT_STRING_free@@OPENSSL_1_1_0
+    ASN1_BIT_STRING_get_bit@@OPENSSL_1_1_0
+sort: write failed: 'standard output': Broken pipe
+### 导出 FUNC 总数
+    4249
+
+## libcustom_rules.so  (855416 B)
+### NEEDED
+    libcrypto.1.1.so
+    libssl.1.1.so
+    liblog.so
+    libm.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    HexToAscii
+    Java_com_base_crules_CustomRules_decodeStr
+    Java_com_base_crules_CustomRules_encodeStr
+    Java_com_base_crules_CustomRules_getTokens
+    Java_com_base_crules_CustomRules_getVersion
+    MD5Decode
+    MD5Encode
+    MD5Final
+    MD5Init
+    MD5Transform
+    MD5Update
+    _Z10RSADecryptNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE
+    _Z10logverboseNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE
+    _Z11replace_allRNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERKS5_S8_
+    _Z3MD5NSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE
+    _Z5splitRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_
+    _ZN10__cxxabiv119__getExceptionClassEPK17_Unwind_Exception
+    _ZN10__cxxabiv119__setExceptionClassEP17_Unwind_Exceptionm
+    _ZN10__cxxabiv121__isOurExceptionClassEPK17_Unwind_Exception
+    _ZN13GSRegexParser11summarySignENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+    _ZN13GSRegexParser11tidyPatternENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+    _ZN13GSRegexParser12validPatternENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_
+    _ZN13GSRegexParser8analysisENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+    _ZN13GSRegexParserC2ENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEiS6_S6_
+    _ZN13GSRegexParserD2Ev
+    _ZN6GSRule1aENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEiS6_
+    _ZN6GSRule1dENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+    _ZN6GSRule1mENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEii
+    _ZN6GSRule1rENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEES6_S6_
+    _ZN6GSRule1tENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEii
+    _ZN7_JNIEnv13CallIntMethodEP8_jobjectP10_jmethodIDz
+    _ZN7_JNIEnv16CallObjectMethodEP8_jobjectP10_jmethodIDz
+    _ZN7_JNIEnv9NewObjectEP7_jclassP10_jmethodIDz
+    _ZNKSt10bad_typeid4whatEv
+    _ZNKSt11logic_error4whatEv
+    _ZNKSt13bad_exception4whatEv
+    _ZNKSt13runtime_error4whatEv
+    _ZNKSt16nested_exception14rethrow_nestedEv
+    _ZNKSt20bad_array_new_length4whatEv
+    _ZNKSt6__ndk110__time_put8__do_putEPcRS1_PK2tmcc
+sort: write failed: 'standard output': Broken pipe
+### 导出 FUNC 总数
+    1365
+
+## libcyspringandroid.so  (18200 B)
+### NEEDED
+    libc.so
+    libm.so
+    libstdc++.so
+    libdl.so
+### 导出 FUNC（前 40）
+    CollisionDetect
+    ConvertQToEuler
+    NativeClothSkirtUpdate
+    NativeClothUpdate
+    NativeClothUpdateInternal
+    NativeSkirtUpdate
+    _UpdateSkirtNativePluginCalcRotAngle
+### 导出 FUNC 总数
+    7
+
+## libfb.so  (182488 B)
+### NEEDED
+    libc++_shared.so
+    liblog.so
+    libdl.so
+    libandroid.so
+    libc.so
+    libm.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _Z16initialize_fbjniv
+    _ZN7_JNIEnv13CallIntMethodEP8_jobjectP10_jmethodIDz
+    _ZN7_JNIEnv14CallVoidMethodEP8_jobjectP10_jmethodIDz
+    _ZN7_JNIEnv16CallObjectMethodEP8_jobjectP10_jmethodIDz
+    _ZN7_JNIEnv17CallBooleanMethodEP8_jobjectP10_jmethodIDz
+    _ZN7_JNIEnv20CallStaticVoidMethodEP7_jclassP10_jmethodIDz
+    _ZN7_JNIEnv22CallStaticObjectMethodEP7_jclassP10_jmethodIDz
+    _ZN7_JNIEnv9NewObjectEP7_jclassP10_jmethodIDz
+    _ZN8facebook14assertInternalEPKcz
+    _ZN8facebook14throwExceptionEP7_JNIEnvPKcS3_St9__va_list
+    _ZN8facebook16findClassOrThrowEP7_JNIEnvPKc
+    _ZN8facebook16setAssertHandlerEPFvPKcE
+    _ZN8facebook16throwIOExceptionEP7_JNIEnvPKcz
+    _ZN8facebook17getFieldIdOrThrowEP7_JNIEnvP7_jclassPKcS5_
+    _ZN8facebook18getMethodIdOrThrowEP7_JNIEnvP7_jclassPKcS5_
+    _ZN8facebook19throwAssertionErrorEP7_JNIEnvPKcz
+    _ZN8facebook20throwNoClassDefErrorEP7_JNIEnvPKcz
+    _ZN8facebook21throwOutOfMemoryErrorEP7_JNIEnvPKcz
+    _ZN8facebook21throwRuntimeExceptionEP7_JNIEnvPKcz
+    _ZN8facebook26throwIllegalStateExceptionEP7_JNIEnvPKcz
+    _ZN8facebook29throwIllegalArgumentExceptionEP7_JNIEnvPKcz
+    _ZN8facebook3jni10JThrowable13getStackTraceEv
+    _ZN8facebook3jni10JThrowable13setStackTraceENS0_9alias_refINS0_11JArrayClassIPNS0_6detail8JTypeForINS0_18JStackTraceElementENS0_7JObjectEvE11_javaobjectEEEEE
+    _ZN8facebook3jni10JThrowable9initCauseENS0_9alias_refIS1_EE
+    _ZN8facebook3jni10initializeEP7_JavaVMONSt6__ndk18functionIFvvEEE
+    _ZN8facebook3jni11Environment10initializeEP7_JavaVM
+    _ZN8facebook3jni11Environment19detachCurrentThreadEv
+    _ZN8facebook3jni11Environment29ensureCurrentThreadIsAttachedEv
+    _ZN8facebook3jni11Environment7currentEv
+    _ZN8facebook3jni11HybridClassINS0_15JNativeRunnableENS0_9JRunnableEE8JavaPart5cthisEv
+    _ZN8facebook3jni11JArrayClassIPNS0_6detail8JTypeForINS0_18JStackTraceElementENS0_7JObjectEvE11_javaobjectEE32get_instantiated_java_descriptorEv
+    _ZN8facebook3jni11JByteBuffer9wrapBytesEPhm
+    _ZN8facebook3jni11LocalStringC1EPKc
+    _ZN8facebook3jni11LocalStringC1ERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+    _ZN8facebook3jni11LocalStringC2EPKc
+    _ZN8facebook3jni11LocalStringC2ERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+    _ZN8facebook3jni11LocalStringD1Ev
+    _ZN8facebook3jni11LocalStringD2Ev
+    _ZN8facebook3jni11ThreadScope15WithClassLoaderEONSt6__ndk18functionIFvvEEE
+### 导出 FUNC 总数
+    253
+
+## libfolly_json.so  (313408 B)
+### NEEDED
+    libglog.so
+    libc++_shared.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    _ZN17double_conversion10BignumDtoaEdNS_14BignumDtoaModeEiNS_6VectorIcEEPiS3_
+    _ZN17double_conversion13FastFixedDtoaEdiNS_6VectorIcEEPiS2_
+    _ZN17double_conversion16PowersOfTenCache32GetCachedPowerForDecimalExponentEiPNS_5DiyFpEPi
+    _ZN17double_conversion16PowersOfTenCache36GetCachedPowerForBinaryExponentRangeEiiPNS_5DiyFpEPi
+    _ZN17double_conversion23DoubleToStringConverter13DoubleToAsciiEdNS0_8DtoaModeEiPciPbPiS4_
+    _ZN17double_conversion23DoubleToStringConverter19EcmaScriptConverterEv
+    _ZN17double_conversion5DiyFp8MultiplyERKS0_
+    _ZN17double_conversion6Bignum11PlusCompareERKS0_S2_S2_
+    _ZN17double_conversion6Bignum12AssignBignumERKS0_
+    _ZN17double_conversion6Bignum12AssignUInt16Et
+    _ZN17double_conversion6Bignum12AssignUInt64Em
+    _ZN17double_conversion6Bignum13SubtractTimesERKS0_i
+    _ZN17double_conversion6Bignum14SubtractBignumERKS0_
+    _ZN17double_conversion6Bignum15AssignHexStringENS_6VectorIKcEE
+    _ZN17double_conversion6Bignum15BigitsShiftLeftEi
+    _ZN17double_conversion6Bignum16MultiplyByUInt32Ej
+    _ZN17double_conversion6Bignum16MultiplyByUInt64Em
+    _ZN17double_conversion6Bignum17AssignPowerUInt16Eti
+    _ZN17double_conversion6Bignum19AssignDecimalStringENS_6VectorIKcEE
+    _ZN17double_conversion6Bignum20MultiplyByPowerOfTenEi
+    _ZN17double_conversion6Bignum21DivideModuloIntBignumERKS0_
+    _ZN17double_conversion6Bignum4ZeroEv
+    _ZN17double_conversion6Bignum5AlignERKS0_
+    _ZN17double_conversion6Bignum5ClampEv
+    _ZN17double_conversion6Bignum6SquareEv
+    _ZN17double_conversion6Bignum7CompareERKS0_S2_
+    _ZN17double_conversion6Bignum9AddBignumERKS0_
+    _ZN17double_conversion6Bignum9AddUInt64Em
+    _ZN17double_conversion6Bignum9ShiftLeftEi
+    _ZN17double_conversion6BignumC1Ev
+    _ZN17double_conversion6BignumC2Ev
+    _ZN17double_conversion6StrtodENS_6VectorIKcEEi
+    _ZN17double_conversion6StrtofENS_6VectorIKcEEi
+    _ZN17double_conversion8FastDtoaEdNS_12FastDtoaModeEiNS_6VectorIcEEPiS3_
+    _ZN5folly10UnexpectedINS_14ConversionCodeEE17BadExpectedAccessC2EOS3_
+    _ZN5folly10UnexpectedINS_14ConversionCodeEE17BadExpectedAccessD0Ev
+    _ZN5folly11FunctionRefIFbRKNS_7dynamicES3_EE4callINSt6__ndk14lessIS1_EEEEbPvS3_S3_
+    _ZN5folly11FunctionRefIFbRKNS_7dynamicES3_EE4callIRKNS_8FunctionIKFbS3_S3_EEEEEbPvS3_S3_
+    _ZN5folly11cold_detail9ColdClassC1Ev
+    _ZN5folly11cold_detail9ColdClassC2Ev
+### 导出 FUNC 总数
+    368
+
+## libglog.so  (157872 B)
+### NEEDED
+    libc++_shared.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    _ZN24glog_internal_namespace_5Mutex6UnlockEv
+    _ZN24glog_internal_namespace_5MutexD2Ev
+    _ZN6google10AddLogSinkEPNS_7LogSinkE
+    _ZN6google10LogMessage10SendToSinkEv
+    _ZN6google10LogMessage12num_messagesEi
+    _ZN6google10LogMessage14LogMessageDataC1Ev
+    _ZN6google10LogMessage14LogMessageDataC2Ev
+    _ZN6google10LogMessage14LogMessageDataD2Ev
+    _ZN6google10LogMessage15SaveOrSendToLogEv
+    _ZN6google10LogMessage16SendToSinkAndLogEv
+    _ZN6google10LogMessage17RecordCrashReasonEPNS_24glog_internal_namespace_11CrashReasonE
+    _ZN6google10LogMessage18SendToSyslogAndLogEv
+    _ZN6google10LogMessage19WriteToStringAndLogEv
+    _ZN6google10LogMessage4FailEv
+    _ZN6google10LogMessage4InitEPKciiMS0_FvvE
+    _ZN6google10LogMessage5FlushEv
+    _ZN6google10LogMessage6streamEv
+    _ZN6google10LogMessage9LogStreamC1EPcii
+    _ZN6google10LogMessage9LogStreamD0Ev
+    _ZN6google10LogMessage9LogStreamD1Ev
+    _ZN6google10LogMessage9SendToLogEv
+    _ZN6google10LogMessageC1EPKci
+    _ZN6google10LogMessageC1EPKciRKNS_13CheckOpStringE
+    _ZN6google10LogMessageC1EPKcii
+    _ZN6google10LogMessageC1EPKciiPNS_7LogSinkEb
+    _ZN6google10LogMessageC1EPKciiPNSt6__ndk112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE
+    _ZN6google10LogMessageC1EPKciiPNSt6__ndk16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEE
+    _ZN6google10LogMessageC1EPKciiiMS0_FvvE
+    _ZN6google10LogMessageC2EPKci
+    _ZN6google10LogMessageC2EPKciRKNS_13CheckOpStringE
+    _ZN6google10LogMessageC2EPKcii
+    _ZN6google10LogMessageC2EPKciiPNS_7LogSinkEb
+    _ZN6google10LogMessageC2EPKciiPNSt6__ndk112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE
+    _ZN6google10LogMessageC2EPKciiPNSt6__ndk16vectorINS3_12basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEENS8_ISA_EEEE
+    _ZN6google10LogMessageC2EPKciiiMS0_FvvE
+    _ZN6google10LogMessageD1Ev
+    _ZN6google10LogMessageD2Ev
+    _ZN6google11InitVLOG3__EPPiS0_PKci
+    _ZN6google11LogToStderrEv
+    _ZN6google12SetVLOGLevelEPKci
+### 导出 FUNC 总数
+    195
+
+## libglog_init.so  (30784 B)
+### NEEDED
+    libglog.so
+    libc++_shared.so
+    liblog.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    _ZN10LogcatSink4sendEiPKcS1_iPK2tmS1_m
+    _ZN10LogcatSinkD0Ev
+    _ZN16TaggedLogcatSink4sendEiPKcS1_iPK2tmS1_m
+    _ZN16TaggedLogcatSinkD0Ev
+    _ZN16TaggedLogcatSinkD2Ev
+    _ZN8facebook8gloginit10initializeEPKc
+    _ZNKSt6__ndk121__basic_string_commonILb1EE20__throw_length_errorEv
+### 导出 FUNC 总数
+    7
+
+## libil2cpp.so  (129667848 B)
+### NEEDED
+    liblog.so
+    libm.so
+    libdl.so
+    libc.so
+    libstdc++.so
+    libtprt.so
+### 导出 FUNC（前 40）
+    CloseZStream
+    CreateZStream
+    DllCanUnloadNow
+    DllGetActivationFactory
+    Flush
+    JNI_OnLoad
+    JNI_OnUnload
+    ReadZStream
+    UnityAdsEngineGetDebugMode
+    UnityAdsEngineGetPlacementState
+    UnityAdsEngineGetVersion
+    UnityAdsEngineInitialize
+    UnityAdsEngineIsInitialized
+    UnityAdsEngineIsReady
+    UnityAdsEngineIsSupported
+    UnityAdsEngineSetDebugMode
+    UnityAdsEngineSetDidErrorCallback
+    UnityAdsEngineSetDidFinishCallback
+    UnityAdsEngineSetDidStartCallback
+    UnityAdsEngineSetMetaData
+    UnityAdsEngineSetReadyCallback
+    UnityAdsEngineShow
+    UnityPalGetLocalTimeZoneData
+    UnityPalGetTimeZoneDataForID
+    UnityPalTimeZoneInfoGetTimeZoneIDs
+    UseUnityPalForTimeZoneInformation
+    WriteZStream
+    _Unwind_Backtrace
+    _Unwind_DeleteException
+    _Unwind_FindEnclosingFunction
+    _Unwind_Find_FDE
+    _Unwind_ForcedUnwind
+    _Unwind_GetCFA
+    _Unwind_GetDataRelBase
+    _Unwind_GetGR
+    _Unwind_GetIP
+    _Unwind_GetIPInfo
+    _Unwind_GetLanguageSpecificData
+    _Unwind_GetRegionStart
+    _Unwind_GetTextRelBase
+### 导出 FUNC 总数
+    1556
+
+## libimagepipeline.so  (399864 B)
+### NEEDED
+    liblog.so
+    libjnigraphics.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _ZN10__cxxabiv111__terminateEPFvvE
+    _ZN10__cxxabiv112__unexpectedEPFvvE
+    _ZN10__cxxabiv115__forced_unwindD0Ev
+    _ZN10__cxxabiv115__forced_unwindD1Ev
+    _ZN10__cxxabiv115__forced_unwindD2Ev
+    _ZN10__cxxabiv117__class_type_infoD0Ev
+    _ZN10__cxxabiv117__class_type_infoD1Ev
+    _ZN10__cxxabiv117__class_type_infoD2Ev
+    _ZN10__cxxabiv119__foreign_exceptionD0Ev
+    _ZN10__cxxabiv119__foreign_exceptionD1Ev
+    _ZN10__cxxabiv119__foreign_exceptionD2Ev
+    _ZN10__cxxabiv120__si_class_type_infoD0Ev
+    _ZN10__cxxabiv120__si_class_type_infoD1Ev
+    _ZN10__cxxabiv120__si_class_type_infoD2Ev
+    _ZN9__gnu_cxx20recursive_init_errorD0Ev
+    _ZN9__gnu_cxx20recursive_init_errorD1Ev
+    _ZN9__gnu_cxx20recursive_init_errorD2Ev
+    _ZN9__gnu_cxx27__verbose_terminate_handlerEv
+    _ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj
+    _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE
+    _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv
+    _ZNK10__cxxabiv117__class_type_info12__do_dyncastElNS0_10__sub_kindEPKS0_PKvS3_S5_RNS0_16__dyncast_resultE
+    _ZNK10__cxxabiv117__class_type_info20__do_find_public_srcElPKvPKS0_S2_
+    _ZNK10__cxxabiv120__si_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE
+    _ZNK10__cxxabiv120__si_class_type_info12__do_dyncastElNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE
+    _ZNK10__cxxabiv120__si_class_type_info20__do_find_public_srcElPKvPKNS_17__class_type_infoES2_
+    _ZNKSt10bad_typeid4whatEv
+    _ZNKSt13bad_exception4whatEv
+    _ZNKSt15__exception_ptr13exception_ptr20__cxa_exception_typeEv
+    _ZNKSt15__exception_ptr13exception_ptr6_M_getEv
+    _ZNKSt15__exception_ptr13exception_ptrcvMS0_FvvEEv
+    _ZNKSt15__exception_ptr13exception_ptrntEv
+    _ZNKSt8bad_cast4whatEv
+    _ZNKSt9bad_alloc4whatEv
+    _ZNKSt9exception4whatEv
+    _ZNSt10bad_typeidD0Ev
+    _ZNSt10bad_typeidD1Ev
+    _ZNSt10bad_typeidD2Ev
+    _ZNSt13bad_exceptionD0Ev
+### 导出 FUNC 总数
+    103
+
+## libjsc.so  (8809472 B)
+### NEEDED
+    libm.so
+    libc++_shared.so
+    liblog.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    JSCheckScriptSyntax
+    JSClassCreate
+    JSClassRelease
+    JSClassRetain
+    JSContextCreateBacktrace
+    JSContextGetGlobalContext
+    JSContextGetGlobalObject
+    JSContextGetGroup
+    JSContextGroupAddHeapFinalizer
+    JSContextGroupAddMarkingConstraint
+    JSContextGroupClearExecutionTimeLimit
+    JSContextGroupCreate
+    JSContextGroupRelease
+    JSContextGroupRemoveHeapFinalizer
+    JSContextGroupRetain
+    JSContextGroupSetExecutionTimeLimit
+    JSDisableGCTimer
+    JSEvaluateScript
+    JSGarbageCollect
+    JSGlobalContextCopyName
+    JSGlobalContextCreate
+    JSGlobalContextCreateInGroup
+    JSGlobalContextGetIncludesNativeCallStackWhenReportingExceptions
+    JSGlobalContextGetRemoteInspectionEnabled
+    JSGlobalContextRelease
+    JSGlobalContextRetain
+    JSGlobalContextSetIncludesNativeCallStackWhenReportingExceptions
+    JSGlobalContextSetName
+    JSGlobalContextSetRemoteInspectionEnabled
+    JSObjectCallAsConstructor
+    JSObjectCallAsFunction
+    JSObjectCopyPropertyNames
+    JSObjectDeletePrivateProperty
+    JSObjectDeleteProperty
+    JSObjectDeletePropertyForKey
+    JSObjectGetArrayBufferByteLength
+    JSObjectGetArrayBufferBytesPtr
+    JSObjectGetGlobalContext
+    JSObjectGetPrivate
+    JSObjectGetPrivateProperty
+sort: write failed: 'standard output': Broken pipe
+### 导出 FUNC 总数
+    1865
+
+## libjscexecutor.so  (297040 B)
+### NEEDED
+    libfb.so
+    libreactnativejni.so
+    libjsc.so
+    libjsinspector.so
+    libfolly_json.so
+    libglog.so
+    libc++_shared.so
+    liblog.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _ZN5folly11toAppendFitIJA10_cjA18_cmA2_cPNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEENS4_9enable_ifIXsr12IsSomeStringINS4_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESJ_
+    _ZN5folly11toAppendFitIJA10_cjA19_cmA2_cPNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEENS4_9enable_ifIXsr12IsSomeStringINS4_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESJ_
+    _ZN5folly11toAppendFitIJA5_cjcNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEPS8_EEENS2_9enable_ifIXsr12IsSomeStringINS2_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESH_
+    _ZN5folly12smartReallocEPvmmm
+    _ZN5folly13fbstring_coreIcE10initMediumEPKcm
+    _ZN5folly13fbstring_coreIcE12expandNoinitEmbb
+    _ZN5folly13fbstring_coreIcE12reserveLargeEm
+    _ZN5folly13fbstring_coreIcE12reserveSmallEmb
+    _ZN5folly13fbstring_coreIcE13reserveMediumEm
+    _ZN5folly13fbstring_coreIcE18destroyMediumLargeEv
+    _ZN5folly13fbstring_coreIcE7reserveEmb
+    _ZN5folly13fbstring_coreIcE7unshareEm
+    _ZN5folly13fbstring_coreIcE9initLargeEPKcm
+    _ZN5folly13usingJEMallocEv
+    _ZN5folly14basic_fbstringIcNSt6__ndk111char_traitsIcEENS1_9allocatorIcEENS_13fbstring_coreIcEEE12traitsLengthEPKc
+    _ZN5folly14basic_fbstringIcNSt6__ndk111char_traitsIcEENS1_9allocatorIcEENS_13fbstring_coreIcEEE6appendEPKcm
+    _ZN5folly15ConversionErrorC2EOS0_
+    _ZN5folly15ConversionErrorD0Ev
+    _ZN5folly15throw_exceptionINS_15ConversionErrorEEEvOT_
+    _ZN5folly15throw_exceptionINS_22OptionalEmptyExceptionEEEvOT_
+    _ZN5folly15throw_exceptionINS_9TypeErrorEEEvOT_
+    _ZN5folly15throw_exceptionISt11logic_errorEEvOT_
+    _ZN5folly15throw_exceptionISt9bad_allocEEvOT_
+    _ZN5folly16throwSystemErrorIJRA20_KcRKNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEEvDpOT_
+    _ZN5folly16throwSystemErrorIJRA24_KcEEEvDpOT_
+    _ZN5folly16throwSystemErrorIJRA36_KcEEEvDpOT_
+    _ZN5folly22OptionalEmptyExceptionC2EOS0_
+    _ZN5folly22OptionalEmptyExceptionD0Ev
+    _ZN5folly23makeSystemErrorExplicitEiPKc
+    _ZN5folly23makeSystemErrorExplicitIJRA20_KcRKNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEENS4_12system_errorEiDpOT_
+    _ZN5folly24throwSystemErrorExplicitEiPKc
+    _ZN5folly24throwSystemErrorExplicitIJRA20_KcRKNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEEviDpOT_
+    _ZN5folly2toINSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEJjEEENS1_9enable_ifIXaasr12IsSomeStringIT_EE5valueoonesZT0_Li1Entsr3std7is_sameIS9_NS_6detail11LastElementIJDpRKT0_EE4typeEEE5valueES9_E4typeESF_
+    _ZN5folly2toIjdEENSt6__ndk19enable_ifIXsr6detail14IsArithToArithIT_T0_EE5valueES3_E4typeERKS4_
+    _ZN5folly3f146detail8F14TableINS1_19NodeContainerPolicyINS_7dynamicES4_NS_6detail13DynamicHasherENS5_15DynamicKeyEqualEvEEE10rehashImplEmmmm
+    _ZN5folly3f146detail8F14TableINS1_19NodeContainerPolicyINS_7dynamicES4_NS_6detail13DynamicHasherENS5_15DynamicKeyEqualEvEEE11reserveImplEmmm
+    _ZN5folly3f146detail8F14TableINS1_19NodeContainerPolicyINS_7dynamicES4_NS_6detail13DynamicHasherENS5_15DynamicKeyEqualEvEEE13insertAtBlankIJRKNSt6__ndk121piecewise_construct_tENSB_5tupleIJONSB_12basic_stringIcNSB_11char_traitsIcEENSB_9allocatorIcEEEEEEENSF_IJEEEEEEvNS1_11F14ItemIterIPNS1_8F14ChunkIPNSB_4pairIKS4_S4_EEEEEENSR_ImmEEDpOT_
+    _ZN5folly3f146detail8F14TableINS1_19NodeContainerPolicyINS_7dynamicES4_NS_6detail13DynamicHasherENS5_15DynamicKeyEqualEvEEE13insertAtBlankIJRKNSt6__ndk121piecewise_construct_tENSB_5tupleIJOiEEENSF_IJODnEEEEEEvNS1_11F14ItemIterIPNS1_8F14ChunkIPNSB_4pairIKS4_S4_EEEEEENSM_ImmEEDpOT_
+    _ZN5folly3f146detail8F14TableINS1_19NodeContainerPolicyINS_7dynamicES4_NS_6detail13DynamicHasherENS5_15DynamicKeyEqualEvEEE15tryEmplaceValueINSt6__ndk112basic_stringIcNSB_11char_traitsIcEENSB_9allocatorIcEEEEJRKNSB_21piecewise_construct_tENSB_5tupleIJOSH_EEENSL_IJEEEEEENSB_4pairINS1_11F14ItemIterIPNS1_8F14ChunkIPNSP_IKS4_S4_EEEEEEbEERKT_DpOT0_
+### 导出 FUNC 总数
+    360
+
+## libjsinspector.so  (47160 B)
+### NEEDED
+    libc++_shared.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    _ZN8facebook5react10IInspectorD0Ev
+    _ZN8facebook5react10IInspectorD1Ev
+    _ZN8facebook5react10IInspectorD2Ev
+    _ZN8facebook5react13IDestructibleD0Ev
+    _ZN8facebook5react13IDestructibleD1Ev
+    _ZN8facebook5react13IDestructibleD2Ev
+    _ZN8facebook5react13InspectorPageC2EOS1_
+    _ZN8facebook5react13InspectorPageC2ERKS1_
+    _ZN8facebook5react16ILocalConnectionD0Ev
+    _ZN8facebook5react16ILocalConnectionD1Ev
+    _ZN8facebook5react16ILocalConnectionD2Ev
+    _ZN8facebook5react17IRemoteConnectionD0Ev
+    _ZN8facebook5react17IRemoteConnectionD1Ev
+    _ZN8facebook5react17IRemoteConnectionD2Ev
+    _ZN8facebook5react20getInspectorInstanceEv
+    _ZN8facebook5react25makeTestInspectorInstanceEv
+    _ZNKSt6__ndk120__vector_base_commonILb1EE20__throw_length_errorEv
+    _ZNKSt6__ndk121__basic_string_commonILb1EE20__throw_length_errorEv
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_5tupleIJNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES8_EEEEENS_22__unordered_map_hasherIiSA_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSA_NS_8equal_toIiEELb1EEENS6_ISA_EEE14__erase_uniqueIiEEmRKT_
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_5tupleIJNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES8_EEEEENS_22__unordered_map_hasherIiSA_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSA_NS_8equal_toIiEELb1EEENS6_ISA_EEE6rehashEm
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_5tupleIJNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES8_EEEEENS_22__unordered_map_hasherIiSA_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSA_NS_8equal_toIiEELb1EEENS6_ISA_EEE6removeENS_21__hash_const_iteratorIPNS_11__hash_nodeISA_PvEEEE
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_5tupleIJNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES8_EEEEENS_22__unordered_map_hasherIiSA_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSA_NS_8equal_toIiEELb1EEENS6_ISA_EEE8__rehashEm
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_8functionIFNS_10unique_ptrIN8facebook5react16ILocalConnectionENS_14default_deleteIS6_EEEENS3_INS5_17IRemoteConnectionENS7_ISA_EEEEEEEEENS_22__unordered_map_hasherIiSF_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSF_NS_8equal_toIiEELb1EEENS_9allocatorISF_EEE14__erase_uniqueIiEEmRKT_
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_8functionIFNS_10unique_ptrIN8facebook5react16ILocalConnectionENS_14default_deleteIS6_EEEENS3_INS5_17IRemoteConnectionENS7_ISA_EEEEEEEEENS_22__unordered_map_hasherIiSF_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSF_NS_8equal_toIiEELb1EEENS_9allocatorISF_EEE6rehashEm
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_8functionIFNS_10unique_ptrIN8facebook5react16ILocalConnectionENS_14default_deleteIS6_EEEENS3_INS5_17IRemoteConnectionENS7_ISA_EEEEEEEEENS_22__unordered_map_hasherIiSF_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSF_NS_8equal_toIiEELb1EEENS_9allocatorISF_EEE6removeENS_21__hash_const_iteratorIPNS_11__hash_nodeISF_PvEEEE
+    _ZNSt6__ndk112__hash_tableINS_17__hash_value_typeIiNS_8functionIFNS_10unique_ptrIN8facebook5react16ILocalConnectionENS_14default_deleteIS6_EEEENS3_INS5_17IRemoteConnectionENS7_ISA_EEEEEEEEENS_22__unordered_map_hasherIiSF_NS_4hashIiEELb1EEENS_21__unordered_map_equalIiSF_NS_8equal_toIiEELb1EEENS_9allocatorISF_EEE8__rehashEm
+    _ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7reserveEm
+    _ZNSt6__ndk113unordered_mapIiNS_5tupleIJNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES7_EEENS_4hashIiEENS_8equal_toIiEENS5_INS_4pairIKiS8_EEEEEixERSE_
+    _ZNSt6__ndk113unordered_mapIiNS_8functionIFNS_10unique_ptrIN8facebook5react16ILocalConnectionENS_14default_deleteIS5_EEEENS2_INS4_17IRemoteConnectionENS6_IS9_EEEEEEENS_4hashIiEENS_8equal_toIiEENS_9allocatorINS_4pairIKiSD_EEEEEixERSK_
+    _ZNSt6__ndk16vectorIN8facebook5react13InspectorPageENS_9allocatorIS3_EEE21__push_back_slow_pathIS3_EEvOT_
+    _ZNSt6__ndk18functionIFNS_10unique_ptrIN8facebook5react16ILocalConnectionENS_14default_deleteIS4_EEEENS1_INS3_17IRemoteConnectionENS5_IS8_EEEEEE4swapERSC_
+### 导出 FUNC 总数
+    31
+
+## libmain.so  (10520 B)
+### NEEDED
+    liblog.so
+    libm.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+### 导出 FUNC 总数
+    1
+
+## libmsaoaidauth.so  (421888 B)
+### NEEDED
+    liblog.so
+    libdl.so
+    libz.so
+    libc.so
+    libm.so
+    libstdc++.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _Unwind_Backtrace
+    _Unwind_DeleteException
+    _Unwind_FindEnclosingFunction
+    _Unwind_Find_FDE
+    _Unwind_ForcedUnwind
+    _Unwind_GetCFA
+    _Unwind_GetDataRelBase
+    _Unwind_GetGR
+    _Unwind_GetIP
+    _Unwind_GetIPInfo
+    _Unwind_GetLanguageSpecificData
+    _Unwind_GetRegionStart
+    _Unwind_GetTextRelBase
+    _Unwind_RaiseException
+    _Unwind_Resume
+    _Unwind_Resume_or_Rethrow
+    _Unwind_SetGR
+    _Unwind_SetIP
+    _ZN10__cxxabiv111__terminateEPFvvE
+    _ZN10__cxxabiv112__unexpectedEPFvvE
+    _ZN10__cxxabiv115__forced_unwindD0Ev
+    _ZN10__cxxabiv115__forced_unwindD1Ev
+    _ZN10__cxxabiv115__forced_unwindD2Ev
+    _ZN10__cxxabiv117__class_type_infoD0Ev
+    _ZN10__cxxabiv117__class_type_infoD1Ev
+    _ZN10__cxxabiv117__class_type_infoD2Ev
+    _ZN10__cxxabiv119__foreign_exceptionD0Ev
+    _ZN10__cxxabiv119__foreign_exceptionD1Ev
+    _ZN10__cxxabiv119__foreign_exceptionD2Ev
+    _ZN10__cxxabiv120__si_class_type_infoD0Ev
+    _ZN10__cxxabiv120__si_class_type_infoD1Ev
+    _ZN10__cxxabiv120__si_class_type_infoD2Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD0Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD1Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD2Ev
+    _ZN9__gnu_cxx27__verbose_terminate_handlerEv
+    _ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj
+    _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE
+    _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv
+### 导出 FUNC 总数
+    161
+
+## libmsaoaidsec.so  (696320 B)
+### NEEDED
+    liblog.so
+    libdl.so
+    libz.so
+    libc.so
+    libm.so
+    libstdc++.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _Unwind_Backtrace
+    _Unwind_DeleteException
+    _Unwind_FindEnclosingFunction
+    _Unwind_Find_FDE
+    _Unwind_ForcedUnwind
+    _Unwind_GetCFA
+    _Unwind_GetDataRelBase
+    _Unwind_GetGR
+    _Unwind_GetIP
+    _Unwind_GetIPInfo
+    _Unwind_GetLanguageSpecificData
+    _Unwind_GetRegionStart
+    _Unwind_GetTextRelBase
+    _Unwind_RaiseException
+    _Unwind_Resume
+    _Unwind_Resume_or_Rethrow
+    _Unwind_SetGR
+    _Unwind_SetIP
+    _ZN10__cxxabiv111__terminateEPFvvE
+    _ZN10__cxxabiv112__unexpectedEPFvvE
+    _ZN10__cxxabiv115__forced_unwindD0Ev
+    _ZN10__cxxabiv115__forced_unwindD1Ev
+    _ZN10__cxxabiv115__forced_unwindD2Ev
+    _ZN10__cxxabiv117__class_type_infoD0Ev
+    _ZN10__cxxabiv117__class_type_infoD1Ev
+    _ZN10__cxxabiv117__class_type_infoD2Ev
+    _ZN10__cxxabiv119__foreign_exceptionD0Ev
+    _ZN10__cxxabiv119__foreign_exceptionD1Ev
+    _ZN10__cxxabiv119__foreign_exceptionD2Ev
+    _ZN10__cxxabiv120__si_class_type_infoD0Ev
+    _ZN10__cxxabiv120__si_class_type_infoD1Ev
+    _ZN10__cxxabiv120__si_class_type_infoD2Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD0Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD1Ev
+    _ZN10__cxxabiv121__vmi_class_type_infoD2Ev
+    _ZN9__gnu_cxx27__verbose_terminate_handlerEv
+    _ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj
+    _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE
+    _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv
+### 导出 FUNC 总数
+    161
+
+## libnative.so  (1943680 B)
+### NEEDED
+    libc.so
+    libm.so
+    libstdc++.so
+    libdl.so
+### 导出 FUNC（前 40）
+    LZ4_compress_default_ext
+    LZ4_decompress_safe_continue
+    LZ4_decompress_safe_ext
+    sqlite3_bind_blob
+    sqlite3_bind_double
+    sqlite3_bind_int
+    sqlite3_bind_int64
+    sqlite3_bind_null
+    sqlite3_bind_text
+    sqlite3_close
+    sqlite3_column_blob
+    sqlite3_column_bytes
+    sqlite3_column_double
+    sqlite3_column_int
+    sqlite3_column_int64
+    sqlite3_column_text
+    sqlite3_column_type
+    sqlite3_exec
+    sqlite3_finalize
+    sqlite3_key
+    sqlite3_key_v2
+    sqlite3_open
+    sqlite3_open_v2
+    sqlite3_prepare_v2
+    sqlite3_rekey
+    sqlite3_rekey_v2
+    sqlite3_reset
+    sqlite3_step
+    sqlite3_threadsafe
+    sqlite3_vfs_find
+    sqlite3_vfs_register
+    sqlite3_vfs_unregister
+    sqlite3_wal_checkpoint
+    sqlite3_wal_checkpoint_v2
+    sqlite3mc_codec_data
+    sqlite3mc_config
+    sqlite3mc_config_cipher
+    tempest_add_header
+    tempest_clear_headers
+    tempest_config_create
+### 导出 FUNC 总数
+    65
+
+## libreactnativejni.so  (956616 B)
+### NEEDED
+    libfb.so
+    libjsc.so
+    libglog_init.so
+    libyoga.so
+    libjsinspector.so
+    libfolly_json.so
+    libglog.so
+    libc++_shared.so
+    libandroid.so
+    liblog.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    _ZN5folly10UnexpectedINS_14ConversionCodeEE17BadExpectedAccessC2EOS3_
+    _ZN5folly10UnexpectedINS_14ConversionCodeEE17BadExpectedAccessD0Ev
+    _ZN5folly11toAppendFitIJA10_cjA18_cmA2_cPNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEENS4_9enable_ifIXsr12IsSomeStringINS4_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESJ_
+    _ZN5folly11toAppendFitIJA10_cjA19_cmA2_cPNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEENS4_9enable_ifIXsr12IsSomeStringINS4_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESJ_
+    _ZN5folly11toAppendFitIJA10_cmA22_cmA21_cPNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEENS4_9enable_ifIXsr12IsSomeStringINS4_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESJ_
+    _ZN5folly11toAppendFitIJA5_cjcNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEPS8_EEENS2_9enable_ifIXsr12IsSomeStringINS2_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESH_
+    _ZN5folly11toAppendFitIJA8_cPKcA19_cjPNSt6__ndk112basic_stringIcNS5_11char_traitsIcEENS5_9allocatorIcEEEEEEENS5_9enable_ifIXsr12IsSomeStringINS5_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESK_
+    _ZN5folly11toAppendFitIJPKcA9_cmPNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEENS4_9enable_ifIXsr12IsSomeStringINS4_14remove_pointerINS_6detail11LastElementIJDpRKT_EE4typeEE4typeEEE5valueEvE4typeESJ_
+    _ZN5folly12smartReallocEPvmmm
+    _ZN5folly13fbstring_coreIcE10initMediumEPKcm
+    _ZN5folly13fbstring_coreIcE12expandNoinitEmbb
+    _ZN5folly13fbstring_coreIcE12reserveLargeEm
+    _ZN5folly13fbstring_coreIcE12reserveSmallEmb
+    _ZN5folly13fbstring_coreIcE13reserveMediumEm
+    _ZN5folly13fbstring_coreIcE18destroyMediumLargeEv
+    _ZN5folly13fbstring_coreIcE7reserveEmb
+    _ZN5folly13fbstring_coreIcE7unshareEm
+    _ZN5folly13fbstring_coreIcE9initLargeEPKcm
+    _ZN5folly13usingJEMallocEv
+    _ZN5folly14basic_fbstringIcNSt6__ndk111char_traitsIcEENS1_9allocatorIcEENS_13fbstring_coreIcEEE12traitsLengthEPKc
+    _ZN5folly14basic_fbstringIcNSt6__ndk111char_traitsIcEENS1_9allocatorIcEENS_13fbstring_coreIcEEE6appendEPKcm
+    _ZN5folly15ConversionErrorC2EOS0_
+    _ZN5folly15ConversionErrorD0Ev
+    _ZN5folly15expected_detail30expected_detail_ExpectedHelper14ExpectedHelper12thenOrThrow_IRNS0_15ExpectedStorageINS_5RangeIPKcEENS_14ConversionCodeELNS0_11StorageTypeE1EEENS_6detail18CheckTrailingSpaceEZNS_2toIbEENSt6__ndk19enable_ifIXntsr3std7is_sameIS8_T_EE5valueESI_E4typeES8_EUlS9_E_NS_8ExpectedINS_4UnitES9_EEvLb0ELi0EEET2_OSI_OT0_OT1_
+    _ZN5folly15expected_detail30expected_detail_ExpectedHelper14ExpectedHelper12thenOrThrow_IRNS0_15ExpectedStorageINS_5RangeIPKcEENS_14ConversionCodeELNS0_11StorageTypeE1EEENS_6detail18CheckTrailingSpaceEZNS_2toIlEENSt6__ndk19enable_ifIXntsr3std7is_sameIS8_T_EE5valueESI_E4typeES8_EUlS9_E_NS_8ExpectedINS_4UnitES9_EEvLb0ELi0EEET2_OSI_OT0_OT1_
+    _ZN5folly15throw_exceptionINS_10UnexpectedINS_14ConversionCodeEE17BadExpectedAccessEEEvOT_
+    _ZN5folly15throw_exceptionINS_15ConversionErrorEEEvOT_
+    _ZN5folly15throw_exceptionINS_17BadExpectedAccessEEEvOT_
+    _ZN5folly15throw_exceptionINS_22OptionalEmptyExceptionEEEvOT_
+    _ZN5folly15throw_exceptionINS_9TypeErrorEEEvOT_
+    _ZN5folly15throw_exceptionISt11logic_errorEEvOT_
+    _ZN5folly15throw_exceptionISt9bad_allocEEvOT_
+    _ZN5folly16throwSystemErrorIJRA20_KcRKNSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEEEEEvDpOT_
+    _ZN5folly16throwSystemErrorIJRA24_KcEEEvDpOT_
+    _ZN5folly16throwSystemErrorIJRA36_KcEEEvDpOT_
+    _ZN5folly17BadExpectedAccessC2EOS0_
+    _ZN5folly17BadExpectedAccessD0Ev
+    _ZN5folly22OptionalEmptyExceptionC2EOS0_
+    _ZN5folly22OptionalEmptyExceptionD0Ev
+sort: write failed: 'standard output': Broken pipe
+### 导出 FUNC 总数
+    1083
+
+## libssl.1.1.so  (590168 B)
+### NEEDED
+    libcrypto.1.1.so
+    libdl.so
+    libc.so
+### 导出 FUNC（前 40）
+    BIO_f_ssl@@OPENSSL_1_1_0
+    BIO_new_buffer_ssl_connect@@OPENSSL_1_1_0
+    BIO_new_ssl@@OPENSSL_1_1_0
+    BIO_new_ssl_connect@@OPENSSL_1_1_0
+    BIO_ssl_copy_session_id@@OPENSSL_1_1_0
+    BIO_ssl_shutdown@@OPENSSL_1_1_0
+    DTLS_client_method@@OPENSSL_1_1_0
+    DTLS_get_data_mtu@@OPENSSL_1_1_1
+    DTLS_method@@OPENSSL_1_1_0
+    DTLS_server_method@@OPENSSL_1_1_0
+    DTLS_set_timer_cb@@OPENSSL_1_1_1
+    DTLSv1_2_client_method@@OPENSSL_1_1_0
+    DTLSv1_2_method@@OPENSSL_1_1_0
+    DTLSv1_2_server_method@@OPENSSL_1_1_0
+    DTLSv1_client_method@@OPENSSL_1_1_0
+    DTLSv1_listen@@OPENSSL_1_1_0
+    DTLSv1_method@@OPENSSL_1_1_0
+    DTLSv1_server_method@@OPENSSL_1_1_0
+    ERR_load_SSL_strings@@OPENSSL_1_1_0
+    OPENSSL_cipher_name@@OPENSSL_1_1_1
+    OPENSSL_init_ssl@@OPENSSL_1_1_0
+    PEM_read_SSL_SESSION@@OPENSSL_1_1_0
+    PEM_read_bio_SSL_SESSION@@OPENSSL_1_1_0
+    PEM_write_SSL_SESSION@@OPENSSL_1_1_0
+    PEM_write_bio_SSL_SESSION@@OPENSSL_1_1_0
+    SRP_Calc_A_param@@OPENSSL_1_1_0
+    SSL_CIPHER_description@@OPENSSL_1_1_0
+    SSL_CIPHER_find@@OPENSSL_1_1_0
+    SSL_CIPHER_get_auth_nid@@OPENSSL_1_1_0
+    SSL_CIPHER_get_bits@@OPENSSL_1_1_0
+    SSL_CIPHER_get_cipher_nid@@OPENSSL_1_1_0
+    SSL_CIPHER_get_digest_nid@@OPENSSL_1_1_0
+    SSL_CIPHER_get_handshake_digest@@OPENSSL_1_1_1
+    SSL_CIPHER_get_id@@OPENSSL_1_1_0
+    SSL_CIPHER_get_kx_nid@@OPENSSL_1_1_0
+    SSL_CIPHER_get_name@@OPENSSL_1_1_0
+    SSL_CIPHER_get_protocol_id@@OPENSSL_1_1_1
+    SSL_CIPHER_get_version@@OPENSSL_1_1_0
+    SSL_CIPHER_is_aead@@OPENSSL_1_1_0
+    SSL_CIPHER_standard_name@@OPENSSL_1_1_0
+### 导出 FUNC 总数
+    495
+
+## libtersafe2.so  (5285264 B)
+### NEEDED
+    liblog.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    GetTssExportFunc2@@TERSAFE
+    JNI_OnLoad@@TERSAFE
+    TssJavaMethod_SendCmd@@TERSAFE
+    TssSDKDelReportData3@@TERSAFE
+    TssSDKDelReportData@@TERSAFE
+    TssSDKForExport@@TERSAFE
+    TssSDKFree@@TERSAFE
+    TssSDKGetReportData2@@TERSAFE
+    TssSDKGetReportData3@@TERSAFE
+    TssSDKGetReportData@@TERSAFE
+    TssSDKInit@@TERSAFE
+    TssSDKInitEx@@TERSAFE
+    TssSDKIoctl@@TERSAFE
+    TssSDKIoctlOld@@TERSAFE
+    TssSDKOnPause@@TERSAFE
+    TssSDKOnRecvData@@TERSAFE
+    TssSDKOnRecvSignature@@TERSAFE
+    TssSDKOnResume@@TERSAFE
+    TssSDKRegistInfoListener@@TERSAFE
+    TssSDKSetUserInfo@@TERSAFE
+    TssSDKSetUserInfoWithLicense@@TERSAFE
+    _ZN3tp210gen_randomEv@@TERSAFE
+    _ZN6TssSdk10gen_randomEv@@TERSAFE
+    _ZN6TssSdk11gen_random2Ev@@TERSAFE
+    _ZN6TssSdk16sdt_report_errorEv@@TERSAFE
+    tp2_dec_tss_info@@TERSAFE
+    tp2_free_anti_data@@TERSAFE
+    tp2_getver@@TERSAFE
+    tp2_regist_tss_info_receiver@@TERSAFE
+    tp2_sdk_init@@TERSAFE
+    tp2_sdk_init_ex@@TERSAFE
+    tp2_sdk_ioctl@@TERSAFE
+    tp2_setgamestatus@@TERSAFE
+    tp2_setoptions@@TERSAFE
+    tp2_setuserinfo@@TERSAFE
+    tp2_setuserinfowithlicense@@TERSAFE
+    tss_del_report_data3@@TERSAFE
+    tss_del_report_data@@TERSAFE
+    tss_enable_get_report_data@@TERSAFE
+    tss_get_report_data2@@TERSAFE
+### 导出 FUNC 总数
+    66
+
+## libtprt.so  (1692296 B)
+### NEEDED
+    liblog.so
+    libc.so
+    libm.so
+    libstdc++.so
+    libdl.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad@@VERS_1.1
+    unwind_xx_info_query@@VERS_1.1
+    unwind_xx_ioctl@@VERS_1.1
+### 导出 FUNC 总数
+    3
+
+## libunity.so  (18050344 B)
+### NEEDED
+    libmain.so
+    libandroid.so
+    liblog.so
+    libz.so
+    libEGL.so
+    libm.so
+    libdl.so
+    libc.so
+    libstdc++.so
+    libtprt.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    JNI_OnUnload
+    UnitySendMessage
+    UnitySwappy_injectTracer
+    UnitySwappy_version
+### 导出 FUNC 总数
+    5
+
+## libyoga.so  (243768 B)
+### NEEDED
+    libfb.so
+    libc++_shared.so
+    libandroid.so
+    liblog.so
+    libc.so
+    libm.so
+    libdl.so
+### 导出 FUNC（前 40）
+    JNI_OnLoad
+    YGAlignToString
+    YGAssert
+    YGAssertWithConfig
+    YGAssertWithNode
+    YGConfigCopy
+    YGConfigFree
+    YGConfigGetContext
+    YGConfigGetDefault
+    YGConfigGetInstanceCount
+    YGConfigGetUseWebDefaults
+    YGConfigNew
+    YGConfigSetCloneNodeFunc
+    YGConfigSetContext
+    YGConfigSetExperimentalFeatureEnabled
+    YGConfigSetLogger
+    YGConfigSetPointScaleFactor
+    YGConfigSetPrintTreeFlag
+    YGConfigSetShouldDiffLayoutWithoutLegacyStretchBehaviour
+    YGConfigSetUseLegacyStretchBehaviour
+    YGConfigSetUseWebDefaults
+    YGDimensionToString
+    YGDirectionToString
+    YGDisplayToString
+    YGEdgeToString
+    YGExperimentalFeatureToString
+    YGFlexDirectionToString
+    YGFloatIsUndefined
+    YGJustifyToString
+    YGLog
+    YGLogLevelToString
+    YGLogWithConfig
+    YGMeasureModeToString
+    YGNodeCalculateLayout
+    YGNodeCanUseCachedMeasurement
+    YGNodeClone
+    YGNodeCopyStyle
+    YGNodeFree
+    YGNodeFreeRecursive
+    YGNodeFreeRecursiveWithCleanupFunc
+### 导出 FUNC 总数
+    238
+
+## 谁依赖 libtersafe / libtprt
+   libil2cpp.so -> libtprt.so 
+   libtersafe2.so -> libtersafe2.so 
+   libtprt.so -> libtprt.so 
+   libunity.so -> libtprt.so 
