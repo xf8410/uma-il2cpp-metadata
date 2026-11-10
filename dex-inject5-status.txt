@@ -1,0 +1,54 @@
+测试包合集 tests-20261110-1103	Latest	tests-20261110-1103	2026-11-10T11:04:19Z
+v0.14.0。		v0.14.0。	2026-11-10T07:26:06Z
+no assets match the file pattern
+APK=apk-dl/hachimi-patched-apk-55a5a295-277302985.apk
+ZIP=dl/zygisk-hachimi2020-v0.14.0-5ea0359-release.zip
+SO=x/lib/arm64-v8a/libhachimi.so
+apk-dl/hachimi-patched-apk-55a5a295-277302985.apk
+apk-dl/hachimi-patched-apk-v3-2f599e32-266964776.apk
+apk-dl/hachimi-patched-apk-v3-14f795a4-266964776.apk
+apk-dl/hachimi-patched-apk-v2-05b0431c-282021672.apk
+apk-dl/hachimi-patched-apk-v5-8cf2a755-251870820.apk
+apk-dl/addso-test-apk-9c50952f-251870894.apk
+apk-dl/hachimi-patched-apk-0de89e7d-501250982.apk
+apk-dl/hachimi-patched-apk-v4-22c673b0-251891399.apk
+apk-dl/hachimi-patched-apk-v3-f0e53c4f-266964776.apk
+apk-dl/hachimi-patched-apk-v6-130077bf-251899492.apk
+apk-dl/control-repack-apk-b58ae9e7-251854416.apk
+apk-dl/hachimi-patched-apk-9aa1f519-511638438.apk
+apk-dl/touch-asset-apk-49453645-251854436.apk
+apk-dl/hachimi-patched-apk-v3-d596178e-266964776.apk
+dl/zygisk-hachimi2020-v0.14.0-5ea0359-release.zip
+$ apktool d -f -o dec apk-dl/hachimi-patched-apk-55a5a295-277302985.apk
+I: Baksmaling classes.dex...
+I: Baksmaling classes2.dex...
+I: Baksmaling classes3.dex...
+I: Baksmaling classes4.dex...
+I: Copying assets and libs...
+I: Copying unknown files...
+I: Copying original files...
+I: Copying META-INF/services directory
+activity: com.bilibili.umamusu.wxapi.WXPayEntryActivity
+smali: 已插入到 dec/smali/com/bilibili/umamusu/wxapi/WXPayEntryActivity.smali 的第 7 行（方法 .method public constructor <init>()V）
+assets: 已放 dsh/libhachimi.so (15068464 B)
+android.jar: /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar
+d8: /usr/local/lib/android/sdk/build-tools/37.0.0/d8
+$ javac -source 8 -target 8 -bootclasspath /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar -d cls src/com/dsh/Shim.java
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+$ /usr/local/lib/android/sdk/build-tools/37.0.0/d8 --lib /usr/local/lib/android/sdk/platforms/android-37.2-beta3/android.jar --min-api 24 --output dexout cls/com/dsh/Shim.class
+
+classes3.dex: 1848 B
+$ apktool b dec -o out/base.apk
+I: Checking whether sources has changed...
+I: Smaling smali_classes3 folder into classes3.dex...
+I: Checking whether resources has changed...
+I: Building resources...
+W: aapt: brut.common.BrutException: brut.common.BrutException: Could not extract resource: /prebuilt/linux/aapt_64 (defaulting to $PATH binary)
+W: res/drawable-anydpi-v21/$gsg_message_item_loading_icon__0.xml: Invalid file name: must contain only [a-z0-9_.]
+W: res/drawable-anydpi-v21/$gsg_message_item_loading_icon__1.xml: Invalid file name: must contain only [a-z0-9_.]
+brut.androlib.AndrolibException: brut.common.BrutException: could not exec (exit code = 1): [aapt, p, --min-sdk-version, 24, --target-sdk-version, 30, --version-code, 11220, --version-name, 2.0.5, --no-version-vectors, -F, /tmp/APKTOOL11522103939178884783.tmp, -0, resources.arsc, -0, META-INF/androidx.activity_activity.version, -0, META-INF/androidx.annotation_annotation-experimental.version, -0, META-INF/androidx.appcompat_appcompat-resources.version, -0, META-INF/androidx.appcompat_appcompat.version, -0, META-INF/androidx.asynclayoutinflater_asynclayoutinflater.version, -0, META-INF/androidx.coordinatorlayout_coordinatorlayout.version, -0, META-INF/androidx.core_core.version, -0, META-INF/androidx.cursoradapter_cursoradapter.version, -0, META-INF/androidx.customview_customview.version, -0, META-INF/androidx.documentfile_documentfile.version, -0, META-INF/androidx.drawerlayout_drawerlayout.version, -0, META-INF/androidx.fragment_fragment.version, -0, META-INF/androidx.interpolator_interpolator.version, -0, META-INF/androidx.legacy_legacy-support-core-ui.version, -0, META-INF/androidx.legacy_legacy-support-core-utils.version, -0, META-INF/androidx.lifecycle_lifecycle-livedata-core.version, -0, META-INF/androidx.lifecycle_lifecycle-livedata.version, -0, META-INF/androidx.lifecycle_lifecycle-process.version, -0, META-INF/androidx.lifecycle_lifecycle-runtime.version, -0, META-INF/androidx.lifecycle_lifecycle-viewmodel-savedstate.version, -0, META-INF/androidx.lifecycle_lifecycle-viewmodel.version, -0, META-INF/androidx.loader_loader.version, -0, META-INF/androidx.localbroadcastmanager_localbroadcastmanager.version, -0, META-INF/androidx.print_print.version, -0, META-INF/androidx.recyclerview_recyclerview.version, -0, META-INF/androidx.room_room-ktx.version, -0, META-INF/androidx.room_room-runtime.version, -0, META-INF/androidx.savedstate_savedstate.version, -0, META-INF/androidx.slidingpanelayout_slidingpanelayout.version, -0, META-INF/androidx.sqlite_sqlite-framework.version, -0, META-INF/androidx.sqlite_sqlite.version, -0, META-INF/androidx.startup_startup-runtime.version, -0, META-INF/androidx.swiperefreshlayout_swiperefreshlayout.version, -0, META-INF/androidx.tracing_tracing.version, -0, META-INF/androidx.vectordrawable_vectordrawable-animated.version, -0, META-INF/androidx.vectordrawable_vectordrawable.version, -0, META-INF/androidx.versionedparcelable_versionedparcelable.version, -0, META-INF/androidx.viewpager_viewpager.version, -0, META-INF/kotlinx_coroutines_android.version, -0, META-INF/kotlinx_coroutines_core.version, -0, lib/arm64-v8a/libmain.so, -0, lib/arm64-v8a/libmain_orig.so, -0, assets/cri_auth, -0, assets/fase_random.cell, -0, png, -0, mp4, -0, assets/sound_proj.acf, -0, assets/PreinResource/Movie/m/Title/title_movie_01.usm, -0, assets/PreinResource/Sound/b/snd_bgm_title.acb, -0, awb, -0, assets/PreinResource/Sound/s/snd_sfx_preinstall.acb, -0, assets/PreinResource/Sound/v/snd_voi_bilibili.acb, -0, assets/PreinResource/Sound/v/snd_voi_title.acb, -0, arsc, -I, /home/runner/.local/share/apktool/framework/1.apk, -S, /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/dec/res, -M, /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/dec/AndroidManifest.xml]
+apktool b 失败
+total 0
