@@ -1,0 +1,13 @@
+run: 42842539286  sha: 8721aa72  2026-11-10T15:16:07Z
+--- x.log ---
+no assets match the file pattern
+no assets match the file pattern
+APK=apk-dl/syyjsn_2.0.5.11220.09221715_20260922_052111_fbd41.apk (251850328 B)
+原 manifest: 85232 B
+Traceback (most recent call last):
+  File "/home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/tools/axml_touchstr.py", line 41, in <module>
+    main()
+    ~~~~^^
+  File "/home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/tools/axml_touchstr.py", line 26, in main
+    pat = old.encode(enc)
+TypeError: encode() argument 'encoding' must be str, not bytes
