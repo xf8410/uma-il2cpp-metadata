@@ -1,0 +1,104 @@
+name: remove-tp
+
+# 实验：把 libtersafe2.so（腾讯 TP 的 Java 侧库）从 APK 里删掉，其它不动
+#   目的：验证「杀进程的判定是否就发生在 libtersafe2 里」
+#   · 游戏能跑 → TP 被摘掉，之后就能随便改 libmain 了
+#   · 启动就崩 → 说明游戏/登录 SDK 依赖它，此路不通
+#   libtprt.so 保留（libmain.so 依赖它，删了 libmain 都加载不了）
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-tp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载原版 APK
+        run: |
+          : > t.log
+          echo "READY=false" >> $GITHUB_ENV
+          mkdir -p apk-dl
+          TAGS=$(gh release list -R "$GITHUB_REPOSITORY" -L 30 | awk -F'\t' '{print $3}')
+          for T in $TAGS ; do
+            [ -z "$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)" ] && \
+              gh release download "$T" -R "$GITHUB_REPOSITORY" -D apk-dl --pattern 'syyjsn*.apk' --clobber >> t.log 2>&1 || true
+          done
+          APK=$(ls apk-dl/syyjsn*.apk 2>/dev/null | head -1)
+          [ -z "$APK" ] && { echo "跳过：无 APK" >> t.log; exit 0; }
+          echo "APK=$APK ($(stat -c%s "$APK") B)" >> t.log
+          echo "APK=$APK" >> $GITHUB_ENV
+          echo "READY=true" >> $GITHUB_ENV
+
+      - name: 删除 libtersafe2.so
+        if: env.READY == 'true'
+        run: |
+          set -e
+          python3 - "$APK" out/no-tp.apk >> t.log 2>&1 <<'PY'
+import sys, zipfile
+src, dst = sys.argv[1], sys.argv[2]
+removed = []
+with zipfile.ZipFile(src) as zin, zipfile.ZipFile(dst, 'w', zipfile.ZIP_DEFLATED) as zout:
+    for it in zin.infolist():
+        name = it.filename
+        if 'libtersafe2.so' in name:
+            removed.append(name)
+            continue
+        data = zin.read(name)
+        ni = zipfile.ZipInfo(name, date_time=it.date_time)
+        ni.compress_type = it.compress_type
+        ni.external_attr = it.external_attr
+        zout.writestr(ni, data)
+print("removed:", removed)
+PY
+          ls -l out/ >> t.log 2>&1 || true
+          echo "原包 $(stat -c%s "$APK") B → 新包 $(stat -c%s out/no-tp.apk) B" >> t.log
+
+      - name: 对齐 + 签名
+        if: env.READY == 'true'
+        run: |
+          set -e
+          mkdir -p out
+          ZA=$(ls "$ANDROID_HOME"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1)
+          AS=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          "$ZA" -p -f 4 out/no-tp.apk out/aligned.apk
+          keytool -genkeypair -v -keystore t.jks -alias t -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass tpass -keypass tpass \
+            -dname "CN=NOTP,OU=Uma,O=DSH,L=NA,S=NA,C=JP" > /dev/null 2>&1
+          "$AS" sign --ks t.jks --ks-pass pass:tpass --key-pass pass:tpass \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true \
+            --out out/no-tp-signed.apk out/aligned.apk
+          "$AS" verify out/no-tp-signed.apk > /dev/null && echo "签名: ok" >> t.log
+          {
+            echo "输出: $(stat -c%s out/no-tp-signed.apk) B"
+            echo "sha256: $(sha256sum out/no-tp-signed.apk | cut -d' ' -f1)"
+          } >> t.log
+
+      - name: 发布
+        if: env.READY == 'true'
+        run: |
+          set -e
+          gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+            gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+          cp out/no-tp-signed.apk "no-tp-$(date -u +%m%d-%H%M).apk"
+          gh release upload builds no-tp-*.apk -R "$GITHUB_REPOSITORY" --clobber
+          echo "发布: https://github.com/$GITHUB_REPOSITORY/releases/tag/builds" >> t.log
+
+      - name: 提交状态
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f t.log ] || echo "(无)" > t.log
+          cp t.log remove-tp-status.txt
+          git add remove-tp-status.txt || true
+          git commit -m "ci: remove-tp ($GITHUB_RUN_ID)" || echo "no change"
+          git push || true
