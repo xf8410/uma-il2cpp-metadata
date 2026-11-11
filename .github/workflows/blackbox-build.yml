@@ -1,7 +1,12 @@
 name: blackbox-build
 
-# 克隆 ALEX5402/NewBlackbox → 打补丁 → JDK21 + NDK29 编译 → 发 Release
-# 补丁：manifest 权限 / WebView 宿主 Context / 自动导入(按包名) + 自动启动 / 中文化 / 诊断日志
+# BlackBox（Android 16 适配 + 中文 + 自动导入）+ Hachimi 注入
+# 补丁：
+#   1) manifest MANAGE_EXTERNAL_STORAGE（真正能读 /sdcard）
+#   2) WebView 用宿主 Context（修容器内 ERR_CACHE_MISS）
+#   3) guest 进程启动时 System.load("/sdcard/Download/libhachimi.so") ← 注入 Hachimi
+#   4) App.onCreate 自动导入(包名) + 自动启动
+#   5) 中文化 + 诊断日志
 on:
   push:
     paths:
@@ -41,17 +46,18 @@ jobs:
           import re, sys, pathlib
           root = pathlib.Path(sys.argv[1])
 
+          # 1) manifest 权限
           mf = root / "app/src/main/AndroidManifest.xml"
           m = mf.read_text(encoding="utf-8")
           if "MANAGE_EXTERNAL_STORAGE" not in m:
               a = '<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"'
               if a in m:
-                  m = m.replace(a, '<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />\n    ' + a, 1)
-                  mf.write_text(m, encoding="utf-8")
+                  mf.write_text(m.replace(a, '<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />\n    ' + a, 1), encoding="utf-8")
                   print("OK manifest")
           else:
               print("manifest 已有")
 
+          # 2) WebView 宿主 Context
           wv = root / "Bcore/src/main/java/top/niunaijun/blackbox/fake/service/WebViewProxy.java"
           s = wv.read_text(encoding="utf-8")
           anchor = ("                if (args != null && args.length > 0 && args[0] instanceof Context) {\n"
@@ -62,6 +68,26 @@ jobs:
               wv.write_text(s, encoding="utf-8")
               print("OK WebViewProxy")
 
+          # 3) ★ Hachimi 注入点：guest 进程启动早期
+          bt = root / "Bcore/src/main/java/top/niunaijun/blackbox/app/BActivityThread.java"
+          b = bt.read_text(encoding="utf-8")
+          anchor2 = ("        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {\n"
+                     "            WebView.setDataDirectorySuffix(")
+          inject = (
+            "        try {\n"
+            "            System.load(\"/sdcard/Download/libhachimi.so\");\n"
+            "            android.util.Log.i(\"BB_INJECT\", \"hachimi loaded in guest \" + processName);\n"
+            "        } catch (Throwable t) {\n"
+            "            android.util.Log.e(\"BB_INJECT\", \"hachimi load failed\", t);\n"
+            "        }\n")
+          if anchor2 in b and "BB_INJECT" not in b:
+              b = b.replace(anchor2, inject + anchor2, 1)
+              bt.write_text(b, encoding="utf-8")
+              print("OK BActivityThread：Hachimi 注入点")
+          else:
+              print("Hachimi 注入点已存在或锚点未命中")
+
+          # 4) 自动导入 + 启动
           app = root / "app/src/main/java/top/niunaijun/blackboxa/app/App.kt"
           a = app.read_text(encoding="utf-8")
           old = "            AppManager.doOnCreate(mContext)"
@@ -76,16 +102,6 @@ jobs:
             "                    if (la == null || la.isEmpty()) {\n"
             "                        val r1 = core.installPackageAsUser(\"com.bilibili.umamusu\", 0)\n"
             "                        android.util.Log.i(\"BB_AUTO\", \"install(pkg) ok=\" + r1?.success + \" msg=\" + r1?.msg)\n"
-            "                        val la2 = core.getInstalledApplications(0, 0)\n"
-            "                        if (la2 == null || la2.isEmpty()) {\n"
-            "                            val g = java.io.File(\"/sdcard/Download/orig.apk\")\n"
-            "                            if (g.exists()) {\n"
-            "                                val cache = java.io.File(cacheDir, \"guest.apk\")\n"
-            "                                g.inputStream().use { i -> cache.outputStream().use { o -> i.copyTo(o) } }\n"
-            "                                val r2 = core.installPackageAsUser(cache.absolutePath, 0)\n"
-            "                                android.util.Log.i(\"BB_AUTO\", \"install(file) ok=\" + r2?.success + \" msg=\" + r2?.msg)\n"
-            "                            }\n"
-            "                        }\n"
             "                    }\n"
             "                    Thread.sleep(2000)\n"
             "                    android.util.Log.i(\"BB_AUTO\", \"launch=\" + core.launchApk(\"com.bilibili.umamusu\", 0))\n"
@@ -97,10 +113,11 @@ jobs:
           if old in a and "BB_AUTO" not in a:
               a = a.replace(old, auto, 1)
               app.write_text(a, encoding="utf-8")
-              print("OK App.kt 自动导入(包名优先)+启动")
+              print("OK App.kt 自动导入+启动")
           else:
               print("App.kt 已打过或锚点未命中")
 
+          # 5) 中文化
           ZH = {"installed_app": "已安装应用", "empty_empty": "空空如也", "filter": "过滤",
                 "setting": "设置", "done": "完成", "cancel": "取消",
                 "install_success": "安装成功", "install_fail": "安装失败：%s",
@@ -137,8 +154,8 @@ jobs:
             echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)" >> "$LOG"
             gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
               gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
-            cp "$APK" "bb-pkg-$(date -u +%m%d-%H%M).apk"
-            gh release upload builds bb-pkg-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
+            cp "$APK" "bb-hachimi-$(date -u +%m%d-%H%M).apk"
+            gh release upload builds bb-hachimi-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
             echo "发布: 完成" >> "$LOG"
           fi
           { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)"; echo "--- 末尾 120 行 ---"; tail -n 120 "$LOG"; } > blackbox-build-status.txt
