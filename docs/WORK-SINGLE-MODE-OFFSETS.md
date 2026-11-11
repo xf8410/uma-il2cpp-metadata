@@ -160,16 +160,16 @@ bl   0x3895f48          ; get_IsPlaying
 | 39 | `_autoPlayCustomPlanArray` | 0x1C0 | 8 | get_AutoPlayCustomPlanArray / ApplyAutoPlayCustomPlanData |
 | 40 | `_autoPlaySelectedPlanId` | 0x1C8 | 8 | get_/set_AutoPlaySelectedPlanId（内部 int 在 0x1D8） |
 | 41 | `<AutoPlaySelectScenario>k__BackingField` | 0x1DC | 8 | get_/set_AutoPlaySelectScenario |
-| 42 | `<AutoPlayModifyPreferenceSkillIds>` | 0x1F0 | 8 | get_/set_ |
-| 43 | `<AutoPlayModifyPreferenceFactorGroups>` | 0x1F8 | 8 | get_/set_ |
-| 44 | `<AutoPlayModifyPreferenceBlueFactorGroups>` | 0x200 | 8 | get_/set_ |
+| 42 | `<AutoPlayModifyPreferenceSkillIds>k__BackingField` | 0x1F0 | 8 | get_/set_ |
+| 43 | `<AutoPlayModifyPreferenceFactorGroups>k__BackingField` | 0x1F8 | 8 | get_/set_ |
+| 44 | `<AutoPlayModifyPreferenceBlueFactorGroups>k__BackingField` | 0x200 | 8 | get_/set_ |
 | 45 | `<AutoPlayEventOption>k__BackingField` | 0x208 | 8 | get_/set_ |
 | 46 | `<AutoPlayRaceContinue>k__BackingField` | 0x21C | 8 | get_/set_ |
 | 47 | `<AutoPlayFactorContinue>k__BackingField` | 0x228 | 8 | get_/set_ |
 | 48 | `<AutoPlayFatnessFactorContinue>k__BackingField` | 0x234 | 8 | get_/set_ |
-| 49 | `<AutoPlayModifyPreferenceSuccessionForemost>` | 0x240 | 8 | get_/set_ |
-| 50 | `<AutoPlayModifyPreferenceSuccessionSecondary>` | 0x248 | 8 | get_/set_ |
-| 51 | `<AutoPlayModifyPreferenceSuccessionBorrow>` | 0x250 | 8 | get_/set_ |
+| 49 | `<AutoPlayModifyPreferenceSuccessionForemost>k__BackingField` | 0x240 | 8 | get_/set_ |
+| 50 | `<AutoPlayModifyPreferenceSuccessionSecondary>k__BackingField` | 0x248 | 8 | get_/set_ |
+| 51 | `<AutoPlayModifyPreferenceSuccessionBorrow>k__BackingField` | 0x250 | 8 | get_/set_ |
 | 52 | `<AutoPlaySuccessionRental>k__BackingField` | 0x258 | 8 | get_/set_ |
 | 53 | `<AutoPlayFitnessContinue>k__BackingField` | 0x264 | 8 | get_/set_ |
 | 54 | `<AutoPlayAutoTimes>k__BackingField` | 0x280 | 4 | get_/set_AutoPlayAutoTimes |
@@ -177,8 +177,8 @@ bl   0x3895f48          ; get_IsPlaying
 | 56 | `<AutoPlayJustFullSupportCard>k__BackingField` | 0x298 | 8 | get_/set_ |
 | 57 | `<AutoPlaySkillLearnPause>k__BackingField` | 0x2A4 | 8 | get_/set_ |
 | 58 | `<AutoPlayVenusModifyPreference>k__BackingField` | 0x2C0 | 4 | get_/set_ |
-| 59 | `<AutoPlayVenusModifyFragmentAttributes>` | 0x2C8 | 8 | get_/set_ |
-| 60 | `<AutoPlayVenusUseDirectSpirit>` | 0x2D0 | 8 | get_/set_ |
+| 59 | `<AutoPlayVenusModifyFragmentAttributes>k__BackingField` | 0x2C8 | 8 | get_/set_ |
+| 60 | `<AutoPlayVenusUseDirectSpirit>k__BackingField` | 0x2D0 | 8 | get_/set_ |
 
 **辅助偏移**（struct 属性内部字段，非独立 metadata 字段）：
 `0x024`(int, master turn 相关)、`0x048`、`0x050`、`0x060`、`0x068`、`0x06C`、`0x080`、`0x0C0`、`0x0CC`、`0x0D8`、`0x0E0`、`0x0E4`、`0x110`、`0x178`、`0x1A8`、`0x1E8`、`0x218`、`0x224`、`0x230`、`0x23C`、`0x260`、`0x26C`、`0x278`、`0x294`、`0x2A0`、`0x2AC`、`0x2D8`。
@@ -316,4 +316,115 @@ python3 extract.py --ctor 0x3BEF43C --pattern new-object
 
 ---
 
-*生成日期：2026-11-11 · 数据源：国服 libil2cpp（XOR 0x97 全量解密，49,129/49,143 方法可反汇编）+ global-metadata.dat（修复后 254,055 字段全对）*
+## 8. `_isPlaying` 读写点唯一性（决定性证据）
+
+全库扫描 `WorkSingleModeData` 的 320 个方法（abs_idx 67087–67406），跟踪 `this` 寄存器搬运链后统计所有落在 `+0x19` 的访存：
+
+| 方向 | 数量 | 方法 | 地址 | 指令 |
+|---|---:|---|---|---|
+| 写 | **1** | `set_IsPlaying` | `0x3895FA0` | `strb` |
+| 读 | **1** | `get_IsPlaying` | `0x3895F48` | `ldrb` |
+
+也就是说 **`_isPlaying` 在整个程序集里只有一个写入口、一个读出口**。这对探针是极好的性质：hook 这两个地址就能 100% 覆盖 `_isPlaying` 的全部变化，不存在旁路写入。
+
+### 8.1 五个写入调用点及其语义
+
+全库扫 `bl 0x3895FA0`，命中 5 处，结构完全一致：
+
+```
+adrp x21, <page>
+ldr  x21, [x21, #off]        ; Singleton<WorkDataManager> 的类元数据槽
+ldr  x0,  [x21, #0]
+bl   0x14BD694               ; Singleton<T>.get_Instance（泛型共享版）
+cbz  w0,  <exit>             ; 实例为空则跳过
+ldr  x0,  [x0, #88]          ; WorkDataManager + 0x58 = <SingleMode> ★
+cbz  w0,  <exit>
+mov  w1,  <0 或 1>
+mov  x2,  xzr                ; MethodInfo* = null（实现不检查）
+bl   0x3895FA0               ; set_IsPlaying
+```
+
+| RVA | 所属方法 | 写入值 | 语义 |
+|---|---|---:|---|
+| `0x4BF111C` | `Gallop.SingleModeChangeViewManager::StartSingleMode` | `1` | 开始育成 |
+| `0x4BF0930` | `Gallop.SingleModeChangeViewManager::GoSingleModeView` | `1` | 跳转育成界面 |
+| `0x357502C` | `Gallop.SingleModeUtils::ClearPlayData` | `0` | 清理游玩数据 |
+| `0x34D73F8` | `<FinalizeView>d__19::MoveNext` | `0` | 结束界面协程 |
+| `0x3462FE0` | `<EndView>d__65::MoveNext` | `0` | 退出界面协程 |
+
+其中 `mov w1, wzr`（写 0）与 `orr w1, wzr, #1`（写 1，编码 `0x320003E1`）是判定真假值的依据。
+
+**旁证**：这 5 处全部经 `ldr x0,[x0,#88]` 取 `WorkDataManager + 0x58`，与 `WorkDataManager..ctor` 内 `str x20,[x19,#88]`（`0x3BEF8BC`）完全对应，`0x58 = <SingleMode>` 得到第三条独立证据。
+
+### 8.2 `get_Character` 作为偏移表总校验锚点
+
+```
+0x3896290  ldr x0, [x0, #48]     ; +0x30
+0x3896294  ret
+```
+
+只有两条指令，直接读出 `+0x30`，与字段表 idx=5 `<Character>k__BackingField` @ `0x030` 精确吻合。由于 `_isPlaying`(0x019)、`_totalTurnNum`(0x02C)、`_scenarioIdList`(0x088)、`_cachedRewardEventId`(0x190) 等修正项与 `_Character` 出自同一张反汇编扫描，这一条即证明整表可信。
+
+---
+
+## 9. 仓库旧版 `fields.tsv` 的归属缺陷（必须重建）
+
+`metadata-20261110/dump/fields.tsv` 是旧解析器产物，其 `type_index` 列用的是「按 typeDefinitions 数组顺序累加 field_count」，在组内乱序处整体偏移。
+
+以 `WorkSingleModeData`（idx=8972）为例：
+
+```
+旧版 fields.tsv（错误）：
+  8972  Short              0x0400470B
+  8972  Mile               0x0400470C
+  8972  Medium             0x0400470D
+  8972  Long               0x0400470E
+  → 实际是嵌套 enum DistanceType 的成员，整体偏移了 170 个字段
+
+新版（修复后）：
+  8972  PLAY_TIMING_TYPE_NUM    0x04004661
+  8972  _storyInfoListDic       0x04004662
+  8972  _isExistPlayingData     0x04004663
+  8972  _isPlaying              0x04004664
+  → token 0x04004661..0x0400469D 严格连续，61 项无缺口
+```
+
+修复后累加结果恰好等于 fields 表条目数 **254055**，可作全局正确性断言；组内 type token 逆序对实测 **4985** 个，说明重排不是可选优化而是必需步骤。
+
+`parse_metadata_fixed.py` 已实现该逻辑，并额外处理一个此前未记录的问题：
+
+### 9.1 string 表不是标准 length-prefixed
+
+本 metadata（`global-metadata.fixed.dat`）的 string 表被重建为 **null-terminated** 形式。若按标准 v27 的 length-prefix 读，`image[0]` 会得到 `scorlib.dll\0<Module>\0Locale\0...`（首字符 `m` 被当成长度 0x6D=109）。判定依据：
+
+```
+image[0].nameIndex = 29  →  STR_O + 29 = 1217573
+该处字节 = 'm'（0x6D），其后 0x00 终止 → "mscorlib.dll"   ✓
+若按 length-prefix：0x6D 当长度 → 读 109 字节，得到一串拼接名 ✗
+```
+
+解析器已加入编码自动探测（用 `image[0]` 名是否以 `.dll` 结尾且全可打印字符来判定）。
+
+---
+
+## 10. 运行时验证探针
+
+`uma_probe.js`（Frida）——完全走标准 IL2CPP 导出 API，零硬编码对象地址：
+
+| 阶段 | 动作 |
+|---|---|
+| 1 | 定位含 `il2cpp_domain_get` 导出的模块（兼容静态链接进 libunity/libmain 的情况） |
+| 2 | `domain_get_assemblies` → 遍历 image → `class_from_name` 找 `Gallop.WorkDataManager` / `Gallop.WorkSingleModeData` |
+| 3 | 对 59 个实例字段逐个 `class_get_field_from_name` + `field_get_offset`，与静态表逐项比对，输出差异表 |
+| 4 | `class_get_static_field_data` → `[0]` → `+0x58`，并用 `WSM` 对象头 klass 指针反向校验 |
+| 5 | `Interceptor.attach` 到 `0x3895FA0` / `0x3895F48`，打印读写时序、调用者（经 backtrace 反查 5 个已知调用点）、以及每次变化时的完整状态快照 |
+
+自校验输出预期为「一致 59 / 59」，此时静态表与运行时布局等价，后续所有偏移可放心使用。
+
+探针额外暴露 `rpc.exports.dump()` 与 `rpc.exports.verify()`，可在 Frida REPL 随时手动快照 / 复验。
+
+**说明**：当前环境无 Android 设备/模拟器，脚本只完成静态交付与逻辑校验（字段名 59/59 与 metadata 逐字一致、RVA 与 `methods_rva.tsv` 一致），未在真机运行。上机后若第 3 步出现差异，优先检查游戏版本是否与本次分析的 dec.so 同版本。
+
+---
+
+*生成日期：2026-11-11 · 更新 2026-11-12（新增 isPlaying 读写点唯一性、5 个写入调用点语义、fields.tsv 归属缺陷对照、Frida 探针）· 数据源：国服 libil2cpp（XOR 0x97 全量解密，49,129/49,143 方法可反汇编）+ global-metadata.dat（修复后 254,055 字段全对）*
