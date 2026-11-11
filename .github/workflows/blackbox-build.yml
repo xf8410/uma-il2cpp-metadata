@@ -1,7 +1,8 @@
 name: blackbox-build
 
-# 把 ALEX5402/NewBlackbox 拉到 CI 里编译，验证「我们自己能出包」，为 Android 16 适配做准备。
-# 产物：app-debug.apk（含 sha256）+ 完整构建日志，发到 Release `builds`。
+# 克隆 ALEX5402/NewBlackbox → 打「诊断日志」补丁 → JDK21 + NDK29 编译 → 产物发 Release
+# 背景：Android 16 上容器导入失败（Installation failed: Attempt to read from field ...），
+#       上游只 log 了 e.message 看不到堆栈；这里把完整堆栈和文件可读性打出来。
 on:
   push:
     paths:
@@ -19,47 +20,89 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 拉上游源码
+      - name: JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: 拉源码 + 装 NDK
         run: |
-          : > b.log
-          git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git upstream >> b.log 2>&1
-          cd upstream
-          echo "commit: $(git rev-parse --short HEAD)" >> ../b.log
-          ls >> ../b.log
-          echo "--- gradle.properties:" >> ../b.log
-          cat gradle.properties >> ../b.log 2>&1 || true
-          echo "--- app/build.gradle 关键行:" >> ../b.log
-          grep -nE "compileSdk|minSdk|targetSdk|ndkVersion|namespace|applicationId" app/build.gradle >> ../b.log 2>&1 || \
-          grep -nE "compileSdk|minSdk|targetSdk|ndkVersion|namespace|applicationId" app/build.gradle.kts >> ../b.log 2>&1 || true
+          LOG="$GITHUB_WORKSPACE/b.log"; : > "$LOG"
+          UP="$GITHUB_WORKSPACE/upstream"
+          git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git "$UP" >> "$LOG" 2>&1
+          echo "commit: $(git -C "$UP" rev-parse --short HEAD)" >> "$LOG"
+          grep -nE "compileSdkVersion|targetSdkVersion|minSdk|gradle:" "$UP/build.gradle" "$UP/gradle/wrapper/gradle-wrapper.properties" >> "$LOG" 2>&1 || true
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >> "$LOG" 2>&1 || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;29.0.13846066" "platforms;android-36" >> "$LOG" 2>&1 || echo "sdkmanager 部分失败（继续）" >> "$LOG"
+          echo "NDK:" >> "$LOG"; ls "$ANDROID_HOME/ndk" >> "$LOG" 2>&1 || true
+
+      - name: 打诊断补丁
+        run: |
+          LOG="$GITHUB_WORKSPACE/b.log"
+          python3 - "$GITHUB_WORKSPACE/upstream" >> "$LOG" 2>&1 <<'PY'
+          import sys, pathlib
+          root = pathlib.Path(sys.argv[1])
+          repo = root / "app/src/main/java/top/niunaijun/blackboxa/data/AppsRepository.kt"
+          s = repo.read_text(encoding="utf-8")
+          for old, new in [
+              ('Log.e(TAG, "Error installing APK: ${e.message}")', 'Log.e(TAG, "Error installing APK", e)'),
+              ('Log.e(TAG, "Error in previewInstallList: ${e.message}")', 'Log.e(TAG, "Error in previewInstallList", e)'),
+          ]:
+              assert old in s, "补丁锚点没找到: " + old
+              s = s.replace(old, new)
+          anchor = '            val blackBoxCore = BlackBoxCore.get()\n            val installResult ='
+          probe = ('            run {\n'
+                   '                val f = java.io.File(source)\n'
+                   '                Log.d(TAG, "installApk source=$source exists=${f.exists()} canRead=${f.canRead()} size=${if (f.exists()) f.length() else -1}")\n'
+                   '            }\n')
+          assert anchor in s, "installApk 锚点没找到"
+          s = s.replace(anchor, probe + anchor, 1)
+          repo.write_text(s, encoding="utf-8")
+          print("补丁已应用: AppsRepository.kt")
+          app = root / "app/src/main/java/top/niunaijun/blackboxa/app/App.kt"
+          a = app.read_text(encoding="utf-8")
+          old = "            AppManager.doOnCreate(mContext)"
+          new = ("            Thread.setDefaultUncaughtExceptionHandler { _, e ->\n"
+                 "                try {\n"
+                 "                    java.io.File(getExternalFilesDir(null), \"bb_crash.txt\")\n"
+                 "                        .appendText(\"\\n==== \" + java.text.SimpleDateFormat(\"MM-dd HH:mm:ss\").format(java.util.Date()) + \" ====\\n\" + android.util.Log.getStackTraceString(e))\n"
+                 "                } catch (_: Throwable) {}\n"
+                 "                android.util.Log.e(\"BB_CRASH\", \"uncaught\", e)\n"
+                 "            }\n" + old)
+          assert old in a, "App.kt 锚点没找到"
+          a = a.replace(old, new, 1)
+          app.write_text(a, encoding="utf-8")
+          print("补丁已应用: App.kt（未捕获异常写 bb_crash.txt）")
+          PY
 
       - name: 编译
         run: |
-          cd upstream
-          chmod +x gradlew || true
-          ( ./gradlew :app:assembleDebug --no-daemon --stacktrace ) >> ../b.log 2>&1
-          echo "exit=$?" >> ../b.log
-          tail -60 ../b.log
+          LOG="$GITHUB_WORKSPACE/b.log"
+          cd "$GITHUB_WORKSPACE/upstream"
+          chmod +x gradlew
+          ( ./gradlew :app:assembleDebug --no-daemon --stacktrace ) >> "$LOG" 2>&1
+          echo "gradle exit=$?" >> "$LOG"
 
       - name: 发布
         if: always()
         run: |
-          cd upstream 2>/dev/null || true
-          APK=$(find . -name "*.apk" -path "*debug*" | head -1)
-          echo "APK=$APK" >> ../b.log
+          LOG="$GITHUB_WORKSPACE/b.log"
+          cd "$GITHUB_WORKSPACE"
+          APK=$(find upstream -name "*debug*.apk" | head -1)
+          echo "APK=${APK:-none}" >> "$LOG"
           if [ -n "$APK" ]; then
-            {
-              echo "输出: $(stat -c%s "$APK") B"
-              echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)"
-            } >> ../b.log
+            echo "输出: $(stat -c%s "$APK") B" >> "$LOG"
+            echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)" >> "$LOG"
             gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
               gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
             cp "$APK" "blackbox-debug-$(date -u +%m%d-%H%M).apk"
-            gh release upload builds blackbox-debug-*.apk -R "$GITHUB_REPOSITORY" --clobber >> ../b.log 2>&1
-            echo "发布: 完成" >> ../b.log
-          else
-            echo "没产出 APK（看日志末尾）" >> ../b.log
+            gh release upload builds blackbox-debug-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
+            echo "发布: 完成" >> "$LOG"
           fi
-          cp ../b.log blackbox-build-status.txt
+          { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)";
+            echo "--- 末尾 150 行 ---";
+            tail -n 150 "$LOG"; } > blackbox-build-status.txt
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add blackbox-build-status.txt || true
