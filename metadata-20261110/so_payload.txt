@@ -1,4 +1,4 @@
-file: metadata-20261110/libil2cpp.so  size: 129667848
+file: metadata-20261110/libil2cpp.dec.so  size: 129667848
 未覆盖区间 12 处，合计 96234 B
   0x0~0x2E8     744 B  -
   0x1A4CF~0x1A4D0       1 B  -

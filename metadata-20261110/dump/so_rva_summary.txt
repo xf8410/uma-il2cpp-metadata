@@ -7,11 +7,11 @@ metadata 方法总数 : 213983
 未定位的程序集：
 
 地址质量复验（300 个抽样地址，越界 0）：
-  other                    197 (65.7%)
-  sub sp,sp,#n             48 (16.0%)
-  stp/str pre-index        38 (12.7%)
-  stp/str offset           16 (5.3%)
-  adrp (PLT stub?)         1 (0.3%)
+  other                    182 (60.7%)
+  sub sp,sp,#n             52 (17.3%)
+  stp/str pre-index        41 (13.7%)
+  stp/str offset           23 (7.7%)
+  adrp (PLT stub?)         2 (0.7%)
 
 地址反查示例：
   0x20622E0   Locale::GetText(1)  token=0x06000001  #0
