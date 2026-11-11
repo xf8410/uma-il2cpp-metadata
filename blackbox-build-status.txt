@@ -1,0 +1,152 @@
+run: 42943035152  2026-11-11T02:05:02Z
+--- 末尾 150 行 ---
+	Element uses-permission#android.permission.READ_APP_SPECIFIC_EXTERNAL_STORAGE at [:Bcore] AndroidManifest.xml:367:5-93 duplicated with element declared at [:Bcore] AndroidManifest.xml:339:5-93
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:368:5-94 Warning:
+	Element uses-permission#android.permission.WRITE_APP_SPECIFIC_EXTERNAL_STORAGE at [:Bcore] AndroidManifest.xml:368:5-94 duplicated with element declared at [:Bcore] AndroidManifest.xml:340:5-94
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:369:5-82 Warning:
+	Element uses-permission#android.permission.MANAGE_EXTERNAL_STORAGE at [:Bcore] AndroidManifest.xml:369:5-82 duplicated with element declared at [:Bcore] AndroidManifest.xml:341:5-82
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:370:5-85 Warning:
+	Element uses-permission#android.permission.ACCESS_BACKGROUND_LOCATION at [:Bcore] AndroidManifest.xml:370:5-85 duplicated with element declared at [:Bcore] AndroidManifest.xml:342:5-85
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:371:5-79 Warning:
+	Element uses-permission#android.permission.ACTIVITY_RECOGNITION at [:Bcore] AndroidManifest.xml:371:5-79 duplicated with element declared at [:Bcore] AndroidManifest.xml:343:5-79
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:372:5-79 Warning:
+	Element uses-permission#android.permission.ACCESS_FINE_LOCATION at [:Bcore] AndroidManifest.xml:372:5-79 duplicated with element declared at [:Bcore] AndroidManifest.xml:344:5-79
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:373:5-81 Warning:
+	Element uses-permission#android.permission.ACCESS_COARSE_LOCATION at [:Bcore] AndroidManifest.xml:373:5-81 duplicated with element declared at [:Bcore] AndroidManifest.xml:345:5-81
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:374:5-65 Warning:
+	Element uses-permission#android.permission.CAMERA at [:Bcore] AndroidManifest.xml:374:5-65 duplicated with element declared at [:Bcore] AndroidManifest.xml:346:5-65
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:375:5-71 Warning:
+	Element uses-permission#android.permission.RECORD_AUDIO at [:Bcore] AndroidManifest.xml:375:5-71 duplicated with element declared at [:Bcore] AndroidManifest.xml:347:5-71
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:376:5-71 Warning:
+	Element uses-permission#android.permission.BODY_SENSORS at [:Bcore] AndroidManifest.xml:376:5-71 duplicated with element declared at [:Bcore] AndroidManifest.xml:348:5-71
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:377:5-82 Warning:
+	Element uses-permission#android.permission.BODY_SENSORS_BACKGROUND at [:Bcore] AndroidManifest.xml:377:5-82 duplicated with element declared at [:Bcore] AndroidManifest.xml:349:5-82
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:378:5-73 Warning:
+	Element uses-permission#android.permission.BLUETOOTH_SCAN at [:Bcore] AndroidManifest.xml:378:5-73 duplicated with element declared at [:Bcore] AndroidManifest.xml:350:5-73
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:379:5-76 Warning:
+	Element uses-permission#android.permission.BLUETOOTH_CONNECT at [:Bcore] AndroidManifest.xml:379:5-76 duplicated with element declared at [:Bcore] AndroidManifest.xml:351:5-76
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:380:5-78 Warning:
+	Element uses-permission#android.permission.BLUETOOTH_ADVERTISE at [:Bcore] AndroidManifest.xml:380:5-78 duplicated with element declared at [:Bcore] AndroidManifest.xml:352:5-78
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:381:5-78 Warning:
+	Element uses-permission#android.permission.NEARBY_WIFI_DEVICES at [:Bcore] AndroidManifest.xml:381:5-78 duplicated with element declared at [:Bcore] AndroidManifest.xml:353:5-78
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:382:5-76 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_IMAGES at [:Bcore] AndroidManifest.xml:382:5-76 duplicated with element declared at [:Bcore] AndroidManifest.xml:354:5-76
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:383:5-75 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_VIDEO at [:Bcore] AndroidManifest.xml:383:5-75 duplicated with element declared at [:Bcore] AndroidManifest.xml:355:5-75
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:384:5-75 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_AUDIO at [:Bcore] AndroidManifest.xml:384:5-75 duplicated with element declared at [:Bcore] AndroidManifest.xml:356:5-75
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:385:5-76 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_VISUAL at [:Bcore] AndroidManifest.xml:385:5-76 duplicated with element declared at [:Bcore] AndroidManifest.xml:357:5-76
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:386:5-75 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_AURAL at [:Bcore] AndroidManifest.xml:386:5-75 duplicated with element declared at [:Bcore] AndroidManifest.xml:358:5-75
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:387:5-90 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_IMAGES_USER_SELECTED at [:Bcore] AndroidManifest.xml:387:5-90 duplicated with element declared at [:Bcore] AndroidManifest.xml:359:5-90
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:388:5-89 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_VIDEO_USER_SELECTED at [:Bcore] AndroidManifest.xml:388:5-89 duplicated with element declared at [:Bcore] AndroidManifest.xml:360:5-89
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:389:5-89 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_AUDIO_USER_SELECTED at [:Bcore] AndroidManifest.xml:389:5-89 duplicated with element declared at [:Bcore] AndroidManifest.xml:361:5-89
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:390:5-90 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_VISUAL_USER_SELECTED at [:Bcore] AndroidManifest.xml:390:5-90 duplicated with element declared at [:Bcore] AndroidManifest.xml:324:5-90
+[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:391:5-89 Warning:
+	Element uses-permission#android.permission.READ_MEDIA_AURAL_USER_SELECTED at [:Bcore] AndroidManifest.xml:391:5-89 duplicated with element declared at [:Bcore] AndroidManifest.xml:325:5-89
+
+> Task :app:processDebugManifest
+> Task :black-reflection:processResources NO-SOURCE
+> Task :black-reflection:classes
+> Task :black-reflection:jar
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :compiler:compileJava
+> Task :Bcore:compileDebugAidl
+> Task :compiler:processResources NO-SOURCE
+> Task :compiler:classes
+> Task :compiler:jar
+> Task :Bcore:javaPreCompileDebug
+> Task :app:javaPreCompileDebug
+> Task :app:mergeDebugShaders
+
+> Task :Bcore:compileDebugJavaWithJavac
+The following annotation processors are not incremental: compiler.jar (project :compiler).
+Make sure all annotation processors are incremental to improve your build speed.
+warning: Supported source version 'RELEASE_8' from annotation processor 'org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor' less than -source '21'
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+1 warning
+
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :Bcore:mergeDebugShaders
+> Task :Bcore:compileDebugShaders NO-SOURCE
+> Task :Bcore:generateDebugAssets UP-TO-DATE
+> Task :Bcore:mergeDebugAssets
+> Task :Bcore:bundleLibCompileToJarDebug
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :Bcore:bundleLibRuntimeToJarDebug
+> Task :Bcore:processDebugJavaRes
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeDebugJniLibFolders
+> Task :app:desugarDebugFileDependencies
+> Task :Bcore:configureNdkBuildDebug[arm64-v8a]
+> Task :app:compileDebugKotlin
+> Task :app:mergeExtDexDebug
+
+> Task :app:compileDebugKotlin
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/app/AppManager.kt:63:34 Parameter 'context' is never used
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/biz/cache/AppSharedPreferenceDelegate.kt:48:27 Unchecked cast: Any to Data
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/data/AppsRepository.kt:261:25 Condition 'applicationInfo == null' is always 'false'
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/data/AppsRepository.kt:301:103 Unnecessary safe call on a non-null receiver of type ApplicationInfo
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/data/AppsRepository.kt:370:25 Variable 'blackBoxCore' is never used
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/util/ShortcutUtil.kt:71:13 'neutralButton(Int? = ..., CharSequence? = ..., DialogCallback? /* = ((MaterialDialog) -> Unit)? */ = ...): MaterialDialog' is deprecated. Use of neutral buttons is discouraged, see https://material.io/design/components/dialogs.html#actions.
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/apps/AppsAdapter.kt:71:47 Elvis operator (?:) always returns the left operand of non-nullable type String
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/apps/AppsAdapter.kt:159:47 Elvis operator (?:) always returns the left operand of non-nullable type String
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/fake/FakeLocationFactory.kt:12:44 Unchecked cast: FakeLocationViewModel to T
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/fake/FakeManagerActivity.kt:166:19 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/fake/FollowMyLocationOverlay.kt:50:43 'getParcelableExtra(String!): T?' is deprecated. Deprecated in Java
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/gms/GmsFactory.kt:11:35 Unchecked cast: GmsViewModel to T
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/list/ListActivity.kt:124:19 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/main/BlackBoxLoader.kt:283:45 Variable 'packageInfo' is never used
+w: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/view/main/BlackBoxLoader.kt:301:20 Parameter 'context' is never used
+
+> Task :app:compileDebugJavaWithJavac
+Note: /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/app/src/main/java/top/niunaijun/blackboxa/util/Resolution.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:processDebugJavaRes
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeLibDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :Bcore:buildNdkBuildDebug[arm64-v8a]
+> Task :Bcore:configureNdkBuildDebug[armeabi-v7a]
+> Task :Bcore:buildNdkBuildDebug[armeabi-v7a]
+> Task :Bcore:mergeDebugJniLibFolders
+> Task :Bcore:mergeDebugNativeLibs
+> Task :app:validateSigningDebug
+> Task :Bcore:copyDebugJniLibsProjectOnly
+> Task :app:writeDebugAppMetadata
+> Task :app:mergeDebugNativeLibs
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:stripDebugDebugSymbols
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+
+[Incubating] Problems report is available at: file:///home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2m 56s
+70 actionable tasks: 70 executed
+gradle exit=0
+APK=upstream/app/build/outputs/apk/debug/BlackBox_4.0.0_universal-debug.apk
+输出: 9180478 B
+sha256: dc55fff6c16cef3d6d7a4e249860488f6c8dbd3a538f635c7c19f2328f260c03
+发布: 完成
