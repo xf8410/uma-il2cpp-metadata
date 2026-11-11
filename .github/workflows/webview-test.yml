@@ -1,0 +1,153 @@
+name: webview-test
+
+# 造一个最小的 WebView 测试 App，用来判断「容器里 WebView 是不是全都用不了」。
+# 装上后放进 BlackBox 里跑：
+#   · 也白屏/报错 ⇒ 容器内 WebView 整体不可用（要改容器）
+#   · 能打开       ⇒ 容器 WebView 没问题，是游戏那一页/那套参数的问题
+on:
+  push:
+    paths:
+      - '.github/workflows/webview-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: 生成工程
+        run: |
+          : > w.log
+          mkdir -p proj/app/src/main/java/com/dsh/wvtest
+          cd proj
+          cat > settings.gradle <<'G'
+          rootProject.name = "wvtest"
+          include ':app'
+          G
+          cat > build.gradle <<'G'
+          buildscript {
+              repositories { google(); mavenCentral() }
+              dependencies { classpath 'com.android.tools.build:gradle:8.7.3' }
+          }
+          allprojects { repositories { google(); mavenCentral() } }
+          G
+          cat > app/build.gradle <<'G'
+          apply plugin: 'com.android.application'
+          android {
+              namespace 'com.dsh.wvtest'
+              compileSdk 36
+              defaultConfig {
+                  applicationId 'com.dsh.wvtest'
+                  minSdk 24
+                  targetSdk 36
+                  versionCode 1
+                  versionName '1.0'
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+          }
+          G
+          cat > app/src/main/AndroidManifest.xml <<'G'
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <application android:label="WebViewTest" android:usesCleartextTraffic="true">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          G
+          cat > app/src/main/java/com/dsh/wvtest/MainActivity.java <<'G'
+          package com.dsh.wvtest;
+
+          import android.app.Activity;
+          import android.graphics.Color;
+          import android.os.Bundle;
+          import android.util.Log;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import android.widget.TextView;
+          import android.view.ViewGroup;
+
+          public class MainActivity extends Activity {
+              private static final String TAG = "WVTest";
+
+              @Override
+              protected void onCreate(Bundle b) {
+                  super.onCreate(b);
+                  WebView wv = new WebView(this);
+                  WebSettings s = wv.getSettings();
+                  s.setJavaScriptEnabled(true);
+                  s.setDomStorageEnabled(true);
+                  wv.setBackgroundColor(Color.WHITE);
+                  wv.setWebViewClient(new WebViewClient() {
+                      @Override
+                      public void onPageFinished(WebView v, String url) {
+                          Log.i(TAG, "onPageFinished " + url);
+                      }
+                      @Override
+                      public void onReceivedError(WebView v, int code, String desc, String url) {
+                          Log.e(TAG, "onReceivedError code=" + code + " desc=" + desc + " url=" + url);
+                      }
+                  });
+                  setContentView(wv, new ViewGroup.LayoutParams(
+                          ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                  Log.i(TAG, "loading https://example.com");
+                  wv.loadUrl("https://example.com");
+              }
+          }
+          G
+          echo "工程生成完毕" >> ../w.log
+          find app -name "*.java" -o -name "*.xml" -o -name "*.gradle" >> ../w.log
+
+      - name: 编译
+        run: |
+          cd proj
+          curl -sSL -o /tmp/g.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip >> ../w.log 2>&1
+          unzip -q /tmp/g.zip -d /tmp >> ../w.log 2>&1
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >> ../w.log 2>&1 || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >> ../w.log 2>&1 || true
+          ( /tmp/gradle-8.9/bin/gradle :app:assembleDebug --no-daemon --stacktrace ) >> ../w.log 2>&1
+          echo "gradle exit=$?" >> ../w.log
+
+      - name: 发布
+        if: always()
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          APK=$(find proj -name "*debug*.apk" | head -1)
+          echo "APK=${APK:-none}" >> w.log
+          if [ -n "$APK" ]; then
+            echo "输出: $(stat -c%s "$APK") B" >> w.log
+            echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)" >> w.log
+            gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+              gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+            cp "$APK" "wvtest-$(date -u +%m%d-%H%M).apk"
+            gh release upload builds wvtest-*.apk -R "$GITHUB_REPOSITORY" --clobber >> w.log 2>&1
+            echo "发布: 完成" >> w.log
+          fi
+          { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)"; echo "--- 末尾 80 行 ---"; tail -n 80 w.log; } > webview-test-status.txt
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add webview-test-status.txt || true
+          git commit -m "ci: webview test ($GITHUB_RUN_ID)" || echo "no change"
+          git pull --rebase --autostash >> /dev/null 2>&1 || true
+          git push || { sleep 5; git pull --rebase --autostash >> /dev/null 2>&1 || true; git push; } || true
