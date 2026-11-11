@@ -1,10 +1,12 @@
 name: blackbox-build
 
 # 克隆 ALEX5402/NewBlackbox → 打补丁 → JDK21 + NDK29 编译 → 发 Release
-# 本轮补丁（除之前的中文化/日志）：
-#   ★ WebView 修复：guest 里创建 WebView 时，把 Context 换成宿主 Context，
-#     这样 Chromium 的 app_webview* 数据目录会落在真实可写的宿主路径下。
-#     （实测根因：容器数据目录里从来没有 app_webview*，导致所有页面 ERR_CACHE_MISS）
+#
+# 本轮补丁：
+#   1) WebView 用宿主 Context 创建（容器里 app_webview 目录从未创建，导致 ERR_CACHE_MISS）
+#   2) App.onCreate 里加「自动导入 + 自动启动」：读 /sdcard/Download/orig.apk，
+#      若容器里没有 guest 就装进去，然后直接 launch。完全不需要点屏幕。
+#   3) AppsRepository 诊断日志 + 中文报错；strings.xml 中文化
 on:
   push:
     paths:
@@ -50,62 +52,74 @@ jobs:
           anchor = ("                if (args != null && args.length > 0 && args[0] instanceof Context) {\n"
                     "                    context = (Context) args[0];")
           assert anchor in s, "WebViewProxy 锚点没找到"
-          new = anchor + ("\n                    Context __host = BlackBoxCore.getContext();\n"
-                          "                    if (__host != null) {\n"
-                          "                        args[0] = __host;\n"
-                          "                        context = __host;\n"
-                          "                        Slog.d(TAG, \"WebView: context swapped to host for data dir\");\n"
-                          "                    }")
-          s = s.replace(anchor, new, 1)
+          s = s.replace(anchor, anchor + ("\n                    Context __host = BlackBoxCore.getContext();\n"
+                                          "                    if (__host != null) {\n"
+                                          "                        args[0] = __host;\n"
+                                          "                        context = __host;\n"
+                                          "                        Slog.d(TAG, \"WebView: context swapped to host\");\n"
+                                          "                    }"), 1)
           wv.write_text(s, encoding="utf-8")
-          print("OK WebViewProxy：guest Context -> 宿主 Context")
+          print("OK WebViewProxy")
 
-          # ---------- 2) AppsRepository：日志 + 中文报错（同前） ----------
+          # ---------- 2) 自动导入 + 自动启动 ----------
+          app = root / "app/src/main/java/top/niunaijun/blackboxa/app/App.kt"
+          a = app.read_text(encoding="utf-8")
+          old = "            AppManager.doOnCreate(mContext)"
+          auto = (
+            "            Thread {\n"
+            "                try {\n"
+            "                    Thread.sleep(3000)\n"
+            "                    val g = java.io.File(\"/sdcard/Download/orig.apk\")\n"
+            "                    val core = BlackBoxCore.get()\n"
+            "                    val la = core.getInstalledApplications(0, 0)\n"
+            "                    android.util.Log.i(\"BB_AUTO\", \"guest count=\" + (la?.size ?: -1) + \" apk=\" + g.exists())\n"
+            "                    if ((la == null || la.isEmpty()) && g.exists()) {\n"
+            "                        val r = core.installPackageAsUser(g.absolutePath, 0)\n"
+            "                        android.util.Log.i(\"BB_AUTO\", \"install ok=\" + r?.success + \" msg=\" + r?.msg)\n"
+            "                    }\n"
+            "                    Thread.sleep(2000)\n"
+            "                    val ok = core.launchApk(\"com.bilibili.umamusu\", 0)\n"
+            "                    android.util.Log.i(\"BB_AUTO\", \"launch=\" + ok)\n"
+            "                } catch (t: Throwable) {\n"
+            "                    android.util.Log.e(\"BB_AUTO\", \"auto failed\", t)\n"
+            "                }\n"
+            "            }.start()\n" + old)
+          assert old in a, "App.kt 锚点没找到"
+          a = a.replace(old, auto, 1)
+          app.write_text(a, encoding="utf-8")
+          print("OK App.kt 自动导入+启动")
+
+          # ---------- 3) 诊断日志 + 中文报错 ----------
           repo = root / "app/src/main/java/top/niunaijun/blackboxa/data/AppsRepository.kt"
           t = repo.read_text(encoding="utf-8")
-          for old, nw in [
+          for old2, nw in [
               ('Log.e(TAG, "Error installing APK: ${e.message}")', 'Log.e(TAG, "Error installing APK", e)'),
-              ('Log.e(TAG, "Error in previewInstallList: ${e.message}")', 'Log.e(TAG, "Error in previewInstallList", e)'),
               ('resultLiveData.postValue("Installation failed: ${e.message}")',
                'resultLiveData.postValue("安装失败：${e.message}")'),
           ]:
-              if old in t:
-                  t = t.replace(old, nw)
-              else:
-                  print("跳过:", old[:40])
+              if old2 in t:
+                  t = t.replace(old2, nw)
           repo.write_text(t, encoding="utf-8")
           print("OK AppsRepository")
 
-          # ---------- 3) strings.xml 中文化 ----------
-          ZH = {
-            "choose": "选择", "choose_app": "选择应用", "installed_app": "已安装应用",
-            "installed_module": "已安装模块", "empty_empty": "空空如也", "filter": "过滤",
-            "open_source_path": "开源地址", "setting": "设置", "jump_module": "前往模块管理",
-            "module_setting": "模块管理", "enable_xposed": "启用 Xposed 框架",
-            "hider": "隐藏", "hide_root": "隐藏 Root", "hide_xposed": "隐藏 Xposed",
-            "userRemark": "备注", "done": "完成", "cancel": "取消", "no_reminders": "不再提醒",
-            "app_stop": "停止运行", "app_stop_hint": "要强制停止 %s 吗？", "is_stop": "%s 已停止",
-            "app_clear": "清除数据", "app_clear_hint": "要清除 %s 的数据吗？",
-            "app_remove": "卸载应用", "app_shortcut": "创建快捷方式",
-            "shortcut_name": "快捷方式名称", "try_add_shortcut": "已尝试添加到桌面",
-            "install_success": "安装成功", "install_fail": "安装失败：%s",
-            "install_fail_no_msg": "安装失败", "uninstall_success": "卸载成功",
-            "uninstall_fail": "卸载失败", "uninstall_app": "卸载应用",
-            "uninstall_app_hint": "要卸载 %s 吗？卸载后会清除相关数据。",
-            "remove_success": "移除成功", "clear_success": "清除成功",
-            "start_fail": "启动失败", "restart_module": "重启应用后生效", "other": "其他",
-            "use_vpn_network": "使用 VPN 网络", "gms_manager": "GMS 管理",
-          }
+          # ---------- 4) strings 中文化 ----------
+          ZH = {"choose": "选择", "choose_app": "选择应用", "installed_app": "已安装应用",
+                "empty_empty": "空空如也", "filter": "过滤", "setting": "设置",
+                "module_setting": "模块管理", "done": "完成", "cancel": "取消",
+                "app_stop": "停止运行", "app_clear": "清除数据", "app_remove": "卸载应用",
+                "install_success": "安装成功", "install_fail": "安装失败：%s",
+                "uninstall_success": "卸载成功", "uninstall_fail": "卸载失败",
+                "other": "其他", "no_reminders": "不再提醒"}
           sx = root / "app/src/main/res/values/strings.xml"
           tx = sx.read_text(encoding="utf-8")
           n = 0
           for k, v in ZH.items():
-              pat = r'<string name="%s">.*?</string>' % re.escape(k)
-              tx2, cnt = re.subn(pat, '<string name="%s">%s</string>' % (k, v), tx, count=1, flags=re.S)
+              tx2, cnt = re.subn(r'<string name="%s">.*?</string>' % re.escape(k),
+                                 '<string name="%s">%s</string>' % (k, v), tx, count=1, flags=re.S)
               if cnt:
                   tx = tx2; n += 1
           sx.write_text(tx, encoding="utf-8")
-          print("OK strings.xml 中文化 %d 条" % n)
+          print("OK strings %d 条" % n)
           PY
 
       - name: 编译
@@ -128,8 +142,8 @@ jobs:
             echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)" >> "$LOG"
             gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
               gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
-            cp "$APK" "bb-wvfix-$(date -u +%m%d-%H%M).apk"
-            gh release upload builds bb-wvfix-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
+            cp "$APK" "bb-auto-$(date -u +%m%d-%H%M).apk"
+            gh release upload builds bb-auto-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
             echo "发布: 完成" >> "$LOG"
           fi
           { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)"; echo "--- 末尾 120 行 ---"; tail -n 120 "$LOG"; } > blackbox-build-status.txt
