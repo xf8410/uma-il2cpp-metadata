@@ -1,4 +1,4 @@
-run: 42950925016  2026-11-11T03:13:22Z
+run: 42951708153  2026-11-11T03:20:30Z
 --- 末尾 120 行 ---
 	Element uses-permission#android.permission.READ_MEDIA_IMAGES at [:Bcore] AndroidManifest.xml:382:5-76 duplicated with element declared at [:Bcore] AndroidManifest.xml:354:5-76
 [:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:383:5-75 Warning:
@@ -86,8 +86,8 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
 > Task :app:mergeDebugJniLibFolders
-> Task :app:mergeProjectDexDebug
 > Task :app:mergeLibDexDebug
+> Task :app:mergeProjectDexDebug
 > Task :app:mergeDebugJavaResource
 > Task :Bcore:configureNdkBuildDebug[arm64-v8a]
 > Task :Bcore:buildNdkBuildDebug[arm64-v8a]
@@ -113,10 +113,10 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 2m 27s
+BUILD SUCCESSFUL in 2m 40s
 70 actionable tasks: 70 executed
 gradle exit=0
 APK=upstream/app/build/outputs/apk/debug/BlackBox_4.0.0_universal-debug.apk
-输出: 9181205 B
-sha256: 3fd083283a32e89d6c9000f260da20f9eea2a926157a4e67d0afbf99c6b120a5
+输出: 9181452 B
+sha256: f65dcaad2e08155a20f1956ca5f6ac593cf7f229699c4a2b82dc41069f8b723c
 发布: 完成
