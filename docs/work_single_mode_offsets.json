@@ -1,0 +1,556 @@
+{
+  "class": "Gallop.WorkSingleModeData",
+  "metadata_index": 8972,
+  "type_token": "0x02000ac2",
+  "field_count": 61,
+  "method_count": 320,
+  "source": "libil2cpp (CN, XOR 0x97 decrypted) + global-metadata.dat (fixed)",
+  "singleton_chain": {
+    "step1": "Il2CppClass(WorkDataManager) + 0xB8 -> static_fields",
+    "step2": "static_fields[0] -> WorkDataManager  (Singleton<T>._instance, token 0x04017d08)",
+    "step3": "WorkDataManager + 0x58 -> WorkSingleModeData  (token 0x04004102)",
+    "evidence": [
+      "Singleton<T>.get_Instance @0x14bd694",
+      "get_SingleMode @0x3bef274",
+      "WorkDataManager..ctor @0x3bef8a0-0x3bef8bc"
+    ]
+  },
+  "il2cpp_class_layout": {
+    "name": "0x10",
+    "static_fields": "0xB8",
+    "rgctx_data": "0xC0",
+    "initialized": "0x132"
+  },
+  "work_data_manager": {
+    "class": "Gallop.WorkDataManager",
+    "metadata_index": 8603,
+    "type_token": "0x02000984",
+    "field_count": 66,
+    "method_count": 67,
+    "single_mode_offset": "0x58",
+    "single_mode_slot": "0x07682ec0",
+    "single_mode_ctor": "0x038a5668",
+    "trained_chara_data_offset": "0x50",
+    "auto_play_data_offset": "0x210",
+    "idle_single_mode_offset": "0x218"
+  },
+  "fields": [
+    {
+      "index": 0,
+      "name": "PLAY_TIMING_TYPE_NUM",
+      "offset": null,
+      "offset_int": null,
+      "size": 0,
+      "evidence": "static const"
+    },
+    {
+      "index": 1,
+      "name": "_storyInfoListDic",
+      "offset": "0x010",
+      "offset_int": 16,
+      "size": 8,
+      "evidence": "ctor/Apply/ClearAllPlayingData/GetFinalTurn"
+    },
+    {
+      "index": 2,
+      "name": "_isExistPlayingData",
+      "offset": "0x018",
+      "offset_int": 24,
+      "size": 1,
+      "evidence": "get_/SetIsExistPlayingData"
+    },
+    {
+      "index": 3,
+      "name": "_isPlaying",
+      "offset": "0x019",
+      "offset_int": 25,
+      "size": 1,
+      "evidence": "get_/set_IsPlaying"
+    },
+    {
+      "index": 4,
+      "name": "_totalTurnNum",
+      "offset": "0x02c",
+      "offset_int": 44,
+      "size": 4,
+      "evidence": "ctor/ApplyTurnNum/GetCurrentTurn"
+    },
+    {
+      "index": 5,
+      "name": "<Character>k__BackingField",
+      "offset": "0x030",
+      "offset_int": 48,
+      "size": 8,
+      "evidence": "get_/set_Character"
+    },
+    {
+      "index": 6,
+      "name": "_raceConditions",
+      "offset": "0x038",
+      "offset_int": 56,
+      "size": 8,
+      "evidence": "ctor/Apply/GetCurrentMasterTurn"
+    },
+    {
+      "index": 7,
+      "name": "_homeInfo",
+      "offset": "0x040",
+      "offset_int": 64,
+      "size": 8,
+      "evidence": "ctor/Apply/ApplyArcDataSet"
+    },
+    {
+      "index": 8,
+      "name": "_addMusicId",
+      "offset": "0x058",
+      "offset_int": 88,
+      "size": 4,
+      "evidence": "get_AddMusicId/ClearAddMusicId"
+    },
+    {
+      "index": 9,
+      "name": "_state",
+      "offset": "0x05c",
+      "offset_int": 92,
+      "size": 8,
+      "evidence": "get_State/SetState"
+    },
+    {
+      "index": 10,
+      "name": "_playingState",
+      "offset": "0x070",
+      "offset_int": 112,
+      "size": 8,
+      "evidence": "get_PlayingState"
+    },
+    {
+      "index": 11,
+      "name": "_scenarioIdList",
+      "offset": "0x088",
+      "offset_int": 136,
+      "size": 8,
+      "evidence": "ctor"
+    },
+    {
+      "index": 12,
+      "name": "_difficultyInfoList",
+      "offset": "0x090",
+      "offset_int": 144,
+      "size": 8,
+      "evidence": "ctor/get_DifficultyInfoList"
+    },
+    {
+      "index": 13,
+      "name": "_changeParameterInfo",
+      "offset": "0x098",
+      "offset_int": 152,
+      "size": 8,
+      "evidence": "ctor/ApplyCharacterChangeParam"
+    },
+    {
+      "index": 14,
+      "name": "_raceHistoryInfoList",
+      "offset": "0x0a0",
+      "offset_int": 160,
+      "size": 8,
+      "evidence": "ctor/GetCountableRaceHistoryInfoList"
+    },
+    {
+      "index": 15,
+      "name": "<WinSaddleArray>k__BackingField",
+      "offset": "0x0a8",
+      "offset_int": 168,
+      "size": 8,
+      "evidence": "get_/set_WinSaddleArray"
+    },
+    {
+      "index": 16,
+      "name": "GroupLogPool",
+      "offset": "0x0b0",
+      "offset_int": 176,
+      "size": 8,
+      "evidence": "ctor/ClearGroupLog"
+    },
+    {
+      "index": 17,
+      "name": "LOG_INFO_MAX",
+      "offset": null,
+      "offset_int": null,
+      "size": 0,
+      "evidence": "static const"
+    },
+    {
+      "index": 18,
+      "name": "_isStepTurn",
+      "offset": "0x0b8",
+      "offset_int": 184,
+      "size": 8,
+      "evidence": "get_/set_IsStepTurn"
+    },
+    {
+      "index": 19,
+      "name": "<IsStepTurnByStory>k__BackingField",
+      "offset": "0x0c4",
+      "offset_int": 196,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 20,
+      "name": "<IsDisplayedRouteClear>k__BackingField",
+      "offset": "0x0d0",
+      "offset_int": 208,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 21,
+      "name": "<IsForceChangeViewMonthStartView>k__BackingField",
+      "offset": "0x0dc",
+      "offset_int": 220,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 22,
+      "name": "<SelectedTrainingCommandId>k__BackingField",
+      "offset": "0x0f8",
+      "offset_int": 248,
+      "size": 4,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 23,
+      "name": "<RentalCount>k__BackingField",
+      "offset": "0x10c",
+      "offset_int": 268,
+      "size": 4,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 24,
+      "name": "_prevFreeRentalTime",
+      "offset": "0x130",
+      "offset_int": 304,
+      "size": 8,
+      "evidence": "get_IsEnableFreeRental/UpdateFreeRentalTime"
+    },
+    {
+      "index": 25,
+      "name": "_successionEventInfo",
+      "offset": "0x138",
+      "offset_int": 312,
+      "size": 8,
+      "evidence": "get_SuccessionEventInfoData"
+    },
+    {
+      "index": 26,
+      "name": "<RaceStartResultInfoData>k__BackingField",
+      "offset": "0x140",
+      "offset_int": 320,
+      "size": 8,
+      "evidence": "ctor/get_"
+    },
+    {
+      "index": 27,
+      "name": "RacePieceCampaignInfoList",
+      "offset": "0x148",
+      "offset_int": 328,
+      "size": 8,
+      "evidence": "ctor/IsLimitApplyedRacePieceCampaign"
+    },
+    {
+      "index": 28,
+      "name": "StoryEventBonusDict",
+      "offset": "0x150",
+      "offset_int": 336,
+      "size": 8,
+      "evidence": "ctor/get_StoryEventTotalBonus"
+    },
+    {
+      "index": 29,
+      "name": "<ResumeFactorSelect>k__BackingField",
+      "offset": "0x158",
+      "offset_int": 344,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 30,
+      "name": "<SkillUpgradeFactorSelect>k__BackingField",
+      "offset": "0x160",
+      "offset_int": 352,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 31,
+      "name": "_fixedTurnCharaSeed",
+      "offset": "0x168",
+      "offset_int": 360,
+      "size": 8,
+      "evidence": "get_FixedTurnCharaSeed"
+    },
+    {
+      "index": 32,
+      "name": "_raceRewardLimitMoreInfoList",
+      "offset": "0x180",
+      "offset_int": 384,
+      "size": 8,
+      "evidence": "ctor/get_"
+    },
+    {
+      "index": 33,
+      "name": "EventChoiceRewardDict",
+      "offset": "0x188",
+      "offset_int": 392,
+      "size": 8,
+      "evidence": "ctor/ApplyEventChoiceRewardData"
+    },
+    {
+      "index": 34,
+      "name": "_cachedRewardEventId",
+      "offset": "0x190",
+      "offset_int": 400,
+      "size": 4,
+      "evidence": "HasEventChoiceRewardInfoCache"
+    },
+    {
+      "index": 35,
+      "name": "_defaultRunningStyleArray",
+      "offset": "0x198",
+      "offset_int": 408,
+      "size": 8,
+      "evidence": "ctor/get_"
+    },
+    {
+      "index": 36,
+      "name": "<IsUmaplan>k__BackingField",
+      "offset": "0x1a0",
+      "offset_int": 416,
+      "size": 8,
+      "evidence": "get_/set_IsUmaplan"
+    },
+    {
+      "index": 37,
+      "name": "_logAdditiveBuffer",
+      "offset": "0x1b0",
+      "offset_int": 432,
+      "size": 8,
+      "evidence": "ctor/AdditiveSystemLog/ClearLog"
+    },
+    {
+      "index": 38,
+      "name": "<SkillFilterSetting>k__BackingField",
+      "offset": "0x1b8",
+      "offset_int": 440,
+      "size": 8,
+      "evidence": "ctor/get_"
+    },
+    {
+      "index": 39,
+      "name": "_autoPlayCustomPlanArray",
+      "offset": "0x1c0",
+      "offset_int": 448,
+      "size": 8,
+      "evidence": "get_AutoPlayCustomPlanArray"
+    },
+    {
+      "index": 40,
+      "name": "_autoPlaySelectedPlanId",
+      "offset": "0x1c8",
+      "offset_int": 456,
+      "size": 8,
+      "evidence": "get_/set_（内部 int 0x1d8）"
+    },
+    {
+      "index": 41,
+      "name": "<AutoPlaySelectScenario>k__BackingField",
+      "offset": "0x1dc",
+      "offset_int": 476,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 42,
+      "name": "<AutoPlayModifyPreferenceSkillIds>",
+      "offset": "0x1f0",
+      "offset_int": 496,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 43,
+      "name": "<AutoPlayModifyPreferenceFactorGroups>",
+      "offset": "0x1f8",
+      "offset_int": 504,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 44,
+      "name": "<AutoPlayModifyPreferenceBlueFactorGroups>",
+      "offset": "0x200",
+      "offset_int": 512,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 45,
+      "name": "<AutoPlayEventOption>k__BackingField",
+      "offset": "0x208",
+      "offset_int": 520,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 46,
+      "name": "<AutoPlayRaceContinue>k__BackingField",
+      "offset": "0x21c",
+      "offset_int": 540,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 47,
+      "name": "<AutoPlayFactorContinue>k__BackingField",
+      "offset": "0x228",
+      "offset_int": 552,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 48,
+      "name": "<AutoPlayFatnessFactorContinue>k__BackingField",
+      "offset": "0x234",
+      "offset_int": 564,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 49,
+      "name": "<AutoPlayModifyPreferenceSuccessionForemost>",
+      "offset": "0x240",
+      "offset_int": 576,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 50,
+      "name": "<AutoPlayModifyPreferenceSuccessionSecondary>",
+      "offset": "0x248",
+      "offset_int": 584,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 51,
+      "name": "<AutoPlayModifyPreferenceSuccessionBorrow>",
+      "offset": "0x250",
+      "offset_int": 592,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 52,
+      "name": "<AutoPlaySuccessionRental>k__BackingField",
+      "offset": "0x258",
+      "offset_int": 600,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 53,
+      "name": "<AutoPlayFitnessContinue>k__BackingField",
+      "offset": "0x264",
+      "offset_int": 612,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 54,
+      "name": "<AutoPlayAutoTimes>k__BackingField",
+      "offset": "0x280",
+      "offset_int": 640,
+      "size": 4,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 55,
+      "name": "<AutoPlaySupportCardOption>k__BackingField",
+      "offset": "0x284",
+      "offset_int": 644,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 56,
+      "name": "<AutoPlayJustFullSupportCard>k__BackingField",
+      "offset": "0x298",
+      "offset_int": 664,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 57,
+      "name": "<AutoPlaySkillLearnPause>k__BackingField",
+      "offset": "0x2a4",
+      "offset_int": 676,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 58,
+      "name": "<AutoPlayVenusModifyPreference>k__BackingField",
+      "offset": "0x2c0",
+      "offset_int": 704,
+      "size": 4,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 59,
+      "name": "<AutoPlayVenusModifyFragmentAttributes>",
+      "offset": "0x2c8",
+      "offset_int": 712,
+      "size": 8,
+      "evidence": "get_/set_"
+    },
+    {
+      "index": 60,
+      "name": "<AutoPlayVenusUseDirectSpirit>",
+      "offset": "0x2d0",
+      "offset_int": 720,
+      "size": 8,
+      "evidence": "get_/set_"
+    }
+  ],
+  "helper_offsets": [
+    "0x024",
+    "0x048",
+    "0x050",
+    "0x060",
+    "0x068",
+    "0x06c",
+    "0x080",
+    "0x0c0",
+    "0x0cc",
+    "0x0d8",
+    "0x0e0",
+    "0x0e4",
+    "0x110",
+    "0x178",
+    "0x1a8",
+    "0x1e8",
+    "0x218",
+    "0x224",
+    "0x230",
+    "0x23c",
+    "0x260",
+    "0x26c",
+    "0x278",
+    "0x294",
+    "0x2a0",
+    "0x2ac",
+    "0x2d8"
+  ]
+}
