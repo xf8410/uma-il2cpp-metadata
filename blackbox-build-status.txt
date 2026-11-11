@@ -1,4 +1,4 @@
-run: 42943035152  2026-11-11T02:05:02Z
+run: 42943778380  2026-11-11T02:11:46Z
 --- 末尾 150 行 ---
 	Element uses-permission#android.permission.READ_APP_SPECIFIC_EXTERNAL_STORAGE at [:Bcore] AndroidManifest.xml:367:5-93 duplicated with element declared at [:Bcore] AndroidManifest.xml:339:5-93
 [:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:368:5-94 Warning:
@@ -57,13 +57,22 @@ run: 42943035152  2026-11-11T02:05:02Z
 > Task :app:processDebugManifestForPackage
 > Task :app:processDebugResources
 > Task :compiler:compileJava
-> Task :Bcore:compileDebugAidl
 > Task :compiler:processResources NO-SOURCE
 > Task :compiler:classes
 > Task :compiler:jar
-> Task :Bcore:javaPreCompileDebug
 > Task :app:javaPreCompileDebug
+> Task :Bcore:javaPreCompileDebug
 > Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :Bcore:mergeDebugShaders
+> Task :Bcore:compileDebugShaders NO-SOURCE
+> Task :Bcore:generateDebugAssets UP-TO-DATE
+> Task :Bcore:mergeDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :Bcore:compileDebugAidl
+> Task :app:desugarDebugFileDependencies
 
 > Task :Bcore:compileDebugJavaWithJavac
 The following annotation processors are not incremental: compiler.jar (project :compiler).
@@ -75,21 +84,10 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 1 warning
 
-> Task :app:compileDebugShaders NO-SOURCE
-> Task :app:generateDebugAssets UP-TO-DATE
-> Task :Bcore:mergeDebugShaders
-> Task :Bcore:compileDebugShaders NO-SOURCE
-> Task :Bcore:generateDebugAssets UP-TO-DATE
-> Task :Bcore:mergeDebugAssets
-> Task :Bcore:bundleLibCompileToJarDebug
-> Task :app:mergeDebugAssets
-> Task :app:compressDebugAssets
-> Task :Bcore:bundleLibRuntimeToJarDebug
 > Task :Bcore:processDebugJavaRes
+> Task :Bcore:bundleLibCompileToJarDebug
+> Task :Bcore:bundleLibRuntimeToJarDebug
 > Task :app:checkDebugDuplicateClasses
-> Task :app:mergeDebugJniLibFolders
-> Task :app:desugarDebugFileDependencies
-> Task :Bcore:configureNdkBuildDebug[arm64-v8a]
 > Task :app:compileDebugKotlin
 > Task :app:mergeExtDexDebug
 
@@ -117,9 +115,11 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
-> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJniLibFolders
 > Task :app:mergeLibDexDebug
+> Task :app:mergeProjectDexDebug
 > Task :app:mergeDebugJavaResource
+> Task :Bcore:configureNdkBuildDebug[arm64-v8a]
 > Task :Bcore:buildNdkBuildDebug[arm64-v8a]
 > Task :Bcore:configureNdkBuildDebug[armeabi-v7a]
 > Task :Bcore:buildNdkBuildDebug[armeabi-v7a]
@@ -143,10 +143,10 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 2m 56s
+BUILD SUCCESSFUL in 3m 34s
 70 actionable tasks: 70 executed
 gradle exit=0
 APK=upstream/app/build/outputs/apk/debug/BlackBox_4.0.0_universal-debug.apk
-输出: 9180478 B
-sha256: dc55fff6c16cef3d6d7a4e249860488f6c8dbd3a538f635c7c19f2328f260c03
+输出: 9179889 B
+sha256: 92ae83f6733ec801c65a8cbf695b33694a8cfee2e87cab9ed9a0074880c223d2
 发布: 完成
