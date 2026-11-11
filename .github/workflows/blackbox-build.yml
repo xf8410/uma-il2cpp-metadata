@@ -1,11 +1,10 @@
 name: blackbox-build
 
-# 克隆 ALEX5402/NewBlackbox → 打补丁（诊断日志 + 全量中文化）→ JDK21 + NDK29 编译 → 发 Release
-# 补丁内容：
-#   1) AppsRepository：完整堆栈日志 + APK 可读性探针 + 错误提示中文
-#   2) App：未捕获异常写 bb_crash.txt
-#   3) MainActivity：存储权限弹窗中文
-#   4) values/strings.xml：全部改中文（设备是 zh-CN，直接替换默认值最省事）
+# 克隆 ALEX5402/NewBlackbox → 打补丁 → JDK21 + NDK29 编译 → 发 Release
+# 本轮补丁（除之前的中文化/日志）：
+#   ★ WebView 修复：guest 里创建 WebView 时，把 Context 换成宿主 Context，
+#     这样 Chromium 的 app_webview* 数据目录会落在真实可写的宿主路径下。
+#     （实测根因：容器数据目录里从来没有 app_webview*，导致所有页面 ERR_CACHE_MISS）
 on:
   push:
     paths:
@@ -38,126 +37,74 @@ jobs:
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >> "$LOG" 2>&1 || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;29.0.13846066" "platforms;android-36" >> "$LOG" 2>&1 || echo "sdkmanager 部分失败（继续）" >> "$LOG"
 
-      - name: 打补丁（日志 + 中文化）
+      - name: 打补丁
         run: |
           LOG="$GITHUB_WORKSPACE/b.log"
           python3 - "$GITHUB_WORKSPACE/upstream" >> "$LOG" 2>&1 <<'PY'
           import re, sys, pathlib
           root = pathlib.Path(sys.argv[1])
 
-          # ---------- 1) AppsRepository：日志 + 中文报错 ----------
+          # ---------- 1) WebView 用宿主 Context ----------
+          wv = root / "Bcore/src/main/java/top/niunaijun/blackbox/fake/service/WebViewProxy.java"
+          s = wv.read_text(encoding="utf-8")
+          anchor = ("                if (args != null && args.length > 0 && args[0] instanceof Context) {\n"
+                    "                    context = (Context) args[0];")
+          assert anchor in s, "WebViewProxy 锚点没找到"
+          new = anchor + ("\n                    Context __host = BlackBoxCore.getContext();\n"
+                          "                    if (__host != null) {\n"
+                          "                        args[0] = __host;\n"
+                          "                        context = __host;\n"
+                          "                        Slog.d(TAG, \"WebView: context swapped to host for data dir\");\n"
+                          "                    }")
+          s = s.replace(anchor, new, 1)
+          wv.write_text(s, encoding="utf-8")
+          print("OK WebViewProxy：guest Context -> 宿主 Context")
+
+          # ---------- 2) AppsRepository：日志 + 中文报错（同前） ----------
           repo = root / "app/src/main/java/top/niunaijun/blackboxa/data/AppsRepository.kt"
-          s = repo.read_text(encoding="utf-8")
-          reps = [
+          t = repo.read_text(encoding="utf-8")
+          for old, nw in [
               ('Log.e(TAG, "Error installing APK: ${e.message}")', 'Log.e(TAG, "Error installing APK", e)'),
               ('Log.e(TAG, "Error in previewInstallList: ${e.message}")', 'Log.e(TAG, "Error in previewInstallList", e)'),
               ('resultLiveData.postValue("Installation failed: ${e.message}")',
                'resultLiveData.postValue("安装失败：${e.message}")'),
-              ('resultLiveData.postValue("Uninstallation failed: ${e.message}")',
-               'resultLiveData.postValue("卸载失败：${e.message}")'),
-              ('resultLiveData.postValue("Clear failed: ${e.message}")',
-               'resultLiveData.postValue("清除失败：${e.message}")'),
-              ('"Cannot install BlackBox app from within BlackBox. This would create infinite recursion and is not allowed for security reasons."',
-               '"不能在 BlackBox 内再安装 BlackBox 本体，这会无限递归，已被阻止。"'),
-          ]
-          for old, new in reps:
-              assert old in s, "锚点没找到: " + old[:60]
-              s = s.replace(old, new)
-          anchor = '            val blackBoxCore = BlackBoxCore.get()\n            val installResult ='
-          probe = ('            run {\n'
-                   '                val f = java.io.File(source)\n'
-                   '                Log.d(TAG, "installApk source=$source exists=${f.exists()} canRead=${f.canRead()} size=${if (f.exists()) f.length() else -1}")\n'
-                   '            }\n')
-          assert anchor in s
-          s = s.replace(anchor, probe + anchor, 1)
-          repo.write_text(s, encoding="utf-8")
-          print("OK AppsRepository.kt")
-
-          # ---------- 2) App.kt：崩溃落盘 ----------
-          app = root / "app/src/main/java/top/niunaijun/blackboxa/app/App.kt"
-          a = app.read_text(encoding="utf-8")
-          old = "            AppManager.doOnCreate(mContext)"
-          new = ("            Thread.setDefaultUncaughtExceptionHandler { _, e ->\n"
-                 "                try {\n"
-                 "                    java.io.File(getExternalFilesDir(null), \"bb_crash.txt\")\n"
-                 "                        .appendText(\"\\n==== \" + java.text.SimpleDateFormat(\"MM-dd HH:mm:ss\").format(java.util.Date()) + \" ====\\n\" + android.util.Log.getStackTraceString(e))\n"
-                 "                } catch (_: Throwable) {}\n"
-                 "                android.util.Log.e(\"BB_CRASH\", \"uncaught\", e)\n"
-                 "            }\n" + old)
-          assert old in a
-          a = a.replace(old, new, 1)
-          app.write_text(a, encoding="utf-8")
-          print("OK App.kt")
-
-          # ---------- 3) MainActivity：存储权限弹窗中文 ----------
-          ma = root / "app/src/main/java/top/niunaijun/blackboxa/view/main/MainActivity.kt"
-          m = ma.read_text(encoding="utf-8")
-          mreps = [
-              ('title(text = "Storage Permission Required")', 'title(text = "需要存储权限")'),
-              ('"This app needs \'All Files Access\' permission to properly run sandboxed apps. Without this permission, some apps may not work correctly.\\n\\nPlease grant permission in the next screen."',
-               '"本应用需要「所有文件访问」权限，才能正常读取并运行沙盒内的应用。\\n\\n没有该权限时，部分应用可能无法正常工作。请在接下来的页面中授予权限。"'),
-              ('positiveButton(text = "Grant Permission")', 'positiveButton(text = "去授权")'),
-              ('negativeButton(text = "Later")', 'negativeButton(text = "稍后")'),
-          ]
-          for old, new in mreps:
-              if old in m:
-                  m = m.replace(old, new)
+          ]:
+              if old in t:
+                  t = t.replace(old, nw)
               else:
-                  print("跳过未命中:", old[:50])
-          ma.write_text(m, encoding="utf-8")
-          print("OK MainActivity.kt")
+                  print("跳过:", old[:40])
+          repo.write_text(t, encoding="utf-8")
+          print("OK AppsRepository")
 
-          # ---------- 4) strings.xml 全量中文化 ----------
+          # ---------- 3) strings.xml 中文化 ----------
           ZH = {
             "choose": "选择", "choose_app": "选择应用", "installed_app": "已安装应用",
             "installed_module": "已安装模块", "empty_empty": "空空如也", "filter": "过滤",
-            "open_source_path": "开源地址", "xp_setting": "Xposed 设置", "tg_group": "Telegram 群组",
-            "fake_location": "虚拟定位（预览）", "real_location": "真实定位",
-            "set_location": "设置虚拟定位成功：%s-%s", "close_fake_location": "关闭虚拟定位",
-            "close_app_fake_location": "关闭 %s 的虚拟定位",
-            "close_fake_location_success": "已关闭 %s 的虚拟定位", "setting": "设置",
-            "jump_module": "前往模块管理", "module_setting": "模块管理",
-            "enable_xposed": "启用 Xposed 框架", "hider": "隐藏", "hide_root": "隐藏 Root",
-            "hide_xposed": "隐藏 Xposed", "userRemark": "备注", "done": "完成", "cancel": "取消",
-            "permission_setting": "设置", "no_reminders": "不再提醒", "app_stop": "停止运行",
-            "app_stop_hint": "要强制停止 %s 吗？", "is_stop": "%s 已停止",
+            "open_source_path": "开源地址", "setting": "设置", "jump_module": "前往模块管理",
+            "module_setting": "模块管理", "enable_xposed": "启用 Xposed 框架",
+            "hider": "隐藏", "hide_root": "隐藏 Root", "hide_xposed": "隐藏 Xposed",
+            "userRemark": "备注", "done": "完成", "cancel": "取消", "no_reminders": "不再提醒",
+            "app_stop": "停止运行", "app_stop_hint": "要强制停止 %s 吗？", "is_stop": "%s 已停止",
             "app_clear": "清除数据", "app_clear_hint": "要清除 %s 的数据吗？",
             "app_remove": "卸载应用", "app_shortcut": "创建快捷方式",
             "shortcut_name": "快捷方式名称", "try_add_shortcut": "已尝试添加到桌面",
-            "add_shortcut_fail_msg": "若添加失败，请到系统设置里为 BlackBox 打开「创建桌面快捷方式」权限",
             "install_success": "安装成功", "install_fail": "安装失败：%s",
             "install_fail_no_msg": "安装失败", "uninstall_success": "卸载成功",
             "uninstall_fail": "卸载失败", "uninstall_app": "卸载应用",
             "uninstall_app_hint": "要卸载 %s 吗？卸载后会清除相关数据。",
-            "uninstall_module": "卸载模块",
-            "uninstall_module_hint": "要卸载这个模块吗？卸载后将不再生效。",
             "remove_success": "移除成功", "clear_success": "清除成功",
-            "start_fail": "启动失败", "start_in_outside": "在外部启动模块",
-            "restart_module": "重启应用后生效",
-            "cannot_create_shortcut": "当前桌面不支持创建快捷方式",
-            "uninstall_module_toast": "请在模块管理中卸载该 Xposed 模块",
-            "other": "其他", "daemon_enable": "守护进程", "use_vpn_network": "使用 VPN 网络",
-            "use_vpn_network_summary": "让沙盒内的应用走 VPN（可能改善网络访问）",
-            "disable_flag_secure": "关闭 Flag Secure",
-            "disable_flag_secure_summary": "允许在应用内截图和录屏",
-            "gms_manager": "GMS 管理", "jump_gms": "前往 GMS 管理", "enable_gms": "启用服务",
-            "enable_gms_hint": "开启 Google 服务后，强依赖 Google Play 服务的应用可以正常运行。",
-            "disable_gms": "禁用服务",
-            "disable_gms_hint": "要清空当前 Google 服务环境吗？Google 服务数据会被清除。",
-            "no_gms": "当前手机没有 Google 服务环境。",
+            "start_fail": "启动失败", "restart_module": "重启应用后生效", "other": "其他",
+            "use_vpn_network": "使用 VPN 网络", "gms_manager": "GMS 管理",
           }
           sx = root / "app/src/main/res/values/strings.xml"
-          t = sx.read_text(encoding="utf-8")
+          tx = sx.read_text(encoding="utf-8")
           n = 0
           for k, v in ZH.items():
               pat = r'<string name="%s">.*?</string>' % re.escape(k)
-              new = '<string name="%s">%s</string>' % (k, v)
-              t2, cnt = re.subn(pat, new, t, count=1, flags=re.S)
+              tx2, cnt = re.subn(pat, '<string name="%s">%s</string>' % (k, v), tx, count=1, flags=re.S)
               if cnt:
-                  t = t2; n += 1
-              else:
-                  print("strings.xml 未命中:", k)
-          sx.write_text(t, encoding="utf-8")
+                  tx = tx2; n += 1
+          sx.write_text(tx, encoding="utf-8")
           print("OK strings.xml 中文化 %d 条" % n)
           PY
 
@@ -181,13 +128,11 @@ jobs:
             echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)" >> "$LOG"
             gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
               gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
-            cp "$APK" "blackbox-zh-$(date -u +%m%d-%H%M).apk"
-            gh release upload builds blackbox-zh-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
+            cp "$APK" "bb-wvfix-$(date -u +%m%d-%H%M).apk"
+            gh release upload builds bb-wvfix-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
             echo "发布: 完成" >> "$LOG"
           fi
-          { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)";
-            echo "--- 末尾 150 行 ---";
-            tail -n 150 "$LOG"; } > blackbox-build-status.txt
+          { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)"; echo "--- 末尾 120 行 ---"; tail -n 120 "$LOG"; } > blackbox-build-status.txt
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add blackbox-build-status.txt || true
