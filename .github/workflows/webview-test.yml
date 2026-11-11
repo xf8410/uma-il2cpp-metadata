@@ -1,9 +1,9 @@
 name: webview-test
 
-# 造一个最小的 WebView 测试 App，用来判断「容器里 WebView 是不是全都用不了」。
-# 装上后放进 BlackBox 里跑：
-#   · 也白屏/报错 ⇒ 容器内 WebView 整体不可用（要改容器）
-#   · 能打开       ⇒ 容器 WebView 没问题，是游戏那一页/那套参数的问题
+# v2：同时打「网络状态」「裸 HTTP 请求」「WebView 加载」三类日志。
+# 放进 BlackBox 里跑，用来区分：
+#   · HTTP 通、WebView 失败 ⇒ 容器里坏的是 Chromium（WebView 内核）
+#   · HTTP 也不通            ⇒ 容器的网络代理坏（ConnectivityManager 等）
 on:
   push:
     paths:
@@ -52,8 +52,8 @@ jobs:
                   applicationId 'com.dsh.wvtest'
                   minSdk 24
                   targetSdk 36
-                  versionCode 1
-                  versionName '1.0'
+                  versionCode 2
+                  versionName '2.0'
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -65,6 +65,7 @@ jobs:
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
               <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
               <application android:label="WebViewTest" android:usesCleartextTraffic="true">
                   <activity android:name=".MainActivity" android:exported="true">
                       <intent-filter>
@@ -79,14 +80,22 @@ jobs:
           package com.dsh.wvtest;
 
           import android.app.Activity;
+          import android.content.Context;
           import android.graphics.Color;
+          import android.net.ConnectivityManager;
+          import android.net.Network;
+          import android.net.NetworkCapabilities;
+          import android.net.NetworkInfo;
           import android.os.Bundle;
           import android.util.Log;
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
-          import android.widget.TextView;
           import android.view.ViewGroup;
+
+          import java.io.InputStream;
+          import java.net.HttpURLConnection;
+          import java.net.URL;
 
           public class MainActivity extends Activity {
               private static final String TAG = "WVTest";
@@ -94,30 +103,64 @@ jobs:
               @Override
               protected void onCreate(Bundle b) {
                   super.onCreate(b);
+
+                  try {
+                      ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                      NetworkInfo ni = cm.getActiveNetworkInfo();
+                      Log.i(TAG, "netInfo=" + (ni == null ? "null" :
+                              ("type=" + ni.getTypeName() + " connected=" + ni.isConnected() + " state=" + ni.getState())));
+                      Network n = cm.getActiveNetwork();
+                      Log.i(TAG, "activeNetwork=" + n);
+                      if (n != null) {
+                          NetworkCapabilities nc = cm.getNetworkCapabilities(n);
+                          Log.i(TAG, "caps=" + nc + " hasInternet=" + (nc != null && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)));
+                      }
+                  } catch (Throwable t) {
+                      Log.e(TAG, "netInfo error", t);
+                  }
+
+                  new Thread(() -> {
+                      try {
+                          HttpURLConnection c = (HttpURLConnection) new URL("https://example.com/").openConnection();
+                          c.setConnectTimeout(8000);
+                          c.setReadTimeout(8000);
+                          c.setRequestProperty("User-Agent", "wvtest");
+                          int code = c.getResponseCode();
+                          InputStream in = code >= 400 ? c.getErrorStream() : c.getInputStream();
+                          int n = 0;
+                          if (in != null) {
+                              byte[] buf = new byte[4096];
+                              int r;
+                              while ((r = in.read(buf)) > 0) n += r;
+                              in.close();
+                          }
+                          Log.i(TAG, "HTTP code=" + code + " bytes=" + n);
+                      } catch (Throwable t) {
+                          Log.e(TAG, "HTTP failed: " + t.getClass().getSimpleName() + " " + t.getMessage());
+                      }
+                  }).start();
+
                   WebView wv = new WebView(this);
                   WebSettings s = wv.getSettings();
                   s.setJavaScriptEnabled(true);
                   s.setDomStorageEnabled(true);
+                  s.setBlockNetworkLoads(false);
                   wv.setBackgroundColor(Color.WHITE);
                   wv.setWebViewClient(new WebViewClient() {
-                      @Override
-                      public void onPageFinished(WebView v, String url) {
+                      @Override public void onPageFinished(WebView v, String url) {
                           Log.i(TAG, "onPageFinished " + url);
                       }
-                      @Override
-                      public void onReceivedError(WebView v, int code, String desc, String url) {
+                      @Override public void onReceivedError(WebView v, int code, String desc, String url) {
                           Log.e(TAG, "onReceivedError code=" + code + " desc=" + desc + " url=" + url);
                       }
                   });
                   setContentView(wv, new ViewGroup.LayoutParams(
                           ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                  Log.i(TAG, "loading https://example.com");
-                  wv.loadUrl("https://example.com");
+                  wv.loadUrl("https://example.com/");
               }
           }
           G
           echo "工程生成完毕" >> ../w.log
-          find app -name "*.java" -o -name "*.xml" -o -name "*.gradle" >> ../w.log
 
       - name: 编译
         run: |
@@ -126,7 +169,7 @@ jobs:
           unzip -q /tmp/g.zip -d /tmp >> ../w.log 2>&1
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >> ../w.log 2>&1 || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" >> ../w.log 2>&1 || true
-          ( /tmp/gradle-8.9/bin/gradle :app:assembleDebug --no-daemon --stacktrace ) >> ../w.log 2>&1
+          ( /tmp/gradle-8.9/bin/gradle :app:assembleDebug --no-daemon ) >> ../w.log 2>&1
           echo "gradle exit=$?" >> ../w.log
 
       - name: 发布
@@ -140,11 +183,11 @@ jobs:
             echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)" >> w.log
             gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
               gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
-            cp "$APK" "wvtest-$(date -u +%m%d-%H%M).apk"
-            gh release upload builds wvtest-*.apk -R "$GITHUB_REPOSITORY" --clobber >> w.log 2>&1
+            cp "$APK" "wvtest2-$(date -u +%m%d-%H%M).apk"
+            gh release upload builds wvtest2-*.apk -R "$GITHUB_REPOSITORY" --clobber >> w.log 2>&1
             echo "发布: 完成" >> w.log
           fi
-          { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)"; echo "--- 末尾 80 行 ---"; tail -n 80 w.log; } > webview-test-status.txt
+          { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)"; echo "--- 末尾 60 行 ---"; tail -n 60 w.log; } > webview-test-status.txt
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add webview-test-status.txt || true
