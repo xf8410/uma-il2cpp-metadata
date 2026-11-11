@@ -1,0 +1,68 @@
+name: blackbox-build
+
+# 把 ALEX5402/NewBlackbox 拉到 CI 里编译，验证「我们自己能出包」，为 Android 16 适配做准备。
+# 产物：app-debug.apk（含 sha256）+ 完整构建日志，发到 Release `builds`。
+on:
+  push:
+    paths:
+      - '.github/workflows/blackbox-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 拉上游源码
+        run: |
+          : > b.log
+          git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git upstream >> b.log 2>&1
+          cd upstream
+          echo "commit: $(git rev-parse --short HEAD)" >> ../b.log
+          ls >> ../b.log
+          echo "--- gradle.properties:" >> ../b.log
+          cat gradle.properties >> ../b.log 2>&1 || true
+          echo "--- app/build.gradle 关键行:" >> ../b.log
+          grep -nE "compileSdk|minSdk|targetSdk|ndkVersion|namespace|applicationId" app/build.gradle >> ../b.log 2>&1 || \
+          grep -nE "compileSdk|minSdk|targetSdk|ndkVersion|namespace|applicationId" app/build.gradle.kts >> ../b.log 2>&1 || true
+
+      - name: 编译
+        run: |
+          cd upstream
+          chmod +x gradlew || true
+          ( ./gradlew :app:assembleDebug --no-daemon --stacktrace ) >> ../b.log 2>&1
+          echo "exit=$?" >> ../b.log
+          tail -60 ../b.log
+
+      - name: 发布
+        if: always()
+        run: |
+          cd upstream 2>/dev/null || true
+          APK=$(find . -name "*.apk" -path "*debug*" | head -1)
+          echo "APK=$APK" >> ../b.log
+          if [ -n "$APK" ]; then
+            {
+              echo "输出: $(stat -c%s "$APK") B"
+              echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)"
+            } >> ../b.log
+            gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
+              gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
+            cp "$APK" "blackbox-debug-$(date -u +%m%d-%H%M).apk"
+            gh release upload builds blackbox-debug-*.apk -R "$GITHUB_REPOSITORY" --clobber >> ../b.log 2>&1
+            echo "发布: 完成" >> ../b.log
+          else
+            echo "没产出 APK（看日志末尾）" >> ../b.log
+          fi
+          cp ../b.log blackbox-build-status.txt
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add blackbox-build-status.txt || true
+          git commit -m "ci: blackbox build ($GITHUB_RUN_ID)" || echo "no change"
+          git pull --rebase --autostash >> /dev/null 2>&1 || true
+          git push || { sleep 5; git pull --rebase --autostash >> /dev/null 2>&1 || true; git push; } || true
