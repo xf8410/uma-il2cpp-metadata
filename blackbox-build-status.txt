@@ -1,35 +1,5 @@
-run: 42943778380  2026-11-11T02:11:46Z
---- 末尾 150 行 ---
-	Element uses-permission#android.permission.READ_APP_SPECIFIC_EXTERNAL_STORAGE at [:Bcore] AndroidManifest.xml:367:5-93 duplicated with element declared at [:Bcore] AndroidManifest.xml:339:5-93
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:368:5-94 Warning:
-	Element uses-permission#android.permission.WRITE_APP_SPECIFIC_EXTERNAL_STORAGE at [:Bcore] AndroidManifest.xml:368:5-94 duplicated with element declared at [:Bcore] AndroidManifest.xml:340:5-94
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:369:5-82 Warning:
-	Element uses-permission#android.permission.MANAGE_EXTERNAL_STORAGE at [:Bcore] AndroidManifest.xml:369:5-82 duplicated with element declared at [:Bcore] AndroidManifest.xml:341:5-82
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:370:5-85 Warning:
-	Element uses-permission#android.permission.ACCESS_BACKGROUND_LOCATION at [:Bcore] AndroidManifest.xml:370:5-85 duplicated with element declared at [:Bcore] AndroidManifest.xml:342:5-85
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:371:5-79 Warning:
-	Element uses-permission#android.permission.ACTIVITY_RECOGNITION at [:Bcore] AndroidManifest.xml:371:5-79 duplicated with element declared at [:Bcore] AndroidManifest.xml:343:5-79
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:372:5-79 Warning:
-	Element uses-permission#android.permission.ACCESS_FINE_LOCATION at [:Bcore] AndroidManifest.xml:372:5-79 duplicated with element declared at [:Bcore] AndroidManifest.xml:344:5-79
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:373:5-81 Warning:
-	Element uses-permission#android.permission.ACCESS_COARSE_LOCATION at [:Bcore] AndroidManifest.xml:373:5-81 duplicated with element declared at [:Bcore] AndroidManifest.xml:345:5-81
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:374:5-65 Warning:
-	Element uses-permission#android.permission.CAMERA at [:Bcore] AndroidManifest.xml:374:5-65 duplicated with element declared at [:Bcore] AndroidManifest.xml:346:5-65
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:375:5-71 Warning:
-	Element uses-permission#android.permission.RECORD_AUDIO at [:Bcore] AndroidManifest.xml:375:5-71 duplicated with element declared at [:Bcore] AndroidManifest.xml:347:5-71
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:376:5-71 Warning:
-	Element uses-permission#android.permission.BODY_SENSORS at [:Bcore] AndroidManifest.xml:376:5-71 duplicated with element declared at [:Bcore] AndroidManifest.xml:348:5-71
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:377:5-82 Warning:
-	Element uses-permission#android.permission.BODY_SENSORS_BACKGROUND at [:Bcore] AndroidManifest.xml:377:5-82 duplicated with element declared at [:Bcore] AndroidManifest.xml:349:5-82
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:378:5-73 Warning:
-	Element uses-permission#android.permission.BLUETOOTH_SCAN at [:Bcore] AndroidManifest.xml:378:5-73 duplicated with element declared at [:Bcore] AndroidManifest.xml:350:5-73
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:379:5-76 Warning:
-	Element uses-permission#android.permission.BLUETOOTH_CONNECT at [:Bcore] AndroidManifest.xml:379:5-76 duplicated with element declared at [:Bcore] AndroidManifest.xml:351:5-76
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:380:5-78 Warning:
-	Element uses-permission#android.permission.BLUETOOTH_ADVERTISE at [:Bcore] AndroidManifest.xml:380:5-78 duplicated with element declared at [:Bcore] AndroidManifest.xml:352:5-78
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:381:5-78 Warning:
-	Element uses-permission#android.permission.NEARBY_WIFI_DEVICES at [:Bcore] AndroidManifest.xml:381:5-78 duplicated with element declared at [:Bcore] AndroidManifest.xml:353:5-78
-[:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:382:5-76 Warning:
+run: 42949415223  2026-11-11T02:59:56Z
+--- 末尾 120 行 ---
 	Element uses-permission#android.permission.READ_MEDIA_IMAGES at [:Bcore] AndroidManifest.xml:382:5-76 duplicated with element declared at [:Bcore] AndroidManifest.xml:354:5-76
 [:Bcore] /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/upstream/Bcore/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:383:5-75 Warning:
 	Element uses-permission#android.permission.READ_MEDIA_VIDEO at [:Bcore] AndroidManifest.xml:383:5-75 duplicated with element declared at [:Bcore] AndroidManifest.xml:355:5-75
@@ -60,8 +30,8 @@ run: 42943778380  2026-11-11T02:11:46Z
 > Task :compiler:processResources NO-SOURCE
 > Task :compiler:classes
 > Task :compiler:jar
-> Task :app:javaPreCompileDebug
 > Task :Bcore:javaPreCompileDebug
+> Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
@@ -116,8 +86,8 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
 > Task :app:mergeDebugJniLibFolders
-> Task :app:mergeLibDexDebug
 > Task :app:mergeProjectDexDebug
+> Task :app:mergeLibDexDebug
 > Task :app:mergeDebugJavaResource
 > Task :Bcore:configureNdkBuildDebug[arm64-v8a]
 > Task :Bcore:buildNdkBuildDebug[arm64-v8a]
@@ -126,10 +96,10 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :Bcore:mergeDebugJniLibFolders
 > Task :Bcore:mergeDebugNativeLibs
 > Task :app:validateSigningDebug
-> Task :Bcore:copyDebugJniLibsProjectOnly
 > Task :app:writeDebugAppMetadata
-> Task :app:mergeDebugNativeLibs
+> Task :Bcore:copyDebugJniLibsProjectOnly
 > Task :app:writeDebugSigningConfigVersions
+> Task :app:mergeDebugNativeLibs
 > Task :app:stripDebugDebugSymbols
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
@@ -143,10 +113,10 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 3m 34s
+BUILD SUCCESSFUL in 2m 28s
 70 actionable tasks: 70 executed
 gradle exit=0
 APK=upstream/app/build/outputs/apk/debug/BlackBox_4.0.0_universal-debug.apk
-输出: 9179889 B
-sha256: 92ae83f6733ec801c65a8cbf695b33694a8cfee2e87cab9ed9a0074880c223d2
+输出: 9179105 B
+sha256: 099234b953116b1da2ebde36ce9ec105196f209559a57325f4d58fbf8f7c5488
 发布: 完成
