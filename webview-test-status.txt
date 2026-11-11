@@ -1,4 +1,4 @@
-run: 42948137930  2026-11-11T02:46:09Z
+run: 42948766933  2026-11-11T02:51:45Z
 --- 末尾 60 行 ---
 
 For more information refer to the compatibility table:
@@ -29,10 +29,10 @@ to this project's gradle.properties.
 > Task :app:compressDebugAssets
 > Task :app:desugarDebugFileDependencies
 > Task :app:processDebugJavaRes NO-SOURCE
-> Task :app:processDebugManifestForPackage
-> Task :app:mergeDebugJavaResource
 > Task :app:checkDebugDuplicateClasses
 > Task :app:mergeDebugJniLibFolders
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugJavaResource
 > Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:mergeExtDexDebug
@@ -41,7 +41,7 @@ to this project's gradle.properties.
 > Task :app:validateSigningDebug
 
 > Task :app:compileDebugJavaWithJavac
-Note: /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/proj/app/src/main/java/com/dsh/wvtest/MainActivity.java uses or overrides a deprecated API.
+Note: /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/proj/app/src/main/java/com/dsh/wvtest3/MainActivity.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 
 > Task :app:dexBuilderDebug
@@ -53,10 +53,10 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
 
-BUILD SUCCESSFUL in 40s
+BUILD SUCCESSFUL in 33s
 32 actionable tasks: 32 executed
 gradle exit=0
 APK=proj/app/build/outputs/apk/debug/app-debug.apk
-输出: 9137 B
-sha256: 4d3719989a805a4665063948bd450151e01b1d0dbdafd0e1a3835e1bb18037ba
+输出: 9101 B
+sha256: 0bec19839ff68415aa98a20652144211740a7b871db3c70f81fbc0f48ee10035
 发布: 完成
