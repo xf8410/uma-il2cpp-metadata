@@ -1,12 +1,11 @@
 name: blackbox-build
 
 # 克隆 ALEX5402/NewBlackbox → 打补丁 → JDK21 + NDK29 编译 → 发 Release
-#
 # 本轮补丁：
-#   1) WebView 用宿主 Context 创建（容器里 app_webview 目录从未创建，导致 ERR_CACHE_MISS）
-#   2) App.onCreate 里加「自动导入 + 自动启动」：读 /sdcard/Download/orig.apk，
-#      若容器里没有 guest 就装进去，然后直接 launch。完全不需要点屏幕。
-#   3) AppsRepository 诊断日志 + 中文报错；strings.xml 中文化
+#   1) ★ manifest 加 MANAGE_EXTERNAL_STORAGE —— 没有它，即使 appops 批准，按 uid 读 /sdcard 仍然 Permission denied
+#   2) WebView 用宿主 Context 创建（容器里 app_webview 目录从未创建 → ERR_CACHE_MISS）
+#   3) App.onCreate 自动导入 + 自动启动（读 /sdcard/Download/orig.apk），测试不点屏
+#   4) 诊断日志 + 中文报错
 on:
   push:
     paths:
@@ -46,22 +45,37 @@ jobs:
           import re, sys, pathlib
           root = pathlib.Path(sys.argv[1])
 
-          # ---------- 1) WebView 用宿主 Context ----------
+          # ---------- 1) manifest 加 MANAGE_EXTERNAL_STORAGE ----------
+          mf = root / "app/src/main/AndroidManifest.xml"
+          m = mf.read_text(encoding="utf-8")
+          if "MANAGE_EXTERNAL_STORAGE" not in m:
+              anchor = '<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"'
+              assert anchor in m, "manifest 锚点没找到"
+              m = m.replace(anchor,
+                            '<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />\n    ' + anchor, 1)
+              mf.write_text(m, encoding="utf-8")
+              print("OK manifest：加 MANAGE_EXTERNAL_STORAGE")
+          else:
+              print("manifest 已有 MANAGE_EXTERNAL_STORAGE")
+
+          # ---------- 2) WebView 用宿主 Context ----------
           wv = root / "Bcore/src/main/java/top/niunaijun/blackbox/fake/service/WebViewProxy.java"
           s = wv.read_text(encoding="utf-8")
           anchor = ("                if (args != null && args.length > 0 && args[0] instanceof Context) {\n"
                     "                    context = (Context) args[0];")
-          assert anchor in s, "WebViewProxy 锚点没找到"
-          s = s.replace(anchor, anchor + ("\n                    Context __host = BlackBoxCore.getContext();\n"
-                                          "                    if (__host != null) {\n"
-                                          "                        args[0] = __host;\n"
-                                          "                        context = __host;\n"
-                                          "                        Slog.d(TAG, \"WebView: context swapped to host\");\n"
-                                          "                    }"), 1)
-          wv.write_text(s, encoding="utf-8")
-          print("OK WebViewProxy")
+          if anchor in s:
+              s = s.replace(anchor, anchor + ("\n                    Context __host = BlackBoxCore.getContext();\n"
+                                              "                    if (__host != null) {\n"
+                                              "                        args[0] = __host;\n"
+                                              "                        context = __host;\n"
+                                              "                        Slog.d(TAG, \"WebView: context swapped to host\");\n"
+                                              "                    }"), 1)
+              wv.write_text(s, encoding="utf-8")
+              print("OK WebViewProxy")
+          else:
+              print("WebViewProxy 锚点未命中（跳过）")
 
-          # ---------- 2) 自动导入 + 自动启动 ----------
+          # ---------- 3) 自动导入 + 自动启动 ----------
           app = root / "app/src/main/java/top/niunaijun/blackboxa/app/App.kt"
           a = app.read_text(encoding="utf-8")
           old = "            AppManager.doOnCreate(mContext)"
@@ -72,9 +86,13 @@ jobs:
             "                    val g = java.io.File(\"/sdcard/Download/orig.apk\")\n"
             "                    val core = BlackBoxCore.get()\n"
             "                    val la = core.getInstalledApplications(0, 0)\n"
-            "                    android.util.Log.i(\"BB_AUTO\", \"guest count=\" + (la?.size ?: -1) + \" apk=\" + g.exists())\n"
+            "                    android.util.Log.i(\"BB_AUTO\", \"guest=\" + (la?.size ?: -1) + \" apkExists=\" + g.exists() + \" apkReadable=\" + g.canRead())\n"
             "                    if ((la == null || la.isEmpty()) && g.exists()) {\n"
-            "                        val r = core.installPackageAsUser(g.absolutePath, 0)\n"
+            "                        val cache = java.io.File(cacheDir, \"guest.apk\")\n"
+            "                        if (cache.exists()) cache.delete()\n"
+            "                        g.inputStream().use { i -> cache.outputStream().use { o -> i.copyTo(o) } }\n"
+            "                        android.util.Log.i(\"BB_AUTO\", \"copied to \" + cache.absolutePath + \" size=\" + cache.length())\n"
+            "                        val r = core.installPackageAsUser(cache.absolutePath, 0)\n"
             "                        android.util.Log.i(\"BB_AUTO\", \"install ok=\" + r?.success + \" msg=\" + r?.msg)\n"
             "                    }\n"
             "                    Thread.sleep(2000)\n"
@@ -84,32 +102,19 @@ jobs:
             "                    android.util.Log.e(\"BB_AUTO\", \"auto failed\", t)\n"
             "                }\n"
             "            }.start()\n" + old)
-          assert old in a, "App.kt 锚点没找到"
-          a = a.replace(old, auto, 1)
-          app.write_text(a, encoding="utf-8")
-          print("OK App.kt 自动导入+启动")
-
-          # ---------- 3) 诊断日志 + 中文报错 ----------
-          repo = root / "app/src/main/java/top/niunaijun/blackboxa/data/AppsRepository.kt"
-          t = repo.read_text(encoding="utf-8")
-          for old2, nw in [
-              ('Log.e(TAG, "Error installing APK: ${e.message}")', 'Log.e(TAG, "Error installing APK", e)'),
-              ('resultLiveData.postValue("Installation failed: ${e.message}")',
-               'resultLiveData.postValue("安装失败：${e.message}")'),
-          ]:
-              if old2 in t:
-                  t = t.replace(old2, nw)
-          repo.write_text(t, encoding="utf-8")
-          print("OK AppsRepository")
+          if old in a and "BB_AUTO" not in a:
+              a = a.replace(old, auto, 1)
+              app.write_text(a, encoding="utf-8")
+              print("OK App.kt 自动导入+启动")
+          else:
+              print("App.kt 已打过或锚点未命中")
 
           # ---------- 4) strings 中文化 ----------
           ZH = {"choose": "选择", "choose_app": "选择应用", "installed_app": "已安装应用",
                 "empty_empty": "空空如也", "filter": "过滤", "setting": "设置",
                 "module_setting": "模块管理", "done": "完成", "cancel": "取消",
-                "app_stop": "停止运行", "app_clear": "清除数据", "app_remove": "卸载应用",
                 "install_success": "安装成功", "install_fail": "安装失败：%s",
-                "uninstall_success": "卸载成功", "uninstall_fail": "卸载失败",
-                "other": "其他", "no_reminders": "不再提醒"}
+                "uninstall_success": "卸载成功", "uninstall_fail": "卸载失败", "other": "其他"}
           sx = root / "app/src/main/res/values/strings.xml"
           tx = sx.read_text(encoding="utf-8")
           n = 0
@@ -142,8 +147,8 @@ jobs:
             echo "sha256: $(sha256sum "$APK" | cut -d' ' -f1)" >> "$LOG"
             gh release view builds -R "$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
               gh release create builds -R "$GITHUB_REPOSITORY" --title "构建产物" --notes "测试 APK" || true
-            cp "$APK" "bb-auto-$(date -u +%m%d-%H%M).apk"
-            gh release upload builds bb-auto-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
+            cp "$APK" "bb-perm-$(date -u +%m%d-%H%M).apk"
+            gh release upload builds bb-perm-*.apk -R "$GITHUB_REPOSITORY" --clobber >> "$LOG" 2>&1
             echo "发布: 完成" >> "$LOG"
           fi
           { echo "run: $GITHUB_RUN_ID  $(date -u +%FT%TZ)"; echo "--- 末尾 120 行 ---"; tail -n 120 "$LOG"; } > blackbox-build-status.txt
