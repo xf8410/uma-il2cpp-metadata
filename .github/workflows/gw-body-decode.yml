@@ -1,0 +1,49 @@
+name: gw-body-decode
+
+# 解 220 字节 msgpack 网关响应，判断是「未鉴权错误」还是「正常数据」
+on:
+  push:
+    paths:
+      - '.github/workflows/gw-body-decode.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python3 -m pip install --quiet msgpack
+      - name: 抓包体并解
+        run: |
+          : > gw.log
+          for H in l1-prod l2-prod le1-prod; do
+            u="https://${H}-bili-gs-uma.bilibiligame.net/"
+            curl -sS -o body.bin --max-time 20 "$u" 2>>gw.log || true
+            echo "=== $u  size=$(stat -c%s body.bin 2>/dev/null)" >> gw.log
+            od -An -tx1 -v body.bin >> gw.log 2>&1 || true
+            python3 - >> gw.log 2>&1 <<'PY'
+            import msgpack
+            d = open('body.bin','rb').read()
+            try:
+                o = msgpack.unpackb(d, raw=False, strict_map_key=False)
+                print("decoded:", repr(o)[:1500])
+            except Exception as e:
+                print("msgpack 解码失败:", e)
+                print("前 120 字节 ascii:", ''.join(chr(b) if 32<=b<127 else '.' for b in d[:120]))
+            PY
+          done
+      - name: 提交
+        if: always()
+        run: |
+          [ -f gw.log ] || echo "(无)" > gw.log
+          git init -q r && cd r
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main && git checkout -q -B main origin/main
+          cp ../gw.log gw-body.txt
+          git add gw-body.txt
+          git commit -m "ci: gateway body decode" || echo "no change"
+          for i in 1 2 3; do git push -q origin main && break || sleep 4; done
