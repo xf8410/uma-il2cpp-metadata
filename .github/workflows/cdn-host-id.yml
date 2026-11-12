@@ -1,0 +1,62 @@
+name: cdn-host-id
+
+# 由下载中的远端 IP 反查 CDN 主机名：PTR + 候选域名 A 记录比对
+on:
+  push:
+    paths:
+      - '.github/workflows/cdn-host-id.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ident:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 反查
+        run: |
+          : > host.log
+          IPS="218.12.76.158 221.194.141.157 42.236.90.180 114.250.41.232 119.188.175.46"
+          echo "=== PTR ===" >> host.log
+          for ip in $IPS; do
+            ptr=$(dig +short -x "$ip" @8.8.8.8 2>/dev/null | head -2 | tr '\n' ' ')
+            echo "$ip  ->  ${ptr:-<无PTR>}" >> host.log
+          done
+          echo >> host.log
+          echo "=== 候选域名 A 记录 ===" >> host.log
+          CAND=""
+          for n in l1 l2 l3 l4 l5 l6 le1 le2 le3 dl res cdn api; do
+            CAND="$CAND ${n}-prod-bili-gs-uma.bilibiligame.net"
+          done
+          for n in l1 l2 l3; do
+            CAND="$CAND ${n}-bak-prod-bili-gs-uma.bilibiligame.net"
+          done
+          CAND="$CAND uma-cdn.biligame.net uma-res.biligame.net uma-resource.biligame.net
+            bili-gs-uma.bilibiligame.net gs-uma.bilibiligame.net uma.bilibiligame.net
+            uma-cdn.bilivideo.com uma-res.bilivideo.com uma.bilivideo.com
+            uma-cdn.hdslb.com uma-res.hdslb.com uma.hdslb.com"
+          for h in $CAND; do
+            a=$(dig +short A "$h" @8.8.8.8 2>/dev/null | grep -E '^[0-9.]+$' | tr '\n' ' ')
+            [ -n "$a" ] && echo "$h -> $a" >> host.log
+          done
+          echo >> host.log
+          echo "=== 命中：解析结果里出现目标 IP 的域名 ===" >> host.log
+          for ip in $IPS; do
+            hit=$(grep -w "$ip" host.log | grep -- '->' | head -3)
+            [ -n "$hit" ] && echo "  $ip :" >> host.log && echo "$hit" >> host.log
+          done
+          echo "（若为空，说明资源主机名不在候选列表里）" >> host.log
+      - name: 提交（独立 clone + 重试）
+        if: always()
+        run: |
+          [ -f host.log ] || echo "(无)" > host.log
+          git init -q r && cd r
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main && git checkout -q -B main origin/main
+          cp ../host.log cdn-host-id.txt
+          git add cdn-host-id.txt
+          git commit -m "ci: cdn host id" || echo "no change"
+          for i in 1 2 3; do git push -q origin main && break || sleep 4; done
