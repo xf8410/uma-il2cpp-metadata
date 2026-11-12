@@ -1,0 +1,203 @@
+=== [37766] InternalDecrypt  RVA=0x2A17EC8  file=0x2A17EC8 ===
+  0x2A17EC8    str      x21, [sp, #-0x30]!
+  0x2A17ECC    stp      x20, x19, [sp, #0x10]
+  0x2A17ED0    stp      x29, x30, [sp, #0x20]
+  0x2A17ED4    add      x29, sp, #0x20
+  0x2A17ED8    adrp     x20, #0x7baa000
+  0x2A17EDC    ldrb     w8, [x20, #0x29]
+  0x2A17EE0    mov      x19, x0
+  0x2A17EE4    tbnz     w8, #0, #0x2a17efc
+  0x2A17EE8    adrp     x0, #0x75f4000
+  0x2A17EEC    ldr      x0, [x0, #0x588]
+  0x2A17EF0    bl       #0x16378b0
+  0x2A17EF4    mov      w8, #1
+  0x2A17EF8    strb     w8, [x20, #0x29]
+  0x2A17EFC    mov      w0, #0x74d
+  0x2A17F00    mov      x1, xzr
+  0x2A17F04    bl       #0x1d2738c
+  0x2A17F08    tbz      w0, #0, #0x2a17f34
+  0x2A17F0C    mov      w0, #0x74d
+  0x2A17F10    mov      x1, xzr
+  0x2A17F14    bl       #0x1d2745c
+  0x2A17F18    cbz      x0, #0x2a18024
+  0x2A17F1C    mov      x1, x19
+  0x2A17F20    ldp      x29, x30, [sp, #0x20]
+  0x2A17F24    ldp      x20, x19, [sp, #0x10]
+  0x2A17F28    mov      x2, xzr
+  0x2A17F2C    ldr      x21, [sp], #0x30
+  0x2A17F30    b        #0x18486ac
+  0x2A17F34    ldrb     w8, [x19, #8]
+  0x2A17F38    cbz      w8, #0x2a17fc4
+  0x2A17F3C    ldr      w8, [x19, #4]
+  0x2A17F40    ldrb     w9, [x19]
+  0x2A17F44    eor      w21, w8, w9
+  0x2A17F48    cmp      w21, #0xb5
+  0x2A17F4C    cset     w20, ne
+  0x2A17F50    bl       #0x2a178e0
+  0x2A17F54    tbz      w0, #0, #0x2a18010
+  0x2A17F58    ldrb     w8, [x19, #0xa]
+  0x2A17F5C    cbz      w8, #0x2a18010
+  0x2A17F60    ldrb     w8, [x19, #9]
+  0x2A17F64    cmp      w21, #0xb5
+  0x2A17F68    cset     w9, ne
+  0x2A17F6C    cmp      w8, #0
+  0x2A17F70    cset     w8, ne
+  0x2A17F74    cmp      w9, w8
+  0x2A17F78    b.eq     #0x2a18010
+  0x2A17F7C    adrp     x19, #0x7baa000
+  0x2A17F80    ldrb     w8, [x19, #0x13e]
+  0x2A17F84    cbnz     w8, #0x2a17f9c
+  0x2A17F88    adrp     x0, #0x7624000
+  0x2A17F8C    ldr      x0, [x0, #0xe0]
+  0x2A17F90    bl       #0x16378b0
+  0x2A17F94    mov      w8, #1
+  0x2A17F98    strb     w8, [x19, #0x13e]
+  0x2A17F9C    adrp     x8, #0x7624000
+  0x2A17FA0    ldr      x8, [x8, #0xe0]
+  0x2A17FA4    ldr      x8, [x8]
+  0x2A17FA8    ldr      x8, [x8, #0xb8]
+  0x2A17FAC    ldr      x0, [x8, #8]
+  0x2A17FB0    cbz      x0, #0x2a18024
+  0x2A17FB4    ldr      x8, [x0]
+  0x2A17FB8    ldp      x9, x1, [x8, #0x188]
+  0x2A17FBC    blr      x9
+  0x2A17FC0    b        #0x2a18010
+  0x2A17FC4    adrp     x20, #0x75f4000
+  0x2A17FC8    ldr      x20, [x20, #0x588]
+  0x2A17FCC    ldr      x0, [x20]
+  0x2A17FD0    ldrb     w8, [x0, #0x133]
+  0x2A17FD4    tbz      w8, #2, #0x2a17fe8
+  0x2A17FD8    ldr      w8, [x0, #0xe0]
+  0x2A17FDC    cbnz     w8, #0x2a17fe8
+  0x2A17FE0    bl       #0x1637960
+  0x2A17FE4    ldr      x0, [x20]
+  0x2A17FE8    ldr      x8, [x0, #0xb8]
+  0x2A17FEC    mov      w0, wzr
+  0x2A17FF0    ldrb     w8, [x8]
+  0x2A17FF4    strb     w8, [x19]
+  0x2A17FF8    bl       #0x2a17844
+  0x2A17FFC    mov      w8, #1
+  0x2A18000    mov      w20, wzr
+  0x2A18004    str      w0, [x19, #4]
+  0x2A18008    strb     wzr, [x19, #0xa]
+  0x2A1800C    strh     w8, [x19, #8]
+  0x2A18010    mov      w0, w20
+  0x2A18014    ldp      x29, x30, [sp, #0x20]
+  0x2A18018    ldp      x20, x19, [sp, #0x10]
+  0x2A1801C    ldr      x21, [sp], #0x30
+  0x2A18020    ret      
+  0x2A18024    bl       #0x1637984
+  0x2A18028    str      x21, [sp, #-0x30]!
+  0x2A1802C    stp      x20, x19, [sp, #0x10]
+  0x2A18030    stp      x29, x30, [sp, #0x20]
+  0x2A18034    add      x29, sp, #0x20
+  0x2A18038    adrp     x20, #0x7baa000
+  0x2A1803C    ldrb     w8, [x20, #0x27]
+  0x2A18040    mov      x19, x0
+  0x2A18044    tbnz     w8, #0, #0x2a1805c
+  0x2A18048    adrp     x0, #0x75f4000
+  0x2A1804C    ldr      x0, [x0, #0x588]
+  0x2A18050    bl       #0x16378b0
+  0x2A18054    mov      w8, #1
+  0x2A18058    strb     w8, [x20, #0x27]
+  0x2A1805C    mov      w0, #0x8d6
+  0x2A18060    mov      x1, xzr
+  0x2A18064    bl       #0x1d2738c
+  0x2A18068    tbz      w0, #0, #0x2a18094
+  0x2A1806C    mov      w0, #0x8d6
+  0x2A18070    mov      x1, xzr
+  0x2A18074    bl       #0x1d2745c
+  0x2A18078    cbz      x0, #0x2a180f8
+  0x2A1807C    mov      x1, x19
+  0x2A18080    ldp      x29, x30, [sp, #0x20]
+  0x2A18084    ldp      x20, x19, [sp, #0x10]
+  0x2A18088    mov      x2, xzr
+  0x2A1808C    ldr      x21, [sp], #0x30
+  0x2A18090    b        #0x184f0b4
+  0x2A18094    mov      x0, x19
+  0x2A18098    bl       #0x2a17ec8
+  0x2A1809C    mov      w20, w0
+  0x2A180A0    mov      w0, #1
+  0x2A180A4    mov      w1, #0x96
+  0x2A180A8    mov      x2, xzr
+  0x2A180AC    bl       #0x1f9abfc
+  0x2A180B0    strb     w0, [x19]
+  0x2A180B4    adrp     x8, #0x75f4000
+  0x2A180B8    ldr      x8, [x8, #0x588]
+  0x2A180BC    mov      w21, w0
+  0x2A180C0    ldr      x0, [x8]
+  0x2A180C4    ldrb     w8, [x0, #0x133]
+  0x2A180C8    tbz      w8, #2, #0x2a180d8
+  0x2A180CC    ldr      w8, [x0, #0xe0]
+  0x2A180D0    cbnz     w8, #0x2a180d8
+  0x2A180D4    bl       #0x1637960
+  0x2A180D8    and      w0, w20, #1
+  0x2A180DC    mov      w1, w21
+  0x2A180E0    bl       #0x2a17a14
+  0x2A180E4    str      w0, [x19, #4]
+  0x2A180E8    ldp      x29, x30, [sp, #0x20]
+  0x2A180EC    ldp      x20, x19, [sp, #0x10]
+  0x2A180F0    ldr      x21, [sp], #0x30
+  0x2A180F4    ret      
+  0x2A180F8    bl       #0x1637984
+  0x2A180FC    str      x19, [sp, #-0x20]!
+  0x2A18100    stp      x29, x30, [sp, #0x10]
+  0x2A18104    add      x29, sp, #0x10
+  0x2A18108    mov      x19, x0
+  0x2A1810C    mov      w0, #0x8d7
+  0x2A18110    mov      x1, xzr
+  0x2A18114    bl       #0x1d2738c
+  0x2A18118    tbz      w0, #0, #0x2a18140
+  0x2A1811C    mov      w0, #0x8d7
+  0x2A18120    mov      x1, xzr
+  0x2A18124    bl       #0x1d2745c
+  0x2A18128    cbz      x0, #0x2a18158
+  0x2A1812C    ldp      x29, x30, [sp, #0x10]
+  0x2A18130    mov      x1, x19
+  0x2A18134    mov      x2, xzr
+  0x2A18138    ldr      x19, [sp], #0x20
+  0x2A1813C    b        #0x184f1e4
+  0x2A18140    mov      x0, x19
+  0x2A18144    bl       #0x2a17dc0
+  0x2A18148    ldr      w0, [x19, #4]
+  0x2A1814C    ldp      x29, x30, [sp, #0x10]
+  0x2A18150    ldr      x19, [sp], #0x20
+  0x2A18154    ret      
+  0x2A18158    bl       #0x1637984
+  0x2A1815C    str      x19, [sp, #-0x20]!
+  0x2A18160    stp      x29, x30, [sp, #0x10]
+  0x2A18164    add      x29, sp, #0x10
+  0x2A18168    mov      x19, x0
+  0x2A1816C    mov      w0, #0x8d8
+  0x2A18170    mov      x1, xzr
+  0x2A18174    bl       #0x1d2738c
+  0x2A18178    tbz      w0, #0, #0x2a181a0
+  0x2A1817C    mov      w0, #0x8d8
+  0x2A18180    mov      x1, xzr
+  0x2A18184    bl       #0x1d2745c
+  0x2A18188    cbz      x0, #0x2a181b0
+  0x2A1818C    ldp      x29, x30, [sp, #0x10]
+  0x2A18190    mov      x1, x19
+  0x2A18194    mov      x2, xzr
+  0x2A18198    ldr      x19, [sp], #0x20
+  0x2A1819C    b        #0x18486ac
+  0x2A181A0    ldp      x29, x30, [sp, #0x10]
+  0x2A181A4    mov      x0, x19
+  0x2A181A8    ldr      x19, [sp], #0x20
+  0x2A181AC    b        #0x2a17ec8
+  0x2A181B0    bl       #0x1637984
+  0x2A181B4    sub      sp, sp, #0x30
+  0x2A181B8    str      x19, [sp, #0x10]
+  0x2A181BC    stp      x29, x30, [sp, #0x20]
+  0x2A181C0    add      x29, sp, #0x20
+  0x2A181C4    mov      w19, w0
+  0x2A181C8    mov      w0, #0x8d9
+  0x2A181CC    mov      x1, xzr
+  0x2A181D0    bl       #0x1d2738c
+  0x2A181D4    tbz      w0, #0, #0x2a18200
+  0x2A181D8    mov      w0, #0x8d9
+  0x2A181DC    mov      x1, xzr
+  0x2A181E0    bl       #0x1d2745c
+  0x2A181E4    cbz      x0, #0x2a18230
+
+--- 共 200 条指令，数据引用 0 个 ---

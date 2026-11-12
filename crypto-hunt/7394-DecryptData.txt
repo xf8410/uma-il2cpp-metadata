@@ -1,0 +1,203 @@
+=== [7394] DecryptData  RVA=0x1F24680  file=0x1F24680 ===
+  0x1F24680    stp      x28, x27, [sp, #-0x60]!
+  0x1F24684    stp      x26, x25, [sp, #0x10]
+  0x1F24688    stp      x24, x23, [sp, #0x20]
+  0x1F2468C    stp      x22, x21, [sp, #0x30]
+  0x1F24690    stp      x20, x19, [sp, #0x40]
+  0x1F24694    stp      x29, x30, [sp, #0x50]
+  0x1F24698    add      x29, sp, #0x50
+  0x1F2469C    sub      sp, sp, #0x60
+  0x1F246A0    adrp     x20, #0x7ba5000
+  0x1F246A4    ldrb     w8, [x20, #0x61c]
+  0x1F246A8    mov      w22, w7
+  0x1F246AC    mov      w21, w6
+  0x1F246B0    mov      w28, w5
+  0x1F246B4    mov      x19, x4
+  0x1F246B8    mov      w27, w3
+  0x1F246BC    mov      w23, w2
+  0x1F246C0    mov      x24, x1
+  0x1F246C4    mov      x25, x0
+  0x1F246C8    tbnz     w8, #0, #0x1f246f8
+  0x1F246CC    adrp     x0, #0x75e1000
+  0x1F246D0    ldr      x0, [x0, #0x5b0]
+  0x1F246D4    bl       #0x16378b0
+  0x1F246D8    adrp     x0, #0x75bd000
+  0x1F246DC    ldr      x0, [x0, #0x3c8]
+  0x1F246E0    bl       #0x16378b0
+  0x1F246E4    adrp     x0, #0x763e000
+  0x1F246E8    ldr      x0, [x0, #0x1f8]
+  0x1F246EC    bl       #0x16378b0
+  0x1F246F0    mov      w8, #1
+  0x1F246F4    strb     w8, [x20, #0x61c]
+  0x1F246F8    cbz      x24, #0x1f250cc
+  0x1F246FC    ldr      w8, [x24, #0x18]
+  0x1F24700    add      w9, w27, w23
+  0x1F24704    cmp      w9, w8
+  0x1F24708    b.gt     #0x1f24724
+  0x1F2470C    ldr      x8, [x19]
+  0x1F24710    cbz      x8, #0x1f24730
+  0x1F24714    ldr      w8, [x8, #0x18]
+  0x1F24718    sub      w8, w8, w28
+  0x1F2471C    cmp      w8, w27
+  0x1F24720    b.ge     #0x1f2474c
+  0x1F24724    adrp     x0, #0x762c000
+  0x1F24728    ldr      x0, [x0, #0xc10]
+  0x1F2472C    b        #0x1f250d8
+  0x1F24730    adrp     x8, #0x75e1000
+  0x1F24734    ldr      x8, [x8, #0x5b0]
+  0x1F24738    mov      w1, w27
+  0x1F2473C    ldr      x0, [x8]
+  0x1F24740    bl       #0x16378c4
+  0x1F24744    mov      w28, wzr
+  0x1F24748    str      x0, [x19]
+  0x1F2474C    ldr      x8, [x25, #0x50]
+  0x1F24750    cbz      x8, #0x1f2476c
+  0x1F24754    ldr      w9, [x8, #0x18]
+  0x1F24758    add      x8, x8, #0x20
+  0x1F2475C    cmp      w9, #0
+  0x1F24760    csel     x8, xzr, x8, eq
+  0x1F24764    stur     x8, [x29, #-0x60]
+  0x1F24768    b        #0x1f24770
+  0x1F2476C    stur     xzr, [x29, #-0x60]
+  0x1F24770    ldr      x8, [x25, #0x30]
+  0x1F24774    cbz      x8, #0x1f24790
+  0x1F24778    ldr      w9, [x8, #0x18]
+  0x1F2477C    add      x8, x8, #0x20
+  0x1F24780    cmp      w9, #0
+  0x1F24784    csel     x8, xzr, x8, eq
+  0x1F24788    stur     x8, [x29, #-0x68]
+  0x1F2478C    b        #0x1f24794
+  0x1F24790    stur     xzr, [x29, #-0x68]
+  0x1F24794    ldr      x8, [x25, #0x58]
+  0x1F24798    cbz      x8, #0x1f247b4
+  0x1F2479C    ldr      w9, [x8, #0x18]
+  0x1F247A0    add      x8, x8, #0x20
+  0x1F247A4    cmp      w9, #0
+  0x1F247A8    csel     x8, xzr, x8, eq
+  0x1F247AC    stur     x8, [x29, #-0x70]
+  0x1F247B0    b        #0x1f247b8
+  0x1F247B4    stur     xzr, [x29, #-0x70]
+  0x1F247B8    ldr      x8, [x25, #0x38]
+  0x1F247BC    cbz      x8, #0x1f247d8
+  0x1F247C0    ldr      w9, [x8, #0x18]
+  0x1F247C4    add      x8, x8, #0x20
+  0x1F247C8    cmp      w9, #0
+  0x1F247CC    csel     x8, xzr, x8, eq
+  0x1F247D0    stur     x8, [x29, #-0x78]
+  0x1F247D4    b        #0x1f247dc
+  0x1F247D8    stur     xzr, [x29, #-0x78]
+  0x1F247DC    adrp     x20, #0x763e000
+  0x1F247E0    ldr      x20, [x20, #0x1f8]
+  0x1F247E4    ldr      x0, [x20]
+  0x1F247E8    ldrb     w8, [x0, #0x133]
+  0x1F247EC    tbz      w8, #2, #0x1f24800
+  0x1F247F0    ldr      w8, [x0, #0xe0]
+  0x1F247F4    cbnz     w8, #0x1f24800
+  0x1F247F8    bl       #0x1637960
+  0x1F247FC    ldr      x0, [x20]
+  0x1F24800    ldr      x8, [x0, #0xb8]
+  0x1F24804    ldr      x9, [x8, #0x10]
+  0x1F24808    cbz      x9, #0x1f24824
+  0x1F2480C    ldr      w10, [x9, #0x18]
+  0x1F24810    add      x9, x9, #0x20
+  0x1F24814    cmp      w10, #0
+  0x1F24818    csel     x9, xzr, x9, eq
+  0x1F2481C    stur     x9, [x29, #-0x80]
+  0x1F24820    b        #0x1f24828
+  0x1F24824    stur     xzr, [x29, #-0x80]
+  0x1F24828    ldrb     w9, [x0, #0x133]
+  0x1F2482C    tbz      w9, #2, #0x1f24844
+  0x1F24830    ldr      w9, [x0, #0xe0]
+  0x1F24834    cbnz     w9, #0x1f24844
+  0x1F24838    bl       #0x1637960
+  0x1F2483C    ldr      x0, [x20]
+  0x1F24840    ldr      x8, [x0, #0xb8]
+  0x1F24844    ldr      x9, [x8, #0x18]
+  0x1F24848    cbz      x9, #0x1f24864
+  0x1F2484C    ldr      w10, [x9, #0x18]
+  0x1F24850    add      x9, x9, #0x20
+  0x1F24854    cmp      w10, #0
+  0x1F24858    csel     x9, xzr, x9, eq
+  0x1F2485C    stur     x9, [x29, #-0x88]
+  0x1F24860    b        #0x1f24868
+  0x1F24864    stur     xzr, [x29, #-0x88]
+  0x1F24868    ldrb     w9, [x0, #0x133]
+  0x1F2486C    tbz      w9, #2, #0x1f24884
+  0x1F24870    ldr      w9, [x0, #0xe0]
+  0x1F24874    cbnz     w9, #0x1f24884
+  0x1F24878    bl       #0x1637960
+  0x1F2487C    ldr      x0, [x20]
+  0x1F24880    ldr      x8, [x0, #0xb8]
+  0x1F24884    ldr      x9, [x8, #0x20]
+  0x1F24888    cbz      x9, #0x1f248a4
+  0x1F2488C    ldr      w10, [x9, #0x18]
+  0x1F24890    add      x9, x9, #0x20
+  0x1F24894    cmp      w10, #0
+  0x1F24898    csel     x9, xzr, x9, eq
+  0x1F2489C    stur     x9, [x29, #-0x90]
+  0x1F248A0    b        #0x1f248a8
+  0x1F248A4    stur     xzr, [x29, #-0x90]
+  0x1F248A8    ldrb     w9, [x0, #0x133]
+  0x1F248AC    tbz      w9, #2, #0x1f248c4
+  0x1F248B0    ldr      w9, [x0, #0xe0]
+  0x1F248B4    cbnz     w9, #0x1f248c4
+  0x1F248B8    bl       #0x1637960
+  0x1F248BC    ldr      x8, [x20]
+  0x1F248C0    ldr      x8, [x8, #0xb8]
+  0x1F248C4    ldr      x8, [x8, #0x28]
+  0x1F248C8    cbz      x8, #0x1f248e4
+  0x1F248CC    ldr      w9, [x8, #0x18]
+  0x1F248D0    add      x8, x8, #0x20
+  0x1F248D4    cmp      w9, #0
+  0x1F248D8    csel     x8, xzr, x8, eq
+  0x1F248DC    stur     x8, [x29, #-0x98]
+  0x1F248E0    b        #0x1f248e8
+  0x1F248E4    stur     xzr, [x29, #-0x98]
+  0x1F248E8    stp      w22, w21, [x29, #-0xa0]
+  0x1F248EC    ldr      w26, [x25, #0x44]
+  0x1F248F0    sbfiz    x20, x26, #2, #0x20
+  0x1F248F4    cbz      w26, #0x1f2493c
+  0x1F248F8    sxtw     x8, w26
+  0x1F248FC    lsl      x8, x8, #2
+  0x1F24900    add      x8, x8, #0xf
+  0x1F24904    mov      x9, sp
+  0x1F24908    and      x8, x8, #0xfffffffffffffff0
+  0x1F2490C    sub      x22, x9, x8
+  0x1F24910    mov      sp, x22
+  0x1F24914    mov      x0, x22
+  0x1F24918    mov      w1, wzr
+  0x1F2491C    mov      x2, x20
+  0x1F24920    bl       #0x1360720
+  0x1F24924    add      x9, x20, #0xf
+  0x1F24928    mov      x8, sp
+  0x1F2492C    and      x9, x9, #0xfffffffffffffff0
+  0x1F24930    sub      x21, x8, x9
+  0x1F24934    mov      sp, x21
+  0x1F24938    b        #0x1f24954
+  0x1F2493C    mov      x0, xzr
+  0x1F24940    mov      w1, wzr
+  0x1F24944    mov      x2, x20
+  0x1F24948    bl       #0x1360720
+  0x1F2494C    mov      x22, xzr
+  0x1F24950    mov      x21, xzr
+  0x1F24954    mov      x0, x21
+  0x1F24958    mov      w1, wzr
+  0x1F2495C    mov      x2, x20
+  0x1F24960    bl       #0x1360720
+  0x1F24964    ldr      w8, [x25, #0x24]
+  0x1F24968    sdiv     w9, w27, w8
+  0x1F2496C    cmp      w9, #1
+  0x1F24970    stur     w9, [x29, #-0x54]
+  0x1F24974    b.lt     #0x1f24f08
+  0x1F24978    stur     w27, [x29, #-0xa4]
+  0x1F2497C    mov      w27, wzr
+  0x1F24980    b        #0x1f24990
+  0x1F24984    ldr      w26, [x25, #0x44]
+  0x1F24988    add      w23, w8, w23
+  0x1F2498C    mov      w28, w20
+  0x1F24990    ldr      w8, [x25, #0x10]
+  0x1F24994    cmp      w8, #4
+  0x1F24998    b.ne     #0x1f24a34
+  0x1F2499C    cmp      w26, #1
+
+--- 共 200 条指令，数据引用 0 个 ---

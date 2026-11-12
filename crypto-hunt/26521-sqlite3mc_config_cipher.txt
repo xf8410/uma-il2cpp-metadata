@@ -1,0 +1,203 @@
+=== [26521] sqlite3mc_config_cipher  RVA=0x2DB63BC  file=0x2DB63BC ===
+  0x2DB63BC    sub      sp, sp, #0x70
+  0x2DB63C0    str      x23, [sp, #0x30]
+  0x2DB63C4    stp      x22, x21, [sp, #0x40]
+  0x2DB63C8    stp      x20, x19, [sp, #0x50]
+  0x2DB63CC    stp      x29, x30, [sp, #0x60]
+  0x2DB63D0    add      x29, sp, #0x60
+  0x2DB63D4    adrp     x23, #0x7baa000
+  0x2DB63D8    ldr      x8, [x23, #0xe70]
+  0x2DB63DC    mov      w19, w3
+  0x2DB63E0    mov      x20, x2
+  0x2DB63E4    mov      x22, x1
+  0x2DB63E8    mov      x21, x0
+  0x2DB63EC    cbnz     x8, #0x2db6438
+  0x2DB63F0    adrp     x12, #0x5d3e000
+  0x2DB63F4    ldr      d0, [x12, #0xd10]
+  0x2DB63F8    adrp     x8, #0x5d81000
+  0x2DB63FC    adrp     x10, #0x5d81000
+  0x2DB6400    add      x8, x8, #0x530
+  0x2DB6404    mov      w9, #6
+  0x2DB6408    add      x10, x10, #0x7c5
+  0x2DB640C    mov      w11, #0x17
+  0x2DB6410    mov      w13, #0x1c
+  0x2DB6414    mov      x0, sp
+  0x2DB6418    stp      x8, x9, [sp]
+  0x2DB641C    stp      x10, x11, [sp, #0x10]
+  0x2DB6420    str      d0, [sp, #0x20]
+  0x2DB6424    str      w13, [sp, #0x28]
+  0x2DB6428    strb     wzr, [sp, #0x2c]
+  0x2DB642C    bl       #0x1637d24
+  0x2DB6430    mov      x8, x0
+  0x2DB6434    str      x0, [x23, #0xe70]
+  0x2DB6438    add      x9, x22, #0x20
+  0x2DB643C    cmp      x22, #0
+  0x2DB6440    add      x10, x20, #0x20
+  0x2DB6444    csel     x1, xzr, x9, eq
+  0x2DB6448    cmp      x20, #0
+  0x2DB644C    csel     x2, xzr, x10, eq
+  0x2DB6450    mov      x0, x21
+  0x2DB6454    mov      w3, w19
+  0x2DB6458    blr      x8
+  0x2DB645C    ldp      x29, x30, [sp, #0x60]
+  0x2DB6460    ldp      x20, x19, [sp, #0x50]
+  0x2DB6464    ldp      x22, x21, [sp, #0x40]
+  0x2DB6468    ldr      x23, [sp, #0x30]
+  0x2DB646C    add      sp, sp, #0x70
+  0x2DB6470    ret      
+  0x2DB6474    sub      sp, sp, #0x60
+  0x2DB6478    stp      x22, x21, [sp, #0x30]
+  0x2DB647C    stp      x20, x19, [sp, #0x40]
+  0x2DB6480    stp      x29, x30, [sp, #0x50]
+  0x2DB6484    add      x29, sp, #0x50
+  0x2DB6488    adrp     x22, #0x7baa000
+  0x2DB648C    ldrb     w8, [x22, #0xe78]
+  0x2DB6490    mov      x19, x2
+  0x2DB6494    mov      x21, x1
+  0x2DB6498    mov      x20, x0
+  0x2DB649C    tbnz     w8, #0, #0x2db64b4
+  0x2DB64A0    adrp     x0, #0x75e1000
+  0x2DB64A4    ldr      x0, [x0, #0x5b0]
+  0x2DB64A8    bl       #0x16378b0
+  0x2DB64AC    mov      w8, #1
+  0x2DB64B0    strb     w8, [x22, #0xe78]
+  0x2DB64B4    adrp     x22, #0x7baa000
+  0x2DB64B8    ldr      x8, [x22, #0xe80]
+  0x2DB64BC    cbnz     x8, #0x2db6508
+  0x2DB64C0    adrp     x12, #0x5d3e000
+  0x2DB64C4    ldr      d0, [x12, #0xd10]
+  0x2DB64C8    adrp     x8, #0x5d81000
+  0x2DB64CC    adrp     x10, #0x5d81000
+  0x2DB64D0    add      x8, x8, #0x530
+  0x2DB64D4    mov      w9, #6
+  0x2DB64D8    add      x10, x10, #0x7dd
+  0x2DB64DC    mov      w11, #0x14
+  0x2DB64E0    mov      w13, #0x18
+  0x2DB64E4    mov      x0, sp
+  0x2DB64E8    stp      x8, x9, [sp]
+  0x2DB64EC    stp      x10, x11, [sp, #0x10]
+  0x2DB64F0    str      d0, [sp, #0x20]
+  0x2DB64F4    str      w13, [sp, #0x28]
+  0x2DB64F8    strb     wzr, [sp, #0x2c]
+  0x2DB64FC    bl       #0x1637d24
+  0x2DB6500    mov      x8, x0
+  0x2DB6504    str      x0, [x22, #0xe80]
+  0x2DB6508    add      x9, x21, #0x20
+  0x2DB650C    cmp      x21, #0
+  0x2DB6510    add      x10, x19, #0x20
+  0x2DB6514    csel     x1, xzr, x9, eq
+  0x2DB6518    cmp      x19, #0
+  0x2DB651C    csel     x2, xzr, x10, eq
+  0x2DB6520    mov      x0, x20
+  0x2DB6524    blr      x8
+  0x2DB6528    mov      x19, x0
+  0x2DB652C    cbz      x0, #0x2db6554
+  0x2DB6530    adrp     x8, #0x75e1000
+  0x2DB6534    ldr      x8, [x8, #0x5b0]
+  0x2DB6538    mov      w1, #1
+  0x2DB653C    ldr      x0, [x8]
+  0x2DB6540    bl       #0x16378c4
+  0x2DB6544    ldrb     w8, [x19]
+  0x2DB6548    mov      x20, x0
+  0x2DB654C    strb     w8, [x0, #0x20]
+  0x2DB6550    b        #0x2db6558
+  0x2DB6554    mov      x20, xzr
+  0x2DB6558    mov      x0, x19
+  0x2DB655C    bl       #0x1637d18
+  0x2DB6560    mov      x0, x20
+  0x2DB6564    ldp      x29, x30, [sp, #0x50]
+  0x2DB6568    ldp      x20, x19, [sp, #0x40]
+  0x2DB656C    ldp      x22, x21, [sp, #0x30]
+  0x2DB6570    add      sp, sp, #0x60
+  0x2DB6574    ret      
+  0x2DB6578    sub      sp, sp, #0x70
+  0x2DB657C    stp      x24, x23, [sp, #0x30]
+  0x2DB6580    stp      x22, x21, [sp, #0x40]
+  0x2DB6584    stp      x20, x19, [sp, #0x50]
+  0x2DB6588    stp      x29, x30, [sp, #0x60]
+  0x2DB658C    add      x29, sp, #0x60
+  0x2DB6590    adrp     x24, #0x7baa000
+  0x2DB6594    ldr      x8, [x24, #0xe98]
+  0x2DB6598    mov      x19, x4
+  0x2DB659C    mov      w20, w3
+  0x2DB65A0    mov      w21, w2
+  0x2DB65A4    mov      w22, w1
+  0x2DB65A8    mov      x23, x0
+  0x2DB65AC    cbnz     x8, #0x2db65f8
+  0x2DB65B0    adrp     x12, #0x5d3e000
+  0x2DB65B4    ldr      d0, [x12, #0xd10]
+  0x2DB65B8    adrp     x8, #0x5d81000
+  0x2DB65BC    adrp     x10, #0x5d81000
+  0x2DB65C0    add      x8, x8, #0x530
+  0x2DB65C4    mov      w9, #6
+  0x2DB65C8    add      x10, x10, #0x824
+  0x2DB65CC    mov      w11, #0x23
+  0x2DB65D0    mov      w13, #0x1c
+  0x2DB65D4    mov      x0, sp
+  0x2DB65D8    stp      x8, x9, [sp]
+  0x2DB65DC    stp      x10, x11, [sp, #0x10]
+  0x2DB65E0    str      d0, [sp, #0x20]
+  0x2DB65E4    str      w13, [sp, #0x28]
+  0x2DB65E8    strb     wzr, [sp, #0x2c]
+  0x2DB65EC    bl       #0x1637d24
+  0x2DB65F0    mov      x8, x0
+  0x2DB65F4    str      x0, [x24, #0xe98]
+  0x2DB65F8    mov      x0, x23
+  0x2DB65FC    mov      w1, w22
+  0x2DB6600    mov      w2, w21
+  0x2DB6604    mov      w3, w20
+  0x2DB6608    mov      x4, x19
+  0x2DB660C    blr      x8
+  0x2DB6610    ldp      x29, x30, [sp, #0x60]
+  0x2DB6614    ldp      x20, x19, [sp, #0x50]
+  0x2DB6618    ldp      x22, x21, [sp, #0x40]
+  0x2DB661C    ldp      x24, x23, [sp, #0x30]
+  0x2DB6620    add      sp, sp, #0x70
+  0x2DB6624    ret      
+  0x2DB6628    sub      sp, sp, #0x60
+  0x2DB662C    str      x21, [sp, #0x30]
+  0x2DB6630    stp      x20, x19, [sp, #0x40]
+  0x2DB6634    stp      x29, x30, [sp, #0x50]
+  0x2DB6638    add      x29, sp, #0x50
+  0x2DB663C    adrp     x21, #0x7baa000
+  0x2DB6640    ldr      x8, [x21, #0xeb0]
+  0x2DB6644    mov      w19, w1
+  0x2DB6648    mov      x20, x0
+  0x2DB664C    cbnz     x8, #0x2db6698
+  0x2DB6650    adrp     x12, #0x5d3e000
+  0x2DB6654    ldr      d0, [x12, #0xd10]
+  0x2DB6658    adrp     x8, #0x5d81000
+  0x2DB665C    adrp     x10, #0x5d81000
+  0x2DB6660    add      x8, x8, #0x530
+  0x2DB6664    mov      w9, #6
+  0x2DB6668    add      x10, x10, #0x87e
+  0x2DB666C    mov      w11, #0x17
+  0x2DB6670    mov      w13, #0xc
+  0x2DB6674    mov      x0, sp
+  0x2DB6678    stp      x8, x9, [sp]
+  0x2DB667C    stp      x10, x11, [sp, #0x10]
+  0x2DB6680    str      d0, [sp, #0x20]
+  0x2DB6684    str      w13, [sp, #0x28]
+  0x2DB6688    strb     wzr, [sp, #0x2c]
+  0x2DB668C    bl       #0x1637d24
+  0x2DB6690    mov      x8, x0
+  0x2DB6694    str      x0, [x21, #0xeb0]
+  0x2DB6698    mov      x0, x20
+  0x2DB669C    mov      w1, w19
+  0x2DB66A0    blr      x8
+  0x2DB66A4    ldp      x29, x30, [sp, #0x50]
+  0x2DB66A8    ldp      x20, x19, [sp, #0x40]
+  0x2DB66AC    ldr      x21, [sp, #0x30]
+  0x2DB66B0    add      sp, sp, #0x60
+  0x2DB66B4    ret      
+  0x2DB66B8    sub      sp, sp, #0x50
+  0x2DB66BC    stp      x20, x19, [sp, #0x30]
+  0x2DB66C0    stp      x29, x30, [sp, #0x40]
+  0x2DB66C4    add      x29, sp, #0x40
+  0x2DB66C8    adrp     x20, #0x7baa000
+  0x2DB66CC    ldr      x8, [x20, #0xeb8]
+  0x2DB66D0    mov      x19, x0
+  0x2DB66D4    cbnz     x8, #0x2db6720
+  0x2DB66D8    adrp     x12, #0x5d3e000
+
+--- 共 200 条指令，数据引用 0 个 ---
