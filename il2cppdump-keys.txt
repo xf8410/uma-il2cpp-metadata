@@ -1,2 +1,55 @@
--rw-r--r-- 1 runner runner 129667848 Nov 12 02:37 dec.so
--rwxr-xr-x 1 runner runner  32248932 Nov 12 02:37 global-metadata.dat
+-rw-r--r-- 1 runner runner 129667848 Nov 12 02:41 dec.so
+-rwxr-xr-x 1 runner runner  32248932 Nov 12 02:41 global-metadata.dat
+--- assets ---
+v6.7.46
+Il2CppDumper-net6-v6.7.46.zip 406027
+Il2CppDumper-net6-win-v6.7.46.zip 788161
+Il2CppDumper-net7-v6.7.46.zip 408192
+Il2CppDumper-net7-win-v6.7.46.zip 792122
+Il2CppDumper-win-v6.7.46.zip 11215992
+dumper = https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.46/Il2CppDumper-net6-v6.7.46.zip
+-rw-r--r-- 1 runner runner 406027 Nov 12 02:41 dumper.zip
+./ida_py3.py
+./config.json
+./ida_with_struct.py
+./Il2CppDumper.runtimeconfig.json
+./ida.py
+./Il2CppDumper.deps.json
+./Mono.Cecil.Rocks.dll
+./Il2CppDumper.dll
+./il2cpp_header_to_ghidra.py
+./ghidra_with_struct.py
+./Mono.Cecil.Mdb.dll
+./ghidra_wasm.py
+./Mono.Cecil.Pdb.dll
+./Mono.Cecil.dll
+./ghidra.py
+./ida_with_struct_py3.py
+./Il2CppDumper.exe
+dll = ./Il2CppDumper.dll
+You must install or update .NET to run this application.
+
+App: /home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/dumper/Il2CppDumper.dll
+Architecture: x64
+Framework: 'Microsoft.NETCore.App', version '6.0.0' (x64)
+.NET location: /usr/share/dotnet/
+
+The following frameworks were found:
+  8.0.6 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  8.0.22 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  8.0.33 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  8.0.34 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  9.0.6 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  9.0.22 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  10.0.8 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  10.0.11 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  10.0.14 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+  10.0.15 at [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+
+Learn more:
+https://aka.ms/dotnet/app-launch-failed
+
+To install missing framework, download:
+https://aka.ms/dotnet-core-applaunch?framework=Microsoft.NETCore.App&framework_version=6.0.0&arch=x64&rid=linux-x64&os=ubuntu.26.04
+ls: cannot access 'out': No such file or directory
+--- dump.cs = <无> ---
