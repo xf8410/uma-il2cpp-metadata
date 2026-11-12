@@ -45,12 +45,49 @@ resources/Manifest/
 | `assets/__tpinfo.tsd` | 4,497 B（腾讯保护信息，未分析） |
 | `assets/cri_auth`、`assets/fase_random.cell` | 各 256 B（CRI 鉴权/随机种子，未分析） |
 
-数据目录：`/data/user/0/com.bilibili.umamusu`（内部存储，**无 root 读不到**）；
-外部 `Android/data/com.bilibili.umamusu` **不存在**（证明资源没有落到外部存储）。
+数据目录：`/data/user/0/com.bilibili.umamusu`（内部存储，**无 root 读不到**）。
 
-## 4. 结论
+## 4. 下载中的实测（2026-11-12 11:50，游戏真的在下载）
 
-- 本地能拿到的全部是明文；**唯一还加密的是 CDN 下载的 `Persistent/dat/XX/HASH`**。
-- 要拿到它，只有两条路：① 登录游戏触发下载 → 抓 logcat 里的 URL 再去拉；② root/提权直接读 `/data/user/0/...`。
-- 已尝试：后台启动国服客户端（成功启动），停在通知权限系统弹窗，`screen_tap` 无效（系统弹窗在别的窗口），
-  继续操作需要占用用户主屏或由用户手动点一次。
+- 游戏版本：**2.0.5**（versionCode 11220, targetSdk 30）
+- `/proc/net/tcp` 里的 HTTPS 远端（下载中，按连接数）：
+
+| 远端 IP | 连接数 |
+|---|---|
+| 218.12.76.158 | 16 |
+| 221.194.141.157 | 10 |
+| 42.236.90.180 | 4 |
+| 114.250.41.232 | 2 |
+| 119.188.175.46 | 2 |
+
+- DNS 比对（CI `cdn-host-id`）：
+  - `l1-prod` / `le1-prod` / `l1-bak-prod` → `155.102.176.81~88`
+  - **`l2-prod` → `218.12.76.150/156`** ← 与实测 218.12.76.158 **同段**，资源走 l2-prod
+- 在 `l2-prod` 上再试 8 条路径：**仍然全部 200 + 220 字节 msgpack** →
+  说明该网段对任意路径都回统一的网关响应，**必须带会话/签名头**，静态 GET 拿不到资源。
+
+## 5. 游戏的外部存储里到底有什么（下载中实测）
+
+`/sdcard/Android/data/com.bilibili.umamusu/`（11:37 才被创建）：
+
+```
+cache/UnityShaderCache/*            （Unity 着色器缓存，明文）
+files/il2cpp/Metadata/global-metadata.dat   32,248,932 B，头 94 43 72 12…
+files/il2cpp/etc/mono/...            （mono 配置）
+files/il2cpp/Resources/*.dll-resources.dat
+files/log_buma/                     （空）
+files/MiPushLog/、files/lpfi/、files/notifications.bin
+```
+
+- 那个 32 MB 的 `global-metadata.dat` 头是 `94 43 72 12 …` = **加密态**（和 APK 里那份一模一样），
+  游戏只是把它复制到外部，**解密在内存里做**。
+- 外部目录里 **没有任何资源缓存**（>512 KB 的文件只有上面这两个）；
+  `logcat` 里也 **没有下载 URL**（Unity 不打这个日志）。
+
+## 6. 结论
+
+- 本地能拿到的全部是明文；**唯一还加密的是 CDN 下载的 `Persistent/dat/XX/HASH`**，落在内部存储。
+- 无 root 时，下不下得动都拿不到密文：外部目录不留、logcat 不打 URL、网关要鉴权。
+- 剩下可行的只有：① root / Magisk 后直接读 `/data/user/0/com.bilibili.umamusu/...`；
+  ② root + MITM 代理（装用户 CA）抓 HTTPS URL；
+  ③ 有 PC/DMM 版的话拷 `Persistent/dat/` 里的文件。
