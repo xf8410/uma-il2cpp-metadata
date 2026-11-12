@@ -1,0 +1,10 @@
+23341	DecryptAcb
+24024	Decrypt
+25110	InitializeDecrypter
+26000	EncryptRJ256
+26002	DecryptRJ256
+26004	CreateKey
+26521	sqlite3mc_config_cipher
+7393	EncryptData
+7394	DecryptData
+37766	InternalDecrypt
