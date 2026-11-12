@@ -1,0 +1,13 @@
+-rw-r--r-- 1 runner runner 129667848 Nov 12 02:34 dec.so
+自检：可执行段 BL 总数 2373281，B 总数 484567
+0x16378B0 -> 80 处 -> callers2/callers-16378B0.txt
+0x27B5618 -> 0 处 -> callers2/callers-27B5618.txt
+0x27B56EC -> 1 处 -> callers2/callers-27B56EC.txt
+0x1BD2F88 -> 1 处 -> callers2/callers-1BD2F88.txt
+0x1BD2EF8 -> 0 处 -> callers2/callers-1BD2EF8.txt
+total 92
+-rw-r--r-- 1 runner runner 73905 Nov 12 02:34 callers-16378B0.txt
+-rw-r--r-- 1 runner runner    43 Nov 12 02:34 callers-1BD2EF8.txt
+-rw-r--r-- 1 runner runner  1914 Nov 12 02:34 callers-1BD2F88.txt
+-rw-r--r-- 1 runner runner    43 Nov 12 02:34 callers-27B5618.txt
+-rw-r--r-- 1 runner runner  1874 Nov 12 02:34 callers-27B56EC.txt

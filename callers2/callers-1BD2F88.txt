@@ -1,0 +1,51 @@
+=== 调用/跳转到 0x1BD2F88：1 处 ===
+
+--- 0x1BD2F74 ---
+  0x1BD2ED4    blr      x8
+  0x1BD2ED8    ldp      x29, x30, [sp, #0x40]
+  0x1BD2EDC    ldp      x20, x19, [sp, #0x30]
+  0x1BD2EE0    cmp      w0, #0
+  0x1BD2EE4    cset     w0, ne
+  0x1BD2EE8    add      sp, sp, #0x50
+  0x1BD2EEC    ret      
+  0x1BD2EF0    fmov     s0, #1.00000000
+  0x1BD2EF4    ret      
+  0x1BD2EF8    str      x21, [sp, #-0x30]!
+  0x1BD2EFC    stp      x20, x19, [sp, #0x10]
+  0x1BD2F00    stp      x29, x30, [sp, #0x20]
+  0x1BD2F04    add      x29, sp, #0x20
+  0x1BD2F08    adrp     x21, #0x7ba2000
+  0x1BD2F0C    ldrb     w8, [x21, #0xa83]
+  0x1BD2F10    mov      x19, x1
+  0x1BD2F14    mov      x20, x0
+  0x1BD2F18    tbnz     w8, #0, #0x1bd2f30
+  0x1BD2F1C    adrp     x0, #0x76c4000
+  0x1BD2F20    ldr      x0, [x0, #0x7c0]
+  0x1BD2F24    bl       #0x16378b0
+  0x1BD2F28    mov      w8, #1
+  0x1BD2F2C    strb     w8, [x21, #0xa83]
+  0x1BD2F30    mov      x0, x20
+  0x1BD2F34    bl       #0x1bd0cdc
+  0x1BD2F38    tbz      w0, #0, #0x1bd2f78
+  0x1BD2F3C    adrp     x8, #0x76c4000
+  0x1BD2F40    ldr      x8, [x8, #0x7c0]
+  0x1BD2F44    ldr      x20, [x20, #0x20]
+  0x1BD2F48    ldr      x0, [x8]
+  0x1BD2F4C    ldrb     w8, [x0, #0x133]
+  0x1BD2F50    tbz      w8, #2, #0x1bd2f60
+  0x1BD2F54    ldr      w8, [x0, #0xe0]
+  0x1BD2F58    cbnz     w8, #0x1bd2f60
+  0x1BD2F5C    bl       #0x1637960
+  0x1BD2F60    mov      x0, x20
+  0x1BD2F64    mov      x1, x19
+  0x1BD2F68    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F6C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F70    ldr      x21, [sp], #0x30
+  0x1BD2F74    b        #0x1bd2f88 <<<
+  0x1BD2F78    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F7C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F80    ldr      x21, [sp], #0x30
+  0x1BD2F84    ret      
+  0x1BD2F88    str      x21, [sp, #-0x30]!
+  0x1BD2F8C    stp      x20, x19, [sp, #0x10]
+  0x1BD2F90    stp      x29, x30, [sp, #0x20]

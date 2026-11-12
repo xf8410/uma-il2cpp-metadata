@@ -1,0 +1,51 @@
+=== 调用/跳转到 0x27B56EC：1 处 ===
+
+--- 0x27B56E4 ---
+  0x27B5644    ldr      x0, [x0, #0x6c0]
+  0x27B5648    bl       #0x16378b0
+  0x27B564C    mov      w8, #1
+  0x27B5650    strb     w8, [x22, #0x58]
+  0x27B5654    mov      w0, #0x121
+  0x27B5658    mov      x1, xzr
+  0x27B565C    bl       #0x2e0482c
+  0x27B5660    tbz      w0, #0, #0x27b5690
+  0x27B5664    mov      w0, #0x121
+  0x27B5668    mov      x1, xzr
+  0x27B566C    bl       #0x2e0479c
+  0x27B5670    cbz      x0, #0x27b56e8
+  0x27B5674    mov      x1, x20
+  0x27B5678    mov      x3, x19
+  0x27B567C    ldp      x29, x30, [sp, #0x20]
+  0x27B5680    ldp      x20, x19, [sp, #0x10]
+  0x27B5684    mov      x2, x21
+  0x27B5688    ldp      x22, x21, [sp], #0x30
+  0x27B568C    b        #0x27b50c8
+  0x27B5690    adrp     x8, #0x7612000
+  0x27B5694    ldr      x8, [x8, #0x6c0]
+  0x27B5698    ldr      x0, [x8]
+  0x27B569C    ldrb     w8, [x0, #0x133]
+  0x27B56A0    tbz      w8, #2, #0x27b56b0
+  0x27B56A4    ldr      w8, [x0, #0xe0]
+  0x27B56A8    cbnz     w8, #0x27b56b0
+  0x27B56AC    bl       #0x1637960
+  0x27B56B0    mov      x0, x21
+  0x27B56B4    mov      x1, xzr
+  0x27B56B8    bl       #0x1ecc884
+  0x27B56BC    mov      x21, x0
+  0x27B56C0    mov      x0, x19
+  0x27B56C4    mov      x1, xzr
+  0x27B56C8    bl       #0x1ecc884
+  0x27B56CC    mov      x2, x0
+  0x27B56D0    mov      x0, x20
+  0x27B56D4    ldp      x29, x30, [sp, #0x20]
+  0x27B56D8    ldp      x20, x19, [sp, #0x10]
+  0x27B56DC    mov      x1, x21
+  0x27B56E0    ldp      x22, x21, [sp], #0x30
+  0x27B56E4    b        #0x27b56ec <<<
+  0x27B56E8    bl       #0x1637984
+  0x27B56EC    sub      sp, sp, #0x50
+  0x27B56F0    stp      x24, x23, [sp, #0x10]
+  0x27B56F4    stp      x22, x21, [sp, #0x20]
+  0x27B56F8    stp      x20, x19, [sp, #0x30]
+  0x27B56FC    stp      x29, x30, [sp, #0x40]
+  0x27B5700    add      x29, sp, #0x40
