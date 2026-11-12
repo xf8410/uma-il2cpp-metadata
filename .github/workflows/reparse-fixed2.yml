@@ -1,0 +1,47 @@
+name: reparse-fixed2
+
+# 重跑修复版解析器（无内嵌 heredoc，避免 YAML 坑）
+on:
+  push:
+    paths:
+      - '.github/workflows/reparse-fixed2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reparse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 重跑解析 + 自检
+        run: |
+          set -e
+          : > rp2.log
+          MD=$(ls metadata-*/global-metadata.fixed.dat 2>/dev/null | head -1)
+          echo "metadata = ${MD:-<无>}" >> rp2.log
+          ls -l metadata-*/ >> rp2.log 2>&1 || true
+          [ -z "$MD" ] && { echo "跳过：找不到 metadata" >> rp2.log; exit 0; }
+          mkdir -p rep
+          python3 tools/parse_metadata_fixed.py "$MD" rep > rp2.out 2>&1 || true
+          tail -c 8000 rp2.out >> rp2.log
+          echo "--- 行数（期望 fields=254055 methods=213983 types=32080）---" >> rp2.log
+          for f in rep/*.tsv ; do [ -f "$f" ] && echo "$(basename $f) = $(wc -l < $f)" >> rp2.log ; done
+          echo "--- summary.json ---" >> rp2.log
+          head -c 3000 rep/summary.json >> rp2.log 2>/dev/null || echo "(无)" >> rp2.log
+          echo "MD=$MD" >> $GITHUB_ENV
+      - name: 提交
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          D=$(dirname "$MD")
+          mkdir -p "$D/dump-fixed"
+          cp rep/*.tsv rep/*.json "$D/dump-fixed/" 2>/dev/null || true
+          cp rp2.log reparse2-status.txt
+          git add reparse2-status.txt "$D/dump-fixed" || true
+          git commit -m "ci: 重跑解析（字段归属修复版）+ 计数自检" || echo "no change"
+          git push || true
