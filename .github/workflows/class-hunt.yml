@@ -1,0 +1,54 @@
+name: class-hunt
+
+# 按 idx 找所属类，反汇编该类全部方法（key/IV 常在同类封装方法/静态构造里）
+on:
+  push:
+    paths:
+      - '.github/workflows/class-hunt.yml'
+      - 'tools/find_class.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  klass:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 -m pip install --quiet capstone
+      - name: 准备
+        run: |
+          : > class.log
+          G=$(ls metadata-*/libil2cpp.dec.so.gz | head -1)
+          gunzip -c "$G" > dec.so
+          echo "--- types.tsv / methods.tsv / string_literals.txt 前 3 行 ---" >> class.log
+          for f in metadata-*/dump/types.tsv metadata-*/dump/methods.tsv metadata-*/dump/string_literals.txt; do
+            echo "== $f" >> class.log
+            head -3 "$f" >> class.log 2>&1 || true
+          done
+          R=$(ls metadata-*/dump/methods_rva.tsv | head -1)
+          M=$(ls metadata-*/dump/methods.tsv | head -1)
+          T=$(ls metadata-*/dump/types.tsv | head -1)
+          echo "RVA=$R" >> "$GITHUB_ENV"
+          echo "METH=$M" >> "$GITHUB_ENV"
+          echo "TYPES=$T" >> "$GITHUB_ENV"
+      - name: 反汇编所属类
+        run: |
+          rm -rf classhunt
+          python3 tools/find_class.py dec.so "$RVA" "$METH" "$TYPES" classhunt \
+            26002,23341,24024 >> class.log 2>&1 || true
+          ls -l classhunt >> class.log 2>&1 || true
+      - name: 提交
+        if: always()
+        run: |
+          [ -f class.log ] || echo "(无)" > class.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp class.log class-hunt.txt
+          git add class-hunt.txt classhunt || true
+          git commit -m "ci: class hunt" || echo "no change"
+          git push || true
