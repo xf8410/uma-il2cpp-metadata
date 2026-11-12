@@ -1,0 +1,2 @@
+-rw-r--r-- 1 runner runner 129667848 Nov 12 02:37 dec.so
+-rwxr-xr-x 1 runner runner  32248932 Nov 12 02:37 global-metadata.dat
