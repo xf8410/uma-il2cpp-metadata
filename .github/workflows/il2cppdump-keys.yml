@@ -1,0 +1,74 @@
+name: il2cppdump-keys
+
+# 用 Il2CppDumper 产生 dump.cs，grep DecryptRJ256/DecryptAcb/CreateKey 的调用点，抽 key/IV 字面量
+on:
+  push:
+    paths:
+      - '.github/workflows/il2cppdump-keys.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: 准备 so + metadata
+        run: |
+          : > keys.log
+          G=$(ls metadata-*/libil2cpp.dec.so.gz | head -1)
+          gunzip -c "$G" > dec.so
+          M=$(ls metadata-*/global-metadata.fixed.dat | head -1)
+          cp "$M" global-metadata.dat
+          ls -l dec.so global-metadata.dat >> keys.log
+      - name: 下载 Il2CppDumper（linux-x64 资产）
+        run: |
+          set -e
+          url=$(curl -sS https://api.github.com/repos/Perfare/Il2CppDumper/releases/latest \
+                | python3 -c "import json,sys;d=json.load(sys.stdin);print(next(a['browser_download_url'] for a in d['assets'] if 'linux' in a['name'].lower()))")
+          echo "dumper = $url" >> keys.log
+          curl -sSL -o dumper.zip "$url"
+          mkdir -p dumper && cd dumper && unzip -o -q ../dumper.zip
+          ls -l >> ../keys.log
+      - name: 跑 Il2CppDumper
+        run: |
+          cd dumper
+          chmod +x Il2CppDumper || true
+          /usr/bin/time -v ./Il2CppDumper ../dec.so ../global-metadata.dat ../out >> ../keys.log 2>&1 || \
+            ./Il2CppDumper ../dec.so ../global-metadata.dat ../out >> ../keys.log 2>&1 || true
+          cd ..
+          ls -l out >> keys.log 2>&1 || true
+          du -sh out >> keys.log 2>&1 || true
+      - name: grep 加解密调用点
+        run: |
+          D=$(ls out/dump.cs 2>/dev/null | head -1)
+          echo "--- dump.cs = ${D:-<无>} ---" >> keys.log
+          if [ -n "$D" ]; then
+            echo "===== DecryptRJ256 调用点 =====" >> keys.log
+            grep -n -A 12 'DecryptRJ256(' "$D" | head -80 >> keys.log || true
+            echo "===== CreateKey 调用点 =====" >> keys.log
+            grep -n -A 8 'CreateKey(' "$D" | head -60 >> keys.log || true
+            echo "===== DecryptAcb 调用点 =====" >> keys.log
+            grep -n -A 12 'DecryptAcb(' "$D" | head -60 >> keys.log || true
+            echo "===== 出现 RJ256 的行（前后各 6 行） =====" >> keys.log
+            grep -n -B 6 -A 6 'RJ256' "$D" | head -120 >> keys.log || true
+          fi
+      - name: 提交（只提交日志，dump.cs 太大不入库）
+        if: always()
+        run: |
+          [ -f keys.log ] || echo "(无)" > keys.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp keys.log il2cppdump-keys.txt
+          git add il2cppdump-keys.txt || true
+          git commit -m "ci: il2cppdump keys" || echo "no change"
+          git push || true
