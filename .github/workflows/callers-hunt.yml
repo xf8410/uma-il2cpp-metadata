@@ -1,0 +1,45 @@
+name: callers-hunt
+
+# 扫 BL 指令找 DecryptRJ256/DecryptAcb 的调用点（key/IV 在调用点传入）
+on:
+  push:
+    paths:
+      - '.github/workflows/callers-hunt.yml'
+      - 'tools/find_callers.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  callers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 -m pip install --quiet capstone numpy
+      - name: 准备 SO
+        run: |
+          : > callers.log
+          G=$(ls metadata-*/libil2cpp.dec.so.gz 2>/dev/null | head -1)
+          gunzip -c "$G" > dec.so
+          ls -l dec.so >> callers.log
+      - name: 扫调用点
+        run: |
+          rm -rf callers
+          # DecryptRJ256: 0x27B5618（入口）/ 0x27B56EC（实体）; DecryptAcb: 0x1BD2F88; Decrypt: 0x1BD2EF8
+          python3 tools/find_callers.py dec.so callers \
+            0x27B5618,0x27B56EC,0x1BD2F88,0x1BD2EF8 >> callers.log 2>&1 || true
+          ls -l callers >> callers.log 2>&1 || true
+      - name: 提交
+        if: always()
+        run: |
+          [ -f callers.log ] || echo "(无)" > callers.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp callers.log callers-status.txt
+          git add callers-status.txt callers || true
+          git commit -m "ci: callers hunt" || echo "no change"
+          git push || true
