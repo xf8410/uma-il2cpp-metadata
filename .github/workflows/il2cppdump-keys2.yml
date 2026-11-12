@@ -1,0 +1,71 @@
+name: il2cppdump-keys2
+
+# Il2CppDumper（net6 包，用 DOTNET_ROLL_FORWARD 跑在 8.x 上）→ dump.cs → grep 加解密调用点
+on:
+  push:
+    paths:
+      - '.github/workflows/il2cppdump-keys2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_ROLL_FORWARD: LatestMajor
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: 准备 so + metadata
+        run: |
+          : > keys2.log
+          G=$(ls metadata-*/libil2cpp.dec.so.gz | head -1)
+          gunzip -c "$G" > dec.so
+          M=$(ls metadata-*/global-metadata.fixed.dat | head -1)
+          cp "$M" global-metadata.dat
+          ls -l dec.so global-metadata.dat >> keys2.log
+      - name: 下载并解包 Il2CppDumper
+        run: |
+          set -e
+          curl -sSL -o dumper.zip https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.46/Il2CppDumper-net6-v6.7.46.zip
+          mkdir -p dumper && cd dumper && unzip -o -q ../dumper.zip
+          echo "--- dumper 内容 ---" >> ../keys2.log
+          ls -l >> ../keys2.log
+      - name: 跑 Il2CppDumper
+        run: |
+          cd dumper
+          dotnet Il2CppDumper.dll ../dec.so ../global-metadata.dat ../out >> ../keys2.log 2>&1 || true
+          cd ..
+          ls -l out 2>&1 | head -20 >> keys2.log || true
+          du -sh out 2>&1 >> keys2.log || true
+      - name: grep 加解密调用点
+        run: |
+          D=$(ls out/dump.cs 2>/dev/null | head -1)
+          echo "--- dump.cs = ${D:-<无>} ---" >> keys2.log
+          if [ -n "$D" ]; then
+            echo "===== DecryptRJ256 调用点 =====" >> keys2.log
+            grep -n -B 3 -A 10 'DecryptRJ256(' "$D" | head -100 >> keys2.log || true
+            echo "===== CreateKey 调用点 =====" >> keys2.log
+            grep -n -B 2 -A 6 'CreateKey(' "$D" | head -80 >> keys2.log || true
+            echo "===== DecryptAcb 调用点 =====" >> keys2.log
+            grep -n -B 3 -A 10 'DecryptAcb(' "$D" | head -80 >> keys2.log || true
+          fi
+      - name: 提交
+        if: always()
+        run: |
+          [ -f keys2.log ] || echo "(无)" > keys2.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp keys2.log il2cppdump-keys2.txt
+          git add il2cppdump-keys2.txt || true
+          git commit -m "ci: il2cppdump keys2" || echo "no change"
+          git push || true
