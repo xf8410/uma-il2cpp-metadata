@@ -1,0 +1,3054 @@
+=== idx=24024 Decrypt  类[3638] 0x0200005B ===
+
+--- idx=23994 get_nativeHandle RVA=0x1BD0CD4 ---
+  0x1BD0CD4    ldr      x0, [x0, #0x20]
+  0x1BD0CD8    ret      
+  0x1BD0CDC    stp      x20, x19, [sp, #-0x20]!
+  0x1BD0CE0    stp      x29, x30, [sp, #0x10]
+  0x1BD0CE4    add      x29, sp, #0x10
+  0x1BD0CE8    adrp     x20, #0x7ba2000
+  0x1BD0CEC    ldrb     w8, [x20, #0xa73]
+  0x1BD0CF0    mov      x19, x0
+  0x1BD0CF4    tbnz     w8, #0, #0x1bd0d0c
+  0x1BD0CF8    adrp     x0, #0x75e7000
+  0x1BD0CFC    ldr      x0, [x0, #0xa10]
+  0x1BD0D00    bl       #0x16378b0
+  0x1BD0D04    mov      w8, #1
+  0x1BD0D08    strb     w8, [x20, #0xa73]
+  0x1BD0D0C    ldr      x0, [x19, #0x20]
+  0x1BD0D10    ldp      x29, x30, [sp, #0x10]
+  0x1BD0D14    mov      x1, xzr
+  0x1BD0D18    mov      x2, xzr
+  0x1BD0D1C    ldp      x20, x19, [sp], #0x20
+  0x1BD0D20    b        #0x20562c4
+  0x1BD0D24    sub      sp, sp, #0x80
+  0x1BD0D28    str      x25, [sp, #0x30]
+  0x1BD0D2C    stp      x24, x23, [sp, #0x40]
+  0x1BD0D30    stp      x22, x21, [sp, #0x50]
+  0x1BD0D34    stp      x20, x19, [sp, #0x60]
+  0x1BD0D38    stp      x29, x30, [sp, #0x70]
+  0x1BD0D3C    add      x29, sp, #0x70
+  0x1BD0D40    adrp     x25, #0x7ba2000
+  0x1BD0D44    ldr      x8, [x25, #0xa88]
+  0x1BD0D48    mov      w19, w5
+  0x1BD0D4C    mov      x20, x4
+  0x1BD0D50    mov      x23, x3
+  0x1BD0D54    mov      x21, x2
+  0x1BD0D58    mov      x24, x1
+  0x1BD0D5C    mov      x22, x0
+  0x1BD0D60    cbnz     x8, #0x1bd0da8
+  0x1BD0D64    adrp     x12, #0x5d3e000
+  0x1BD0D68    ldr      d0, [x12, #0xd10]
+  0x1BD0D6C    adrp     x8, #0x5d3e000
+  0x1BD0D70    adrp     x10, #0x5d3f000
+  0x1BD0D74    add      x8, x8, #0xdc0
+  0x1BD0D78    mov      w9, #0xe
+  0x1BD0D7C    add      x10, x10, #0x723
+  0x1BD0D80    mov      w11, #0x18
+  0x1BD0D84    mov      w13, #0x2c
+  0x1BD0D88    mov      x0, sp
+  0x1BD0D8C    stp      x8, x9, [sp]
+  0x1BD0D90    stp      x10, x11, [sp, #0x10]
+  0x1BD0D94    str      d0, [sp, #0x20]
+  0x1BD0D98    str      w13, [sp, #0x28]
+  0x1BD0D9C    strb     wzr, [sp, #0x2c]
+  0x1BD0DA0    bl       #0x1637d24
+  0x1BD0DA4    str      x0, [x25, #0xa88]
+  0x1BD0DA8    mov      x0, x24
+  0x1BD0DAC    bl       #0x1637cf8
+  0x1BD0DB0    mov      x24, x0
+  0x1BD0DB4    mov      x0, x23
+  0x1BD0DB8    bl       #0x1637cf8
+  0x1BD0DBC    ldr      x8, [x25, #0xa88]
+  0x1BD0DC0    mov      x23, x0
+  0x1BD0DC4    mov      x0, x22
+  0x1BD0DC8    mov      x1, x24
+  0x1BD0DCC    mov      x2, x21
+  0x1BD0DD0    mov      x3, x23
+  0x1BD0DD4    mov      x4, x20
+  0x1BD0DD8    mov      w5, w19
+  0x1BD0DDC    blr      x8
+  0x1BD0DE0    mov      x19, x0
+  0x1BD0DE4    mov      x0, x24
+  0x1BD0DE8    bl       #0x1637d18
+  0x1BD0DEC    mov      x0, x23
+  0x1BD0DF0    bl       #0x1637d18
+  0x1BD0DF4    mov      x0, x19
+  0x1BD0DF8    ldp      x29, x30, [sp, #0x70]
+  0x1BD0DFC    ldp      x20, x19, [sp, #0x60]
+  0x1BD0E00    ldp      x22, x21, [sp, #0x50]
+  0x1BD0E04    ldp      x24, x23, [sp, #0x40]
+  0x1BD0E08    ldr      x25, [sp, #0x30]
+  0x1BD0E0C    add      sp, sp, #0x80
+  0x1BD0E10    ret      
+
+--- idx=23995 get_isAvailable RVA=0x1BD0CDC ---
+  0x1BD0CDC    stp      x20, x19, [sp, #-0x20]!
+  0x1BD0CE0    stp      x29, x30, [sp, #0x10]
+  0x1BD0CE4    add      x29, sp, #0x10
+  0x1BD0CE8    adrp     x20, #0x7ba2000
+  0x1BD0CEC    ldrb     w8, [x20, #0xa73]
+  0x1BD0CF0    mov      x19, x0
+  0x1BD0CF4    tbnz     w8, #0, #0x1bd0d0c
+  0x1BD0CF8    adrp     x0, #0x75e7000
+  0x1BD0CFC    ldr      x0, [x0, #0xa10]
+  0x1BD0D00    bl       #0x16378b0
+  0x1BD0D04    mov      w8, #1
+  0x1BD0D08    strb     w8, [x20, #0xa73]
+  0x1BD0D0C    ldr      x0, [x19, #0x20]
+  0x1BD0D10    ldp      x29, x30, [sp, #0x10]
+  0x1BD0D14    mov      x1, xzr
+  0x1BD0D18    mov      x2, xzr
+  0x1BD0D1C    ldp      x20, x19, [sp], #0x20
+  0x1BD0D20    b        #0x20562c4
+  0x1BD0D24    sub      sp, sp, #0x80
+  0x1BD0D28    str      x25, [sp, #0x30]
+  0x1BD0D2C    stp      x24, x23, [sp, #0x40]
+  0x1BD0D30    stp      x22, x21, [sp, #0x50]
+  0x1BD0D34    stp      x20, x19, [sp, #0x60]
+  0x1BD0D38    stp      x29, x30, [sp, #0x70]
+  0x1BD0D3C    add      x29, sp, #0x70
+  0x1BD0D40    adrp     x25, #0x7ba2000
+  0x1BD0D44    ldr      x8, [x25, #0xa88]
+  0x1BD0D48    mov      w19, w5
+  0x1BD0D4C    mov      x20, x4
+  0x1BD0D50    mov      x23, x3
+  0x1BD0D54    mov      x21, x2
+  0x1BD0D58    mov      x24, x1
+  0x1BD0D5C    mov      x22, x0
+  0x1BD0D60    cbnz     x8, #0x1bd0da8
+  0x1BD0D64    adrp     x12, #0x5d3e000
+  0x1BD0D68    ldr      d0, [x12, #0xd10]
+  0x1BD0D6C    adrp     x8, #0x5d3e000
+  0x1BD0D70    adrp     x10, #0x5d3f000
+  0x1BD0D74    add      x8, x8, #0xdc0
+  0x1BD0D78    mov      w9, #0xe
+  0x1BD0D7C    add      x10, x10, #0x723
+  0x1BD0D80    mov      w11, #0x18
+  0x1BD0D84    mov      w13, #0x2c
+  0x1BD0D88    mov      x0, sp
+  0x1BD0D8C    stp      x8, x9, [sp]
+  0x1BD0D90    stp      x10, x11, [sp, #0x10]
+  0x1BD0D94    str      d0, [sp, #0x20]
+  0x1BD0D98    str      w13, [sp, #0x28]
+  0x1BD0D9C    strb     wzr, [sp, #0x2c]
+  0x1BD0DA0    bl       #0x1637d24
+  0x1BD0DA4    str      x0, [x25, #0xa88]
+  0x1BD0DA8    mov      x0, x24
+  0x1BD0DAC    bl       #0x1637cf8
+  0x1BD0DB0    mov      x24, x0
+  0x1BD0DB4    mov      x0, x23
+  0x1BD0DB8    bl       #0x1637cf8
+  0x1BD0DBC    ldr      x8, [x25, #0xa88]
+  0x1BD0DC0    mov      x23, x0
+  0x1BD0DC4    mov      x0, x22
+  0x1BD0DC8    mov      x1, x24
+  0x1BD0DCC    mov      x2, x21
+  0x1BD0DD0    mov      x3, x23
+  0x1BD0DD4    mov      x4, x20
+  0x1BD0DD8    mov      w5, w19
+  0x1BD0DDC    blr      x8
+  0x1BD0DE0    mov      x19, x0
+  0x1BD0DE4    mov      x0, x24
+  0x1BD0DE8    bl       #0x1637d18
+  0x1BD0DEC    mov      x0, x23
+  0x1BD0DF0    bl       #0x1637d18
+  0x1BD0DF4    mov      x0, x19
+  0x1BD0DF8    ldp      x29, x30, [sp, #0x70]
+  0x1BD0DFC    ldp      x20, x19, [sp, #0x60]
+  0x1BD0E00    ldp      x22, x21, [sp, #0x50]
+  0x1BD0E04    ldp      x24, x23, [sp, #0x40]
+  0x1BD0E08    ldr      x25, [sp, #0x30]
+  0x1BD0E0C    add      sp, sp, #0x80
+  0x1BD0E10    ret      
+
+--- idx=23996 LoadAcbFile RVA=0x1BCA72C ---
+  0x1BCA72C    stp      x22, x21, [sp, #-0x30]!
+  0x1BCA730    stp      x20, x19, [sp, #0x10]
+  0x1BCA734    stp      x29, x30, [sp, #0x20]
+  0x1BCA738    add      x29, sp, #0x20
+  0x1BCA73C    adrp     x22, #0x7ba2000
+  0x1BCA740    ldrb     w8, [x22, #0xa74]
+  0x1BCA744    mov      x19, x2
+  0x1BCA748    mov      x20, x1
+  0x1BCA74C    mov      x21, x0
+  0x1BCA750    tbnz     w8, #0, #0x1bca780
+  0x1BCA754    adrp     x0, #0x75f9000
+  0x1BCA758    ldr      x0, [x0, #0xb80]
+  0x1BCA75C    bl       #0x16378b0
+  0x1BCA760    adrp     x0, #0x7646000
+  0x1BCA764    ldr      x0, [x0, #0xb08]
+  0x1BCA768    bl       #0x16378b0
+  0x1BCA76C    adrp     x0, #0x75e7000
+  0x1BCA770    ldr      x0, [x0, #0xa10]
+  0x1BCA774    bl       #0x16378b0
+  0x1BCA778    mov      w8, #1
+  0x1BCA77C    strb     w8, [x22, #0xa74]
+  0x1BCA780    adrp     x8, #0x75f9000
+  0x1BCA784    ldr      x8, [x8, #0xb80]
+  0x1BCA788    ldr      x0, [x8]
+  0x1BCA78C    ldrb     w8, [x0, #0x133]
+  0x1BCA790    tbz      w8, #2, #0x1bca7a0
+  0x1BCA794    ldr      w8, [x0, #0xe0]
+  0x1BCA798    cbnz     w8, #0x1bca7a0
+  0x1BCA79C    bl       #0x1637960
+  0x1BCA7A0    bl       #0x1bc6160
+  0x1BCA7A4    tbz      w0, #0, #0x1bca7b4
+  0x1BCA7A8    cbz      x21, #0x1bca7bc
+  0x1BCA7AC    ldr      x0, [x21, #0x20]
+  0x1BCA7B0    b        #0x1bca7c0
+  0x1BCA7B4    mov      x20, xzr
+  0x1BCA7B8    b        #0x1bca810
+  0x1BCA7BC    mov      x0, xzr
+  0x1BCA7C0    mov      x1, x20
+  0x1BCA7C4    mov      x2, x0
+  0x1BCA7C8    mov      x3, x19
+  0x1BCA7CC    mov      x4, xzr
+  0x1BCA7D0    mov      w5, wzr
+  0x1BCA7D4    bl       #0x1bd0d24
+  0x1BCA7D8    mov      x1, xzr
+  0x1BCA7DC    mov      x2, xzr
+  0x1BCA7E0    mov      x19, x0
+  0x1BCA7E4    bl       #0x20562b8
+  0x1BCA7E8    mov      x20, xzr
+  0x1BCA7EC    tbnz     w0, #0, #0x1bca810
+  0x1BCA7F0    adrp     x8, #0x7646000
+  0x1BCA7F4    ldr      x8, [x8, #0xb08]
+  0x1BCA7F8    ldr      x0, [x8]
+  0x1BCA7FC    bl       #0x163797c
+  0x1BCA800    mov      x1, x19
+  0x1BCA804    mov      x2, xzr
+  0x1BCA808    mov      x20, x0
+  0x1BCA80C    bl       #0x1bd0e14
+  0x1BCA810    mov      x0, x20
+  0x1BCA814    ldp      x29, x30, [sp, #0x20]
+  0x1BCA818    ldp      x20, x19, [sp, #0x10]
+  0x1BCA81C    ldp      x22, x21, [sp], #0x30
+  0x1BCA820    ret      
+
+--- idx=23997 LoadAcbData RVA=0x1BCA824 ---
+  0x1BCA824    sub      sp, sp, #0x40
+  0x1BCA828    stp      x22, x21, [sp, #0x10]
+  0x1BCA82C    stp      x20, x19, [sp, #0x20]
+  0x1BCA830    stp      x29, x30, [sp, #0x30]
+  0x1BCA834    add      x29, sp, #0x30
+  0x1BCA838    adrp     x22, #0x7ba2000
+  0x1BCA83C    ldrb     w8, [x22, #0xa75]
+  0x1BCA840    mov      x19, x2
+  0x1BCA844    mov      x21, x1
+  0x1BCA848    mov      x20, x0
+  0x1BCA84C    tbnz     w8, #0, #0x1bca888
+  0x1BCA850    adrp     x0, #0x75f9000
+  0x1BCA854    ldr      x0, [x0, #0xb80]
+  0x1BCA858    bl       #0x16378b0
+  0x1BCA85C    adrp     x0, #0x7646000
+  0x1BCA860    ldr      x0, [x0, #0xb08]
+  0x1BCA864    bl       #0x16378b0
+  0x1BCA868    adrp     x0, #0x75e7000
+  0x1BCA86C    ldr      x0, [x0, #0xa10]
+  0x1BCA870    bl       #0x16378b0
+  0x1BCA874    adrp     x0, #0x7676000
+  0x1BCA878    ldr      x0, [x0, #0x718]
+  0x1BCA87C    bl       #0x16378b0
+  0x1BCA880    mov      w8, #1
+  0x1BCA884    strb     w8, [x22, #0xa75]
+  0x1BCA888    adrp     x8, #0x75f9000
+  0x1BCA88C    ldr      x8, [x8, #0xb80]
+  0x1BCA890    str      wzr, [sp, #8]
+  0x1BCA894    ldr      x0, [x8]
+  0x1BCA898    ldrb     w8, [x0, #0x133]
+  0x1BCA89C    tbz      w8, #2, #0x1bca8ac
+  0x1BCA8A0    ldr      w8, [x0, #0xe0]
+  0x1BCA8A4    cbnz     w8, #0x1bca8ac
+  0x1BCA8A8    bl       #0x1637960
+  0x1BCA8AC    bl       #0x1bc6160
+  0x1BCA8B0    tbz      w0, #0, #0x1bca950
+  0x1BCA8B4    cbz      x21, #0x1bca8bc
+  0x1BCA8B8    ldr      x21, [x21, #0x20]
+  0x1BCA8BC    mov      w1, #3
+  0x1BCA8C0    mov      x0, x20
+  0x1BCA8C4    mov      x2, xzr
+  0x1BCA8C8    bl       #0x1f79454
+  0x1BCA8CC    str      w0, [sp, #8]
+  0x1BCA8D0    add      x0, sp, #8
+  0x1BCA8D4    mov      x1, xzr
+  0x1BCA8D8    bl       #0x1f79344
+  0x1BCA8DC    cbz      x20, #0x1bca96c
+  0x1BCA8E0    ldr      w1, [x20, #0x18]
+  0x1BCA8E4    mov      x2, x21
+  0x1BCA8E8    mov      x3, x19
+  0x1BCA8EC    mov      x4, xzr
+  0x1BCA8F0    mov      w5, wzr
+  0x1BCA8F4    bl       #0x1bd0ef4
+  0x1BCA8F8    mov      x1, xzr
+  0x1BCA8FC    mov      x2, xzr
+  0x1BCA900    mov      x19, x0
+  0x1BCA904    bl       #0x20562b8
+  0x1BCA908    mov      x20, xzr
+  0x1BCA90C    tbnz     w0, #0, #0x1bca954
+  0x1BCA910    adrp     x8, #0x7676000
+  0x1BCA914    ldr      w1, [sp, #8]
+  0x1BCA918    ldr      x8, [x8, #0x718]
+  0x1BCA91C    mov      x0, sp
+  0x1BCA920    str      xzr, [sp]
+  0x1BCA924    ldr      x2, [x8]
+  0x1BCA928    bl       #0x1cc64c8
+  0x1BCA92C    adrp     x8, #0x7646000
+  0x1BCA930    ldr      x8, [x8, #0xb08]
+  0x1BCA934    ldr      x0, [x8]
+  0x1BCA938    bl       #0x163797c
+  0x1BCA93C    ldr      x2, [sp]
+  0x1BCA940    mov      x1, x19
+  0x1BCA944    mov      x20, x0
+  0x1BCA948    bl       #0x1bd0e14
+  0x1BCA94C    b        #0x1bca954
+  0x1BCA950    mov      x20, xzr
+  0x1BCA954    mov      x0, x20
+  0x1BCA958    ldp      x29, x30, [sp, #0x30]
+  0x1BCA95C    ldp      x20, x19, [sp, #0x20]
+  0x1BCA960    ldp      x22, x21, [sp, #0x10]
+  0x1BCA964    add      sp, sp, #0x40
+  0x1BCA968    ret      
+
+--- idx=23998 Dispose RVA=0x1BD0FD0 ---
+  0x1BD0FD0    stp      x20, x19, [sp, #-0x20]!
+  0x1BD0FD4    stp      x29, x30, [sp, #0x10]
+  0x1BD0FD8    add      x29, sp, #0x10
+  0x1BD0FDC    adrp     x20, #0x7ba2000
+  0x1BD0FE0    ldrb     w8, [x20, #0xa76]
+  0x1BD0FE4    mov      x19, x0
+  0x1BD0FE8    tbnz     w8, #0, #0x1bd1000
+  0x1BD0FEC    adrp     x0, #0x760b000
+  0x1BD0FF0    ldr      x0, [x0, #0xe28]
+  0x1BD0FF4    bl       #0x16378b0
+  0x1BD0FF8    mov      w8, #1
+  0x1BD0FFC    strb     w8, [x20, #0xa76]
+  0x1BD1000    mov      w1, #1
+  0x1BD1004    mov      x0, x19
+  0x1BD1008    bl       #0x1bd1040
+  0x1BD100C    adrp     x8, #0x760b000
+  0x1BD1010    ldr      x8, [x8, #0xe28]
+  0x1BD1014    ldr      x0, [x8]
+  0x1BD1018    ldrb     w8, [x0, #0x133]
+  0x1BD101C    tbz      w8, #2, #0x1bd102c
+  0x1BD1020    ldr      w8, [x0, #0xe0]
+  0x1BD1024    cbnz     w8, #0x1bd102c
+  0x1BD1028    bl       #0x1637960
+  0x1BD102C    ldp      x29, x30, [sp, #0x10]
+  0x1BD1030    mov      x0, x19
+  0x1BD1034    mov      x1, xzr
+  0x1BD1038    ldp      x20, x19, [sp], #0x20
+  0x1BD103C    b        #0x1f75da8
+  0x1BD1040    str      x21, [sp, #-0x30]!
+  0x1BD1044    stp      x20, x19, [sp, #0x10]
+  0x1BD1048    stp      x29, x30, [sp, #0x20]
+  0x1BD104C    add      x29, sp, #0x20
+  0x1BD1050    adrp     x21, #0x7ba2000
+  0x1BD1054    ldrb     w8, [x21, #0xa77]
+  0x1BD1058    mov      w19, w1
+  0x1BD105C    mov      x20, x0
+  0x1BD1060    tbnz     w8, #0, #0x1bd1084
+  0x1BD1064    adrp     x0, #0x75fe000
+  0x1BD1068    ldr      x0, [x0, #0xfa0]
+  0x1BD106C    bl       #0x16378b0
+  0x1BD1070    adrp     x0, #0x75e7000
+  0x1BD1074    ldr      x0, [x0, #0xa10]
+  0x1BD1078    bl       #0x16378b0
+  0x1BD107C    mov      w8, #1
+  0x1BD1080    strb     w8, [x21, #0xa77]
+  0x1BD1084    adrp     x8, #0x75fe000
+  0x1BD1088    ldr      x8, [x8, #0xfa0]
+  0x1BD108C    ldr      x0, [x8]
+  0x1BD1090    ldrb     w8, [x0, #0x133]
+  0x1BD1094    tbz      w8, #2, #0x1bd10a4
+  0x1BD1098    ldr      w8, [x0, #0xe0]
+  0x1BD109C    cbnz     w8, #0x1bd10a4
+  0x1BD10A0    bl       #0x1637960
+  0x1BD10A4    mov      x0, x20
+  0x1BD10A8    mov      x1, xzr
+  0x1BD10AC    bl       #0x1dfefe4
+  0x1BD10B0    mov      x0, x20
+  0x1BD10B4    bl       #0x1bd0cdc
+  0x1BD10B8    tbnz     w0, #0, #0x1bd10c4
+  0x1BD10BC    tbnz     w19, #0, #0x1bd10d4
+  0x1BD10C0    b        #0x1bd1100
+  0x1BD10C4    ldr      x0, [x20, #0x20]
+  0x1BD10C8    bl       #0x1bd1110
+  0x1BD10CC    str      xzr, [x20, #0x20]
+  0x1BD10D0    tbz      w19, #0, #0x1bd1100
+  0x1BD10D4    add      x19, x20, #0x28
+  0x1BD10D8    mov      x0, x19
+  0x1BD10DC    mov      x1, xzr
+  0x1BD10E0    bl       #0x1f79294
+  0x1BD10E4    tbz      w0, #0, #0x1bd1100
+  0x1BD10E8    mov      x0, x19
+  0x1BD10EC    ldp      x29, x30, [sp, #0x20]
+  0x1BD10F0    ldp      x20, x19, [sp, #0x10]
+  0x1BD10F4    mov      x1, xzr
+  0x1BD10F8    ldr      x21, [sp], #0x30
+  0x1BD10FC    b        #0x1f7947c
+  0x1BD1100    ldp      x29, x30, [sp, #0x20]
+  0x1BD1104    ldp      x20, x19, [sp, #0x10]
+  0x1BD1108    ldr      x21, [sp], #0x30
+  0x1BD110C    ret      
+
+--- idx=23999 Dispose RVA=0x1BD1040 ---
+  0x1BD1040    str      x21, [sp, #-0x30]!
+  0x1BD1044    stp      x20, x19, [sp, #0x10]
+  0x1BD1048    stp      x29, x30, [sp, #0x20]
+  0x1BD104C    add      x29, sp, #0x20
+  0x1BD1050    adrp     x21, #0x7ba2000
+  0x1BD1054    ldrb     w8, [x21, #0xa77]
+  0x1BD1058    mov      w19, w1
+  0x1BD105C    mov      x20, x0
+  0x1BD1060    tbnz     w8, #0, #0x1bd1084
+  0x1BD1064    adrp     x0, #0x75fe000
+  0x1BD1068    ldr      x0, [x0, #0xfa0]
+  0x1BD106C    bl       #0x16378b0
+  0x1BD1070    adrp     x0, #0x75e7000
+  0x1BD1074    ldr      x0, [x0, #0xa10]
+  0x1BD1078    bl       #0x16378b0
+  0x1BD107C    mov      w8, #1
+  0x1BD1080    strb     w8, [x21, #0xa77]
+  0x1BD1084    adrp     x8, #0x75fe000
+  0x1BD1088    ldr      x8, [x8, #0xfa0]
+  0x1BD108C    ldr      x0, [x8]
+  0x1BD1090    ldrb     w8, [x0, #0x133]
+  0x1BD1094    tbz      w8, #2, #0x1bd10a4
+  0x1BD1098    ldr      w8, [x0, #0xe0]
+  0x1BD109C    cbnz     w8, #0x1bd10a4
+  0x1BD10A0    bl       #0x1637960
+  0x1BD10A4    mov      x0, x20
+  0x1BD10A8    mov      x1, xzr
+  0x1BD10AC    bl       #0x1dfefe4
+  0x1BD10B0    mov      x0, x20
+  0x1BD10B4    bl       #0x1bd0cdc
+  0x1BD10B8    tbnz     w0, #0, #0x1bd10c4
+  0x1BD10BC    tbnz     w19, #0, #0x1bd10d4
+  0x1BD10C0    b        #0x1bd1100
+  0x1BD10C4    ldr      x0, [x20, #0x20]
+  0x1BD10C8    bl       #0x1bd1110
+  0x1BD10CC    str      xzr, [x20, #0x20]
+  0x1BD10D0    tbz      w19, #0, #0x1bd1100
+  0x1BD10D4    add      x19, x20, #0x28
+  0x1BD10D8    mov      x0, x19
+  0x1BD10DC    mov      x1, xzr
+  0x1BD10E0    bl       #0x1f79294
+  0x1BD10E4    tbz      w0, #0, #0x1bd1100
+  0x1BD10E8    mov      x0, x19
+  0x1BD10EC    ldp      x29, x30, [sp, #0x20]
+  0x1BD10F0    ldp      x20, x19, [sp, #0x10]
+  0x1BD10F4    mov      x1, xzr
+  0x1BD10F8    ldr      x21, [sp], #0x30
+  0x1BD10FC    b        #0x1f7947c
+  0x1BD1100    ldp      x29, x30, [sp, #0x20]
+  0x1BD1104    ldp      x20, x19, [sp, #0x10]
+  0x1BD1108    ldr      x21, [sp], #0x30
+  0x1BD110C    ret      
+
+--- idx=24000 Exists RVA=0x1BD1190 ---
+  0x1BD1190    ldr      x0, [x0, #0x20]
+  0x1BD1194    b        #0x1bd1198
+  0x1BD1198    sub      sp, sp, #0x60
+  0x1BD119C    str      x21, [sp, #0x30]
+  0x1BD11A0    stp      x20, x19, [sp, #0x40]
+  0x1BD11A4    stp      x29, x30, [sp, #0x50]
+  0x1BD11A8    add      x29, sp, #0x50
+  0x1BD11AC    adrp     x21, #0x7ba2000
+  0x1BD11B0    ldr      x8, [x21, #0xab0]
+  0x1BD11B4    mov      x20, x1
+  0x1BD11B8    mov      x19, x0
+  0x1BD11BC    cbnz     x8, #0x1bd1204
+  0x1BD11C0    adrp     x12, #0x5d3e000
+  0x1BD11C4    ldr      d0, [x12, #0xd10]
+  0x1BD11C8    adrp     x8, #0x5d3e000
+  0x1BD11CC    adrp     x10, #0x5d3f000
+  0x1BD11D0    add      x8, x8, #0xdc0
+  0x1BD11D4    mov      w9, #0xe
+  0x1BD11D8    add      x10, x10, #0x798
+  0x1BD11DC    mov      w11, #0x17
+  0x1BD11E0    mov      w13, #0x10
+  0x1BD11E4    mov      x0, sp
+  0x1BD11E8    stp      x8, x9, [sp]
+  0x1BD11EC    stp      x10, x11, [sp, #0x10]
+  0x1BD11F0    str      d0, [sp, #0x20]
+  0x1BD11F4    str      w13, [sp, #0x28]
+  0x1BD11F8    strb     wzr, [sp, #0x2c]
+  0x1BD11FC    bl       #0x1637d24
+  0x1BD1200    str      x0, [x21, #0xab0]
+  0x1BD1204    mov      x0, x20
+  0x1BD1208    bl       #0x1637cf8
+  0x1BD120C    ldr      x8, [x21, #0xab0]
+  0x1BD1210    mov      x20, x0
+  0x1BD1214    mov      x0, x19
+  0x1BD1218    mov      x1, x20
+  0x1BD121C    blr      x8
+  0x1BD1220    mov      w19, w0
+  0x1BD1224    mov      x0, x20
+  0x1BD1228    bl       #0x1637d18
+  0x1BD122C    cmp      w19, #0
+  0x1BD1230    ldp      x29, x30, [sp, #0x50]
+  0x1BD1234    ldp      x20, x19, [sp, #0x40]
+  0x1BD1238    ldr      x21, [sp, #0x30]
+  0x1BD123C    cset     w0, ne
+  0x1BD1240    add      sp, sp, #0x60
+  0x1BD1244    ret      
+
+--- idx=24001 Exists RVA=0x1BD1248 ---
+  0x1BD1248    ldr      x0, [x0, #0x20]
+  0x1BD124C    b        #0x1bd1250
+  0x1BD1250    sub      sp, sp, #0x60
+  0x1BD1254    str      x21, [sp, #0x30]
+  0x1BD1258    stp      x20, x19, [sp, #0x40]
+  0x1BD125C    stp      x29, x30, [sp, #0x50]
+  0x1BD1260    add      x29, sp, #0x50
+  0x1BD1264    adrp     x21, #0x7ba2000
+  0x1BD1268    ldr      x8, [x21, #0xaa8]
+  0x1BD126C    mov      w19, w1
+  0x1BD1270    mov      x20, x0
+  0x1BD1274    cbnz     x8, #0x1bd12c0
+  0x1BD1278    adrp     x12, #0x5d3e000
+  0x1BD127C    ldr      d0, [x12, #0xd10]
+  0x1BD1280    adrp     x8, #0x5d3e000
+  0x1BD1284    adrp     x10, #0x5d3f000
+  0x1BD1288    add      x8, x8, #0xdc0
+  0x1BD128C    mov      w9, #0xe
+  0x1BD1290    add      x10, x10, #0x782
+  0x1BD1294    mov      w11, #0x15
+  0x1BD1298    mov      w13, #0xc
+  0x1BD129C    mov      x0, sp
+  0x1BD12A0    stp      x8, x9, [sp]
+  0x1BD12A4    stp      x10, x11, [sp, #0x10]
+  0x1BD12A8    str      d0, [sp, #0x20]
+  0x1BD12AC    str      w13, [sp, #0x28]
+  0x1BD12B0    strb     wzr, [sp, #0x2c]
+  0x1BD12B4    bl       #0x1637d24
+  0x1BD12B8    mov      x8, x0
+  0x1BD12BC    str      x0, [x21, #0xaa8]
+  0x1BD12C0    mov      x0, x20
+  0x1BD12C4    mov      w1, w19
+  0x1BD12C8    blr      x8
+  0x1BD12CC    ldp      x29, x30, [sp, #0x50]
+  0x1BD12D0    ldp      x20, x19, [sp, #0x40]
+  0x1BD12D4    ldr      x21, [sp, #0x30]
+  0x1BD12D8    cmp      w0, #0
+  0x1BD12DC    cset     w0, ne
+  0x1BD12E0    add      sp, sp, #0x60
+  0x1BD12E4    ret      
+
+--- idx=24002 GetCueInfo RVA=0x1BD12E8 ---
+  0x1BD12E8    sub      sp, sp, #0xd0
+  0x1BD12EC    stp      x22, x21, [sp, #0xa0]
+  0x1BD12F0    stp      x20, x19, [sp, #0xb0]
+  0x1BD12F4    stp      x29, x30, [sp, #0xc0]
+  0x1BD12F8    add      x29, sp, #0xc0
+  0x1BD12FC    adrp     x19, #0x7ba2000
+  0x1BD1300    ldrb     w8, [x19, #0xa78]
+  0x1BD1304    mov      x21, x2
+  0x1BD1308    mov      x20, x1
+  0x1BD130C    mov      x22, x0
+  0x1BD1310    tbnz     w8, #0, #0x1bd1358
+  0x1BD1314    adrp     x0, #0x767b000
+  0x1BD1318    ldr      x0, [x0, #0x398]
+  0x1BD131C    bl       #0x16378b0
+  0x1BD1320    adrp     x0, #0x7681000
+  0x1BD1324    ldr      x0, [x0, #0x78]
+  0x1BD1328    bl       #0x16378b0
+  0x1BD132C    adrp     x0, #0x7633000
+  0x1BD1330    ldr      x0, [x0, #0x420]
+  0x1BD1334    bl       #0x16378b0
+  0x1BD1338    adrp     x0, #0x7643000
+  0x1BD133C    ldr      x0, [x0, #0x598]
+  0x1BD1340    bl       #0x16378b0
+  0x1BD1344    adrp     x0, #0x767b000
+  0x1BD1348    ldr      x0, [x0, #0x8f0]
+  0x1BD134C    bl       #0x16378b0
+  0x1BD1350    mov      w8, #1
+  0x1BD1354    strb     w8, [x19, #0xa78]
+  0x1BD1358    adrp     x8, #0x7643000
+  0x1BD135C    ldr      x8, [x8, #0x598]
+  0x1BD1360    stur     wzr, [x29, #-0x24]
+  0x1BD1364    ldr      x0, [x8]
+  0x1BD1368    bl       #0x163797c
+  0x1BD136C    adrp     x8, #0x767b000
+  0x1BD1370    ldr      x8, [x8, #0x398]
+  0x1BD1374    mov      x19, x0
+  0x1BD1378    ldr      x1, [x8]
+  0x1BD137C    bl       #0x1dd8a90
+  0x1BD1380    cbz      x19, #0x1bd149c
+  0x1BD1384    adrp     x8, #0x7633000
+  0x1BD1388    ldr      x22, [x22, #0x20]
+  0x1BD138C    ldr      x8, [x8, #0x420]
+  0x1BD1390    ldr      x1, [x8]
+  0x1BD1394    mov      x0, x19
+  0x1BD1398    bl       #0x1dd8a84
+  0x1BD139C    mov      x2, x0
+  0x1BD13A0    mov      x0, x22
+  0x1BD13A4    mov      x1, x20
+  0x1BD13A8    bl       #0x1bd14e0
+  0x1BD13AC    ldr      x22, [x19, #0x10]
+  0x1BD13B0    mov      w20, w0
+  0x1BD13B4    add      x0, sp, #8
+  0x1BD13B8    mov      w2, #0x90
+  0x1BD13BC    mov      w1, wzr
+  0x1BD13C0    bl       #0x1360720
+  0x1BD13C4    add      x0, sp, #8
+  0x1BD13C8    mov      x1, x22
+  0x1BD13CC    mov      w2, wzr
+  0x1BD13D0    mov      x3, xzr
+  0x1BD13D4    bl       #0x2458a24
+  0x1BD13D8    add      x1, sp, #8
+  0x1BD13DC    mov      w2, #0x90
+  0x1BD13E0    mov      x0, x21
+  0x1BD13E4    bl       #0x135f420
+  0x1BD13E8    adrp     x8, #0x5d3e000
+  0x1BD13EC    ldr      d0, [x8, #0xd20]
+  0x1BD13F0    mov      x21, xzr
+  0x1BD13F4    mov      w22, #1
+  0x1BD13F8    stur     d0, [x29, #-0x28]
+  0x1BD13FC    adrp     x10, #0x767b000
+  0x1BD1400    ldr      x8, [x19]
+  0x1BD1404    ldr      x10, [x10, #0x8f0]
+  0x1BD1408    ldrh     w9, [x8, #0x12a]
+  0x1BD140C    ldr      x1, [x10]
+  0x1BD1410    cbz      x9, #0x1bd143c
+  0x1BD1414    ldr      x11, [x8, #0xb0]
+  0x1BD1418    mov      x10, xzr
+  0x1BD141C    add      x11, x11, #8
+  0x1BD1420    ldur     x12, [x11, #-8]
+  0x1BD1424    cmp      x12, x1
+  0x1BD1428    b.eq     #0x1bd144c
+  0x1BD142C    add      x10, x10, #1
+  0x1BD1430    cmp      x10, x9
+  0x1BD1434    add      x11, x11, #0x10
+  0x1BD1438    b.lo     #0x1bd1420
+  0x1BD143C    mov      x0, x19
+  0x1BD1440    mov      w2, wzr
+  0x1BD1444    bl       #0x15cf530
+  0x1BD1448    b        #0x1bd1458
+  0x1BD144C    ldrsw    x9, [x11]
+  0x1BD1450    add      x8, x8, x9, lsl #4
+  0x1BD1454    add      x0, x8, #0x138
+  0x1BD1458    ldp      x8, x1, [x0]
+  0x1BD145C    mov      x0, x19
+  0x1BD1460    blr      x8
+  0x1BD1464    cbnz     x21, #0x1bd14a0
+  0x1BD1468    cbz      w22, #0x1bd1484
+  0x1BD146C    sub      x8, x22, #1
+  0x1BD1470    sub      x9, x29, #0x28
+  0x1BD1474    ldr      w9, [x9, x8, lsl #2]
+  0x1BD1478    cmp      w9, #0x37
+  0x1BD147C    b.ne     #0x1bd1484
+  0x1BD1480    stur     w8, [x29, #-0x24]
+  0x1BD1484    and      w0, w20, #1
+  0x1BD1488    ldp      x29, x30, [sp, #0xc0]
+  0x1BD148C    ldp      x20, x19, [sp, #0xb0]
+  0x1BD1490    ldp      x22, x21, [sp, #0xa0]
+  0x1BD1494    add      sp, sp, #0xd0
+  0x1BD1498    ret      
+
+--- idx=24003 GetCueInfo RVA=0x1BD1598 ---
+  0x1BD1598    sub      sp, sp, #0xd0
+  0x1BD159C    stp      x22, x21, [sp, #0xa0]
+  0x1BD15A0    stp      x20, x19, [sp, #0xb0]
+  0x1BD15A4    stp      x29, x30, [sp, #0xc0]
+  0x1BD15A8    add      x29, sp, #0xc0
+  0x1BD15AC    adrp     x19, #0x7ba2000
+  0x1BD15B0    ldrb     w8, [x19, #0xa79]
+  0x1BD15B4    mov      x21, x2
+  0x1BD15B8    mov      w20, w1
+  0x1BD15BC    mov      x22, x0
+  0x1BD15C0    tbnz     w8, #0, #0x1bd1608
+  0x1BD15C4    adrp     x0, #0x767b000
+  0x1BD15C8    ldr      x0, [x0, #0x398]
+  0x1BD15CC    bl       #0x16378b0
+  0x1BD15D0    adrp     x0, #0x7681000
+  0x1BD15D4    ldr      x0, [x0, #0x78]
+  0x1BD15D8    bl       #0x16378b0
+  0x1BD15DC    adrp     x0, #0x7633000
+  0x1BD15E0    ldr      x0, [x0, #0x420]
+  0x1BD15E4    bl       #0x16378b0
+  0x1BD15E8    adrp     x0, #0x7643000
+  0x1BD15EC    ldr      x0, [x0, #0x598]
+  0x1BD15F0    bl       #0x16378b0
+  0x1BD15F4    adrp     x0, #0x767b000
+  0x1BD15F8    ldr      x0, [x0, #0x8f0]
+  0x1BD15FC    bl       #0x16378b0
+  0x1BD1600    mov      w8, #1
+  0x1BD1604    strb     w8, [x19, #0xa79]
+  0x1BD1608    adrp     x8, #0x7643000
+  0x1BD160C    ldr      x8, [x8, #0x598]
+  0x1BD1610    stur     wzr, [x29, #-0x24]
+  0x1BD1614    ldr      x0, [x8]
+  0x1BD1618    bl       #0x163797c
+  0x1BD161C    adrp     x8, #0x767b000
+  0x1BD1620    ldr      x8, [x8, #0x398]
+  0x1BD1624    mov      x19, x0
+  0x1BD1628    ldr      x1, [x8]
+  0x1BD162C    bl       #0x1dd8a90
+  0x1BD1630    cbz      x19, #0x1bd174c
+  0x1BD1634    adrp     x8, #0x7633000
+  0x1BD1638    ldr      x22, [x22, #0x20]
+  0x1BD163C    ldr      x8, [x8, #0x420]
+  0x1BD1640    ldr      x1, [x8]
+  0x1BD1644    mov      x0, x19
+  0x1BD1648    bl       #0x1dd8a84
+  0x1BD164C    mov      x2, x0
+  0x1BD1650    mov      x0, x22
+  0x1BD1654    mov      w1, w20
+  0x1BD1658    bl       #0x1bd1790
+  0x1BD165C    ldr      x22, [x19, #0x10]
+  0x1BD1660    mov      w20, w0
+  0x1BD1664    add      x0, sp, #8
+  0x1BD1668    mov      w2, #0x90
+  0x1BD166C    mov      w1, wzr
+  0x1BD1670    bl       #0x1360720
+  0x1BD1674    add      x0, sp, #8
+  0x1BD1678    mov      x1, x22
+  0x1BD167C    mov      w2, wzr
+  0x1BD1680    mov      x3, xzr
+  0x1BD1684    bl       #0x2458a24
+  0x1BD1688    add      x1, sp, #8
+  0x1BD168C    mov      w2, #0x90
+  0x1BD1690    mov      x0, x21
+  0x1BD1694    bl       #0x135f420
+  0x1BD1698    adrp     x8, #0x5d3e000
+  0x1BD169C    ldr      d0, [x8, #0xd20]
+  0x1BD16A0    mov      x21, xzr
+  0x1BD16A4    mov      w22, #1
+  0x1BD16A8    stur     d0, [x29, #-0x28]
+  0x1BD16AC    adrp     x10, #0x767b000
+  0x1BD16B0    ldr      x8, [x19]
+  0x1BD16B4    ldr      x10, [x10, #0x8f0]
+  0x1BD16B8    ldrh     w9, [x8, #0x12a]
+  0x1BD16BC    ldr      x1, [x10]
+  0x1BD16C0    cbz      x9, #0x1bd16ec
+  0x1BD16C4    ldr      x11, [x8, #0xb0]
+  0x1BD16C8    mov      x10, xzr
+  0x1BD16CC    add      x11, x11, #8
+  0x1BD16D0    ldur     x12, [x11, #-8]
+  0x1BD16D4    cmp      x12, x1
+  0x1BD16D8    b.eq     #0x1bd16fc
+  0x1BD16DC    add      x10, x10, #1
+  0x1BD16E0    cmp      x10, x9
+  0x1BD16E4    add      x11, x11, #0x10
+  0x1BD16E8    b.lo     #0x1bd16d0
+  0x1BD16EC    mov      x0, x19
+  0x1BD16F0    mov      w2, wzr
+  0x1BD16F4    bl       #0x15cf530
+  0x1BD16F8    b        #0x1bd1708
+  0x1BD16FC    ldrsw    x9, [x11]
+  0x1BD1700    add      x8, x8, x9, lsl #4
+  0x1BD1704    add      x0, x8, #0x138
+  0x1BD1708    ldp      x8, x1, [x0]
+  0x1BD170C    mov      x0, x19
+  0x1BD1710    blr      x8
+  0x1BD1714    cbnz     x21, #0x1bd1750
+  0x1BD1718    cbz      w22, #0x1bd1734
+  0x1BD171C    sub      x8, x22, #1
+  0x1BD1720    sub      x9, x29, #0x28
+  0x1BD1724    ldr      w9, [x9, x8, lsl #2]
+  0x1BD1728    cmp      w9, #0x37
+  0x1BD172C    b.ne     #0x1bd1734
+  0x1BD1730    stur     w8, [x29, #-0x24]
+  0x1BD1734    and      w0, w20, #1
+  0x1BD1738    ldp      x29, x30, [sp, #0xc0]
+  0x1BD173C    ldp      x20, x19, [sp, #0xb0]
+  0x1BD1740    ldp      x22, x21, [sp, #0xa0]
+  0x1BD1744    add      sp, sp, #0xd0
+  0x1BD1748    ret      
+
+--- idx=24004 GetCueInfoByIndex RVA=0x1BD1830 ---
+  0x1BD1830    sub      sp, sp, #0xd0
+  0x1BD1834    stp      x22, x21, [sp, #0xa0]
+  0x1BD1838    stp      x20, x19, [sp, #0xb0]
+  0x1BD183C    stp      x29, x30, [sp, #0xc0]
+  0x1BD1840    add      x29, sp, #0xc0
+  0x1BD1844    adrp     x19, #0x7ba2000
+  0x1BD1848    ldrb     w8, [x19, #0xa7a]
+  0x1BD184C    mov      x21, x2
+  0x1BD1850    mov      w20, w1
+  0x1BD1854    mov      x22, x0
+  0x1BD1858    tbnz     w8, #0, #0x1bd18a0
+  0x1BD185C    adrp     x0, #0x767b000
+  0x1BD1860    ldr      x0, [x0, #0x398]
+  0x1BD1864    bl       #0x16378b0
+  0x1BD1868    adrp     x0, #0x7681000
+  0x1BD186C    ldr      x0, [x0, #0x78]
+  0x1BD1870    bl       #0x16378b0
+  0x1BD1874    adrp     x0, #0x7633000
+  0x1BD1878    ldr      x0, [x0, #0x420]
+  0x1BD187C    bl       #0x16378b0
+  0x1BD1880    adrp     x0, #0x7643000
+  0x1BD1884    ldr      x0, [x0, #0x598]
+  0x1BD1888    bl       #0x16378b0
+  0x1BD188C    adrp     x0, #0x767b000
+  0x1BD1890    ldr      x0, [x0, #0x8f0]
+  0x1BD1894    bl       #0x16378b0
+  0x1BD1898    mov      w8, #1
+  0x1BD189C    strb     w8, [x19, #0xa7a]
+  0x1BD18A0    adrp     x8, #0x7643000
+  0x1BD18A4    ldr      x8, [x8, #0x598]
+  0x1BD18A8    stur     wzr, [x29, #-0x24]
+  0x1BD18AC    ldr      x0, [x8]
+  0x1BD18B0    bl       #0x163797c
+  0x1BD18B4    adrp     x8, #0x767b000
+  0x1BD18B8    ldr      x8, [x8, #0x398]
+  0x1BD18BC    mov      x19, x0
+  0x1BD18C0    ldr      x1, [x8]
+  0x1BD18C4    bl       #0x1dd8a90
+  0x1BD18C8    cbz      x19, #0x1bd19e4
+  0x1BD18CC    adrp     x8, #0x7633000
+  0x1BD18D0    ldr      x22, [x22, #0x20]
+  0x1BD18D4    ldr      x8, [x8, #0x420]
+  0x1BD18D8    ldr      x1, [x8]
+  0x1BD18DC    mov      x0, x19
+  0x1BD18E0    bl       #0x1dd8a84
+  0x1BD18E4    mov      x2, x0
+  0x1BD18E8    mov      x0, x22
+  0x1BD18EC    mov      w1, w20
+  0x1BD18F0    bl       #0x1bd1a28
+  0x1BD18F4    ldr      x22, [x19, #0x10]
+  0x1BD18F8    mov      w20, w0
+  0x1BD18FC    add      x0, sp, #8
+  0x1BD1900    mov      w2, #0x90
+  0x1BD1904    mov      w1, wzr
+  0x1BD1908    bl       #0x1360720
+  0x1BD190C    add      x0, sp, #8
+  0x1BD1910    mov      x1, x22
+  0x1BD1914    mov      w2, wzr
+  0x1BD1918    mov      x3, xzr
+  0x1BD191C    bl       #0x2458a24
+  0x1BD1920    add      x1, sp, #8
+  0x1BD1924    mov      w2, #0x90
+  0x1BD1928    mov      x0, x21
+  0x1BD192C    bl       #0x135f420
+  0x1BD1930    adrp     x8, #0x5d3e000
+  0x1BD1934    ldr      d0, [x8, #0xd20]
+  0x1BD1938    mov      x21, xzr
+  0x1BD193C    mov      w22, #1
+  0x1BD1940    stur     d0, [x29, #-0x28]
+  0x1BD1944    adrp     x10, #0x767b000
+  0x1BD1948    ldr      x8, [x19]
+  0x1BD194C    ldr      x10, [x10, #0x8f0]
+  0x1BD1950    ldrh     w9, [x8, #0x12a]
+  0x1BD1954    ldr      x1, [x10]
+  0x1BD1958    cbz      x9, #0x1bd1984
+  0x1BD195C    ldr      x11, [x8, #0xb0]
+  0x1BD1960    mov      x10, xzr
+  0x1BD1964    add      x11, x11, #8
+  0x1BD1968    ldur     x12, [x11, #-8]
+  0x1BD196C    cmp      x12, x1
+  0x1BD1970    b.eq     #0x1bd1994
+  0x1BD1974    add      x10, x10, #1
+  0x1BD1978    cmp      x10, x9
+  0x1BD197C    add      x11, x11, #0x10
+  0x1BD1980    b.lo     #0x1bd1968
+  0x1BD1984    mov      x0, x19
+  0x1BD1988    mov      w2, wzr
+  0x1BD198C    bl       #0x15cf530
+  0x1BD1990    b        #0x1bd19a0
+  0x1BD1994    ldrsw    x9, [x11]
+  0x1BD1998    add      x8, x8, x9, lsl #4
+  0x1BD199C    add      x0, x8, #0x138
+  0x1BD19A0    ldp      x8, x1, [x0]
+  0x1BD19A4    mov      x0, x19
+  0x1BD19A8    blr      x8
+  0x1BD19AC    cbnz     x21, #0x1bd19e8
+  0x1BD19B0    cbz      w22, #0x1bd19cc
+  0x1BD19B4    sub      x8, x22, #1
+  0x1BD19B8    sub      x9, x29, #0x28
+  0x1BD19BC    ldr      w9, [x9, x8, lsl #2]
+  0x1BD19C0    cmp      w9, #0x37
+  0x1BD19C4    b.ne     #0x1bd19cc
+  0x1BD19C8    stur     w8, [x29, #-0x24]
+  0x1BD19CC    and      w0, w20, #1
+  0x1BD19D0    ldp      x29, x30, [sp, #0xc0]
+  0x1BD19D4    ldp      x20, x19, [sp, #0xb0]
+  0x1BD19D8    ldp      x22, x21, [sp, #0xa0]
+  0x1BD19DC    add      sp, sp, #0xd0
+  0x1BD19E0    ret      
+
+--- idx=24005 GetCueInfoList RVA=0x1BD1AC8 ---
+  0x1BD1AC8    str      x23, [sp, #-0x40]!
+  0x1BD1ACC    stp      x22, x21, [sp, #0x10]
+  0x1BD1AD0    stp      x20, x19, [sp, #0x20]
+  0x1BD1AD4    stp      x29, x30, [sp, #0x30]
+  0x1BD1AD8    add      x29, sp, #0x30
+  0x1BD1ADC    adrp     x20, #0x7ba2000
+  0x1BD1AE0    ldrb     w8, [x20, #0xa7b]
+  0x1BD1AE4    mov      x19, x0
+  0x1BD1AE8    tbnz     w8, #0, #0x1bd1b00
+  0x1BD1AEC    adrp     x0, #0x7617000
+  0x1BD1AF0    ldr      x0, [x0, #0xf0]
+  0x1BD1AF4    bl       #0x16378b0
+  0x1BD1AF8    mov      w8, #1
+  0x1BD1AFC    strb     w8, [x20, #0xa7b]
+  0x1BD1B00    ldr      x0, [x19, #0x20]
+  0x1BD1B04    bl       #0x1bd1b94
+  0x1BD1B08    adrp     x8, #0x7617000
+  0x1BD1B0C    ldr      x8, [x8, #0xf0]
+  0x1BD1B10    mov      w22, w0
+  0x1BD1B14    mov      w1, w22
+  0x1BD1B18    ldr      x8, [x8]
+  0x1BD1B1C    mov      x0, x8
+  0x1BD1B20    bl       #0x16378c4
+  0x1BD1B24    cmp      w22, #1
+  0x1BD1B28    mov      x20, x0
+  0x1BD1B2C    b.lt     #0x1bd1b6c
+  0x1BD1B30    cbz      x20, #0x1bd1b90
+  0x1BD1B34    mov      x21, xzr
+  0x1BD1B38    sxtw     x23, w22
+  0x1BD1B3C    add      x22, x20, #0x20
+  0x1BD1B40    ldr      w8, [x20, #0x18]
+  0x1BD1B44    cmp      x21, x8
+  0x1BD1B48    b.hs     #0x1bd1b84
+  0x1BD1B4C    mov      x0, x19
+  0x1BD1B50    mov      w1, w21
+  0x1BD1B54    mov      x2, x22
+  0x1BD1B58    bl       #0x1bd1830
+  0x1BD1B5C    add      x21, x21, #1
+  0x1BD1B60    cmp      x21, x23
+  0x1BD1B64    add      x22, x22, #0x90
+  0x1BD1B68    b.lt     #0x1bd1b40
+  0x1BD1B6C    mov      x0, x20
+  0x1BD1B70    ldp      x29, x30, [sp, #0x30]
+  0x1BD1B74    ldp      x20, x19, [sp, #0x20]
+  0x1BD1B78    ldp      x22, x21, [sp, #0x10]
+  0x1BD1B7C    ldr      x23, [sp], #0x40
+  0x1BD1B80    ret      
+
+--- idx=24006 GetWaveFormInfo RVA=0x1BCB808 ---
+  0x1BCB808    strb     wzr, [sp, #0x2c]
+  0x1BCB80C    bl       #0x1627d24
+  0x1BCB810    str      x0, [x19, #0xf88]
+  0x1BCB814    blr      x0
+  0x1BCB818    ldp      x29, x30, [sp, #0x40]
+  0x1BCB81C    ldr      x19, [sp, #0x30]
+  0x1BCB820    add      sp, sp, #0x50
+  0x1BCB824    ret      
+  0x1BCB828    b        #0x1bcb82c
+  0x1BCB82C    sub      sp, sp, #0x50
+  0x1BCB830    str      x19, [sp, #0x30]
+  0x1BCB834    stp      x29, x30, [sp, #0x40]
+  0x1BCB838    add      x29, sp, #0x40
+  0x1BCB83C    adrp     x19, #0x7b92000
+  0x1BCB840    ldr      x8, [x19, #0xf90]
+  0x1BCB844    cbnz     x8, #0x1bcb88c
+  0x1BCB848    adrp     x12, #0x5d2e000
+  0x1BCB84C    ldr      d0, [x12, #0xd10]
+  0x1BCB850    adrp     x8, #0x5d2e000
+  0x1BCB854    adrp     x10, #0x5d30000
+  0x1BCB858    add      x8, x8, #0xdc0
+  0x1BCB85C    mov      w9, #0xe
+  0x1BCB860    add      x10, x10, #0x8c0
+  0x1BCB864    mov      w11, #0x2e
+  0x1BCB868    mov      x0, sp
+  0x1BCB86C    stp      x8, x9, [sp]
+  0x1BCB870    stp      x10, x11, [sp, #0x10]
+  0x1BCB874    str      d0, [sp, #0x20]
+  0x1BCB878    str      wzr, [sp, #0x28]
+  0x1BCB87C    strb     wzr, [sp, #0x2c]
+  0x1BCB880    bl       #0x1627d24
+  0x1BCB884    mov      x8, x0
+  0x1BCB888    str      x0, [x19, #0xf90]
+  0x1BCB88C    blr      x8
+  0x1BCB890    ldp      x29, x30, [sp, #0x40]
+  0x1BCB894    ldr      x19, [sp, #0x30]
+  0x1BCB898    add      sp, sp, #0x50
+  0x1BCB89C    ret      
+
+--- idx=24007 GetWaveFormInfo RVA=0x1BD1CCC ---
+  0x1BD1CCC    sub      sp, sp, #0x60
+  0x1BD1CD0    stp      x22, x21, [sp, #0x30]
+  0x1BD1CD4    stp      x20, x19, [sp, #0x40]
+  0x1BD1CD8    stp      x29, x30, [sp, #0x50]
+  0x1BD1CDC    add      x29, sp, #0x50
+  0x1BD1CE0    adrp     x19, #0x7ba2000
+  0x1BD1CE4    ldrb     w8, [x19, #0xa7d]
+  0x1BD1CE8    mov      x22, x2
+  0x1BD1CEC    mov      w20, w1
+  0x1BD1CF0    mov      x21, x0
+  0x1BD1CF4    tbnz     w8, #0, #0x1bd1d3c
+  0x1BD1CF8    adrp     x0, #0x75c7000
+  0x1BD1CFC    ldr      x0, [x0, #0x348]
+  0x1BD1D00    bl       #0x16378b0
+  0x1BD1D04    adrp     x0, #0x766f000
+  0x1BD1D08    ldr      x0, [x0, #0xbb8]
+  0x1BD1D0C    bl       #0x16378b0
+  0x1BD1D10    adrp     x0, #0x766b000
+  0x1BD1D14    ldr      x0, [x0, #0x358]
+  0x1BD1D18    bl       #0x16378b0
+  0x1BD1D1C    adrp     x0, #0x76c5000
+  0x1BD1D20    ldr      x0, [x0, #0x5e0]
+  0x1BD1D24    bl       #0x16378b0
+  0x1BD1D28    adrp     x0, #0x767b000
+  0x1BD1D2C    ldr      x0, [x0, #0x8f0]
+  0x1BD1D30    bl       #0x16378b0
+  0x1BD1D34    mov      w8, #1
+  0x1BD1D38    strb     w8, [x19, #0xa7d]
+  0x1BD1D3C    adrp     x8, #0x76c5000
+  0x1BD1D40    ldr      x8, [x8, #0x5e0]
+  0x1BD1D44    str      wzr, [sp, #0x2c]
+  0x1BD1D48    ldr      x0, [x8]
+  0x1BD1D4C    bl       #0x163797c
+  0x1BD1D50    adrp     x8, #0x75c7000
+  0x1BD1D54    ldr      x8, [x8, #0x348]
+  0x1BD1D58    mov      x19, x0
+  0x1BD1D5C    ldr      x1, [x8]
+  0x1BD1D60    bl       #0x1dd8fd8
+  0x1BD1D64    cbz      x19, #0x1bd1e78
+  0x1BD1D68    adrp     x8, #0x766b000
+  0x1BD1D6C    ldr      x21, [x21, #0x20]
+  0x1BD1D70    ldr      x8, [x8, #0x358]
+  0x1BD1D74    ldr      x1, [x8]
+  0x1BD1D78    mov      x0, x19
+  0x1BD1D7C    bl       #0x1dd8fcc
+  0x1BD1D80    mov      x2, x0
+  0x1BD1D84    mov      x0, x21
+  0x1BD1D88    mov      w1, w20
+  0x1BD1D8C    bl       #0x1bd1ebc
+  0x1BD1D90    ldr      x1, [x19, #0x10]
+  0x1BD1D94    mov      w20, w0
+  0x1BD1D98    movi     v0.2d, #0000000000000000
+  0x1BD1D9C    str      xzr, [sp, #0x20]
+  0x1BD1DA0    stp      q0, q0, [sp]
+  0x1BD1DA4    mov      x0, sp
+  0x1BD1DA8    mov      w2, wzr
+  0x1BD1DAC    mov      x3, xzr
+  0x1BD1DB0    bl       #0x2459efc
+  0x1BD1DB4    adrp     x9, #0x5d3e000
+  0x1BD1DB8    ldp      q0, q1, [sp]
+  0x1BD1DBC    ldr      x8, [sp, #0x20]
+  0x1BD1DC0    ldr      d2, [x9, #0xd20]
+  0x1BD1DC4    mov      x21, xzr
+  0x1BD1DC8    stp      q0, q1, [x22]
+  0x1BD1DCC    str      x8, [x22, #0x20]
+  0x1BD1DD0    str      d2, [sp, #0x28]
+  0x1BD1DD4    mov      w22, #1
+  0x1BD1DD8    adrp     x10, #0x767b000
+  0x1BD1DDC    ldr      x8, [x19]
+  0x1BD1DE0    ldr      x10, [x10, #0x8f0]
+  0x1BD1DE4    ldrh     w9, [x8, #0x12a]
+  0x1BD1DE8    ldr      x1, [x10]
+  0x1BD1DEC    cbz      x9, #0x1bd1e18
+  0x1BD1DF0    ldr      x11, [x8, #0xb0]
+  0x1BD1DF4    mov      x10, xzr
+  0x1BD1DF8    add      x11, x11, #8
+  0x1BD1DFC    ldur     x12, [x11, #-8]
+  0x1BD1E00    cmp      x12, x1
+  0x1BD1E04    b.eq     #0x1bd1e28
+  0x1BD1E08    add      x10, x10, #1
+  0x1BD1E0C    cmp      x10, x9
+  0x1BD1E10    add      x11, x11, #0x10
+  0x1BD1E14    b.lo     #0x1bd1dfc
+  0x1BD1E18    mov      x0, x19
+  0x1BD1E1C    mov      w2, wzr
+  0x1BD1E20    bl       #0x15cf530
+  0x1BD1E24    b        #0x1bd1e34
+  0x1BD1E28    ldrsw    x9, [x11]
+  0x1BD1E2C    add      x8, x8, x9, lsl #4
+  0x1BD1E30    add      x0, x8, #0x138
+  0x1BD1E34    ldp      x8, x1, [x0]
+  0x1BD1E38    mov      x0, x19
+  0x1BD1E3C    blr      x8
+  0x1BD1E40    cbnz     x21, #0x1bd1e7c
+  0x1BD1E44    cbz      w22, #0x1bd1e60
+  0x1BD1E48    sub      x8, x22, #1
+  0x1BD1E4C    add      x9, sp, #0x28
+  0x1BD1E50    ldr      w9, [x9, x8, lsl #2]
+  0x1BD1E54    cmp      w9, #0x37
+  0x1BD1E58    b.ne     #0x1bd1e60
+  0x1BD1E5C    str      w8, [sp, #0x2c]
+  0x1BD1E60    and      w0, w20, #1
+  0x1BD1E64    ldp      x29, x30, [sp, #0x50]
+  0x1BD1E68    ldp      x20, x19, [sp, #0x40]
+  0x1BD1E6C    ldp      x22, x21, [sp, #0x30]
+  0x1BD1E70    add      sp, sp, #0x60
+  0x1BD1E74    ret      
+
+--- idx=24008 GetNumCuePlaying RVA=0x1BD1F5C ---
+  0x1BD1F5C    ldr      x0, [x0, #0x20]
+  0x1BD1F60    b        #0x1bd1f64
+  0x1BD1F64    sub      sp, sp, #0x60
+  0x1BD1F68    str      x21, [sp, #0x30]
+  0x1BD1F6C    stp      x20, x19, [sp, #0x40]
+  0x1BD1F70    stp      x29, x30, [sp, #0x50]
+  0x1BD1F74    add      x29, sp, #0x50
+  0x1BD1F78    adrp     x21, #0x7ba2000
+  0x1BD1F7C    ldr      x8, [x21, #0xb00]
+  0x1BD1F80    mov      x20, x1
+  0x1BD1F84    mov      x19, x0
+  0x1BD1F88    cbnz     x8, #0x1bd1fd0
+  0x1BD1F8C    adrp     x12, #0x5d3e000
+  0x1BD1F90    ldr      d0, [x12, #0xd10]
+  0x1BD1F94    adrp     x8, #0x5d3e000
+  0x1BD1F98    adrp     x10, #0x5d3f000
+  0x1BD1F9C    add      x8, x8, #0xdc0
+  0x1BD1FA0    mov      w9, #0xe
+  0x1BD1FA4    add      x10, x10, #0x8f5
+  0x1BD1FA8    mov      w11, #0x28
+  0x1BD1FAC    mov      w13, #0x10
+  0x1BD1FB0    mov      x0, sp
+  0x1BD1FB4    stp      x8, x9, [sp]
+  0x1BD1FB8    stp      x10, x11, [sp, #0x10]
+  0x1BD1FBC    str      d0, [sp, #0x20]
+  0x1BD1FC0    str      w13, [sp, #0x28]
+  0x1BD1FC4    strb     wzr, [sp, #0x2c]
+  0x1BD1FC8    bl       #0x1637d24
+  0x1BD1FCC    str      x0, [x21, #0xb00]
+  0x1BD1FD0    mov      x0, x20
+  0x1BD1FD4    bl       #0x1637cf8
+  0x1BD1FD8    ldr      x8, [x21, #0xb00]
+  0x1BD1FDC    mov      x20, x0
+  0x1BD1FE0    mov      x0, x19
+  0x1BD1FE4    mov      x1, x20
+  0x1BD1FE8    blr      x8
+  0x1BD1FEC    mov      w19, w0
+  0x1BD1FF0    mov      x0, x20
+  0x1BD1FF4    bl       #0x1637d18
+  0x1BD1FF8    mov      w0, w19
+  0x1BD1FFC    ldp      x29, x30, [sp, #0x50]
+  0x1BD2000    ldp      x20, x19, [sp, #0x40]
+  0x1BD2004    ldr      x21, [sp, #0x30]
+  0x1BD2008    add      sp, sp, #0x60
+  0x1BD200C    ret      
+
+--- idx=24009 GetNumCuePlaying RVA=0x1BD2010 ---
+  0x1BD2010    ldr      x0, [x0, #0x20]
+  0x1BD2014    b        #0x1bd2018
+  0x1BD2018    sub      sp, sp, #0x60
+  0x1BD201C    str      x21, [sp, #0x30]
+  0x1BD2020    stp      x20, x19, [sp, #0x40]
+  0x1BD2024    stp      x29, x30, [sp, #0x50]
+  0x1BD2028    add      x29, sp, #0x50
+  0x1BD202C    adrp     x21, #0x7ba2000
+  0x1BD2030    ldr      x8, [x21, #0xb08]
+  0x1BD2034    mov      w19, w1
+  0x1BD2038    mov      x20, x0
+  0x1BD203C    cbnz     x8, #0x1bd2088
+  0x1BD2040    adrp     x12, #0x5d3e000
+  0x1BD2044    ldr      d0, [x12, #0xd10]
+  0x1BD2048    adrp     x8, #0x5d3e000
+  0x1BD204C    adrp     x10, #0x5d3f000
+  0x1BD2050    add      x8, x8, #0xdc0
+  0x1BD2054    mov      w9, #0xe
+  0x1BD2058    add      x10, x10, #0x91e
+  0x1BD205C    mov      w11, #0x26
+  0x1BD2060    mov      w13, #0xc
+  0x1BD2064    mov      x0, sp
+  0x1BD2068    stp      x8, x9, [sp]
+  0x1BD206C    stp      x10, x11, [sp, #0x10]
+  0x1BD2070    str      d0, [sp, #0x20]
+  0x1BD2074    str      w13, [sp, #0x28]
+  0x1BD2078    strb     wzr, [sp, #0x2c]
+  0x1BD207C    bl       #0x1637d24
+  0x1BD2080    mov      x8, x0
+  0x1BD2084    str      x0, [x21, #0xb08]
+  0x1BD2088    mov      x0, x20
+  0x1BD208C    mov      w1, w19
+  0x1BD2090    blr      x8
+  0x1BD2094    ldp      x29, x30, [sp, #0x50]
+  0x1BD2098    ldp      x20, x19, [sp, #0x40]
+  0x1BD209C    ldr      x21, [sp, #0x30]
+  0x1BD20A0    add      sp, sp, #0x60
+  0x1BD20A4    ret      
+
+--- idx=24010 GetBlockIndex RVA=0x1BD20A8 ---
+  0x1BD20A8    ldr      x0, [x0, #0x20]
+  0x1BD20AC    b        #0x1bd20b0
+  0x1BD20B0    sub      sp, sp, #0x60
+  0x1BD20B4    stp      x22, x21, [sp, #0x30]
+  0x1BD20B8    stp      x20, x19, [sp, #0x40]
+  0x1BD20BC    stp      x29, x30, [sp, #0x50]
+  0x1BD20C0    add      x29, sp, #0x50
+  0x1BD20C4    adrp     x22, #0x7ba2000
+  0x1BD20C8    ldr      x8, [x22, #0xb18]
+  0x1BD20CC    mov      x20, x2
+  0x1BD20D0    mov      x21, x1
+  0x1BD20D4    mov      x19, x0
+  0x1BD20D8    cbnz     x8, #0x1bd2120
+  0x1BD20DC    adrp     x12, #0x5d3e000
+  0x1BD20E0    ldr      d0, [x12, #0xd10]
+  0x1BD20E4    adrp     x8, #0x5d3e000
+  0x1BD20E8    adrp     x10, #0x5d3f000
+  0x1BD20EC    add      x8, x8, #0xdc0
+  0x1BD20F0    mov      w9, #0xe
+  0x1BD20F4    add      x10, x10, #0x964
+  0x1BD20F8    mov      w11, #0x20
+  0x1BD20FC    mov      w13, #0x18
+  0x1BD2100    mov      x0, sp
+  0x1BD2104    stp      x8, x9, [sp]
+  0x1BD2108    stp      x10, x11, [sp, #0x10]
+  0x1BD210C    str      d0, [sp, #0x20]
+  0x1BD2110    str      w13, [sp, #0x28]
+  0x1BD2114    strb     wzr, [sp, #0x2c]
+  0x1BD2118    bl       #0x1637d24
+  0x1BD211C    str      x0, [x22, #0xb18]
+  0x1BD2120    mov      x0, x21
+  0x1BD2124    bl       #0x1637cf8
+  0x1BD2128    mov      x21, x0
+  0x1BD212C    mov      x0, x20
+  0x1BD2130    bl       #0x1637cf8
+  0x1BD2134    ldr      x8, [x22, #0xb18]
+  0x1BD2138    mov      x20, x0
+  0x1BD213C    mov      x0, x19
+  0x1BD2140    mov      x1, x21
+  0x1BD2144    mov      x2, x20
+  0x1BD2148    blr      x8
+  0x1BD214C    mov      w19, w0
+  0x1BD2150    mov      x0, x21
+  0x1BD2154    bl       #0x1637d18
+  0x1BD2158    mov      x0, x20
+  0x1BD215C    bl       #0x1637d18
+  0x1BD2160    mov      w0, w19
+  0x1BD2164    ldp      x29, x30, [sp, #0x50]
+  0x1BD2168    ldp      x20, x19, [sp, #0x40]
+  0x1BD216C    ldp      x22, x21, [sp, #0x30]
+  0x1BD2170    add      sp, sp, #0x60
+  0x1BD2174    ret      
+
+--- idx=24011 GetBlockIndex RVA=0x1BD2178 ---
+  0x1BD2178    ldr      x0, [x0, #0x20]
+  0x1BD217C    b        #0x1bd2180
+  0x1BD2180    sub      sp, sp, #0x60
+  0x1BD2184    stp      x22, x21, [sp, #0x30]
+  0x1BD2188    stp      x20, x19, [sp, #0x40]
+  0x1BD218C    stp      x29, x30, [sp, #0x50]
+  0x1BD2190    add      x29, sp, #0x50
+  0x1BD2194    adrp     x22, #0x7ba2000
+  0x1BD2198    ldr      x8, [x22, #0xb10]
+  0x1BD219C    mov      x21, x2
+  0x1BD21A0    mov      w19, w1
+  0x1BD21A4    mov      x20, x0
+  0x1BD21A8    cbnz     x8, #0x1bd21f0
+  0x1BD21AC    adrp     x12, #0x5d3e000
+  0x1BD21B0    ldr      d0, [x12, #0xd10]
+  0x1BD21B4    adrp     x8, #0x5d3e000
+  0x1BD21B8    adrp     x10, #0x5d3f000
+  0x1BD21BC    add      x8, x8, #0xdc0
+  0x1BD21C0    mov      w9, #0xe
+  0x1BD21C4    add      x10, x10, #0x945
+  0x1BD21C8    mov      w11, #0x1e
+  0x1BD21CC    mov      w13, #0x14
+  0x1BD21D0    mov      x0, sp
+  0x1BD21D4    stp      x8, x9, [sp]
+  0x1BD21D8    stp      x10, x11, [sp, #0x10]
+  0x1BD21DC    str      d0, [sp, #0x20]
+  0x1BD21E0    str      w13, [sp, #0x28]
+  0x1BD21E4    strb     wzr, [sp, #0x2c]
+  0x1BD21E8    bl       #0x1637d24
+  0x1BD21EC    str      x0, [x22, #0xb10]
+  0x1BD21F0    mov      x0, x21
+  0x1BD21F4    bl       #0x1637cf8
+  0x1BD21F8    ldr      x8, [x22, #0xb10]
+  0x1BD21FC    mov      x21, x0
+  0x1BD2200    mov      x0, x20
+  0x1BD2204    mov      w1, w19
+  0x1BD2208    mov      x2, x21
+  0x1BD220C    blr      x8
+  0x1BD2210    mov      w19, w0
+  0x1BD2214    mov      x0, x21
+  0x1BD2218    bl       #0x1637d18
+  0x1BD221C    mov      w0, w19
+  0x1BD2220    ldp      x29, x30, [sp, #0x50]
+  0x1BD2224    ldp      x20, x19, [sp, #0x40]
+  0x1BD2228    ldp      x22, x21, [sp, #0x30]
+  0x1BD222C    add      sp, sp, #0x60
+  0x1BD2230    ret      
+
+--- idx=24012 GetNumUsableAisacControls RVA=0x1BD2234 ---
+  0x1BD2234    ldr      x0, [x0, #0x20]
+  0x1BD2238    b        #0x1bd223c
+  0x1BD223C    sub      sp, sp, #0x60
+  0x1BD2240    str      x21, [sp, #0x30]
+  0x1BD2244    stp      x20, x19, [sp, #0x40]
+  0x1BD2248    stp      x29, x30, [sp, #0x50]
+  0x1BD224C    add      x29, sp, #0x50
+  0x1BD2250    adrp     x21, #0x7ba2000
+  0x1BD2254    ldr      x8, [x21, #0xac0]
+  0x1BD2258    mov      x20, x1
+  0x1BD225C    mov      x19, x0
+  0x1BD2260    cbnz     x8, #0x1bd22a8
+  0x1BD2264    adrp     x12, #0x5d3e000
+  0x1BD2268    ldr      d0, [x12, #0xd10]
+  0x1BD226C    adrp     x8, #0x5d3e000
+  0x1BD2270    adrp     x10, #0x5d3f000
+  0x1BD2274    add      x8, x8, #0xdc0
+  0x1BD2278    mov      w9, #0xe
+  0x1BD227C    add      x10, x10, #0x7db
+  0x1BD2280    mov      w11, #0x2c
+  0x1BD2284    mov      w13, #0x10
+  0x1BD2288    mov      x0, sp
+  0x1BD228C    stp      x8, x9, [sp]
+  0x1BD2290    stp      x10, x11, [sp, #0x10]
+  0x1BD2294    str      d0, [sp, #0x20]
+  0x1BD2298    str      w13, [sp, #0x28]
+  0x1BD229C    strb     wzr, [sp, #0x2c]
+  0x1BD22A0    bl       #0x1637d24
+  0x1BD22A4    str      x0, [x21, #0xac0]
+  0x1BD22A8    mov      x0, x20
+  0x1BD22AC    bl       #0x1637cf8
+  0x1BD22B0    ldr      x8, [x21, #0xac0]
+  0x1BD22B4    mov      x20, x0
+  0x1BD22B8    mov      x0, x19
+  0x1BD22BC    mov      x1, x20
+  0x1BD22C0    blr      x8
+  0x1BD22C4    mov      w19, w0
+  0x1BD22C8    mov      x0, x20
+  0x1BD22CC    bl       #0x1637d18
+  0x1BD22D0    mov      w0, w19
+  0x1BD22D4    ldp      x29, x30, [sp, #0x50]
+  0x1BD22D8    ldp      x20, x19, [sp, #0x40]
+  0x1BD22DC    ldr      x21, [sp, #0x30]
+  0x1BD22E0    add      sp, sp, #0x60
+  0x1BD22E4    ret      
+
+--- idx=24013 GetNumUsableAisacControls RVA=0x1BD22E8 ---
+  0x1BD22E8    ldr      x0, [x0, #0x20]
+  0x1BD22EC    b        #0x1bd22f0
+  0x1BD22F0    sub      sp, sp, #0x60
+  0x1BD22F4    str      x21, [sp, #0x30]
+  0x1BD22F8    stp      x20, x19, [sp, #0x40]
+  0x1BD22FC    stp      x29, x30, [sp, #0x50]
+  0x1BD2300    add      x29, sp, #0x50
+  0x1BD2304    adrp     x21, #0x7ba2000
+  0x1BD2308    ldr      x8, [x21, #0xab8]
+  0x1BD230C    mov      w19, w1
+  0x1BD2310    mov      x20, x0
+  0x1BD2314    cbnz     x8, #0x1bd2360
+  0x1BD2318    adrp     x12, #0x5d3e000
+  0x1BD231C    ldr      d0, [x12, #0xd10]
+  0x1BD2320    adrp     x8, #0x5d3e000
+  0x1BD2324    adrp     x10, #0x5d3f000
+  0x1BD2328    add      x8, x8, #0xdc0
+  0x1BD232C    mov      w9, #0xe
+  0x1BD2330    add      x10, x10, #0x7b0
+  0x1BD2334    mov      w11, #0x2a
+  0x1BD2338    mov      w13, #0xc
+  0x1BD233C    mov      x0, sp
+  0x1BD2340    stp      x8, x9, [sp]
+  0x1BD2344    stp      x10, x11, [sp, #0x10]
+  0x1BD2348    str      d0, [sp, #0x20]
+  0x1BD234C    str      w13, [sp, #0x28]
+  0x1BD2350    strb     wzr, [sp, #0x2c]
+  0x1BD2354    bl       #0x1637d24
+  0x1BD2358    mov      x8, x0
+  0x1BD235C    str      x0, [x21, #0xab8]
+  0x1BD2360    mov      x0, x20
+  0x1BD2364    mov      w1, w19
+  0x1BD2368    blr      x8
+  0x1BD236C    ldp      x29, x30, [sp, #0x50]
+  0x1BD2370    ldp      x20, x19, [sp, #0x40]
+  0x1BD2374    ldr      x21, [sp, #0x30]
+  0x1BD2378    add      sp, sp, #0x60
+  0x1BD237C    ret      
+
+--- idx=24014 GetUsableAisacControl RVA=0x1BD2380 ---
+  0x1BD2380    sub      sp, sp, #0x50
+  0x1BD2384    str      x23, [sp, #0x10]
+  0x1BD2388    stp      x22, x21, [sp, #0x20]
+  0x1BD238C    stp      x20, x19, [sp, #0x30]
+  0x1BD2390    stp      x29, x30, [sp, #0x40]
+  0x1BD2394    add      x29, sp, #0x40
+  0x1BD2398    adrp     x19, #0x7ba2000
+  0x1BD239C    ldrb     w8, [x19, #0xa7e]
+  0x1BD23A0    mov      x22, x3
+  0x1BD23A4    mov      w20, w2
+  0x1BD23A8    mov      x21, x1
+  0x1BD23AC    mov      x23, x0
+  0x1BD23B0    tbnz     w8, #0, #0x1bd23f8
+  0x1BD23B4    adrp     x0, #0x7621000
+  0x1BD23B8    ldr      x0, [x0, #0x580]
+  0x1BD23BC    bl       #0x16378b0
+  0x1BD23C0    adrp     x0, #0x75aa000
+  0x1BD23C4    ldr      x0, [x0, #0x558]
+  0x1BD23C8    bl       #0x16378b0
+  0x1BD23CC    adrp     x0, #0x7648000
+  0x1BD23D0    ldr      x0, [x0, #0xbb0]
+  0x1BD23D4    bl       #0x16378b0
+  0x1BD23D8    adrp     x0, #0x75f9000
+  0x1BD23DC    ldr      x0, [x0, #0xdd0]
+  0x1BD23E0    bl       #0x16378b0
+  0x1BD23E4    adrp     x0, #0x767b000
+  0x1BD23E8    ldr      x0, [x0, #0x8f0]
+  0x1BD23EC    bl       #0x16378b0
+  0x1BD23F0    mov      w8, #1
+  0x1BD23F4    strb     w8, [x19, #0xa7e]
+  0x1BD23F8    adrp     x8, #0x75f9000
+  0x1BD23FC    ldr      x8, [x8, #0xdd0]
+  0x1BD2400    str      wzr, [sp, #0x1c]
+  0x1BD2404    ldr      x0, [x8]
+  0x1BD2408    bl       #0x163797c
+  0x1BD240C    adrp     x8, #0x7621000
+  0x1BD2410    ldr      x8, [x8, #0x580]
+  0x1BD2414    mov      x19, x0
+  0x1BD2418    ldr      x1, [x8]
+  0x1BD241C    bl       #0x1dd8548
+  0x1BD2420    cbz      x19, #0x1bd252c
+  0x1BD2424    adrp     x8, #0x7648000
+  0x1BD2428    ldr      x23, [x23, #0x20]
+  0x1BD242C    ldr      x8, [x8, #0xbb0]
+  0x1BD2430    ldr      x1, [x8]
+  0x1BD2434    mov      x0, x19
+  0x1BD2438    bl       #0x1dd853c
+  0x1BD243C    mov      x3, x0
+  0x1BD2440    mov      x0, x23
+  0x1BD2444    mov      x1, x21
+  0x1BD2448    mov      w2, w20
+  0x1BD244C    bl       #0x1bd2570
+  0x1BD2450    ldr      x1, [x19, #0x10]
+  0x1BD2454    mov      w20, w0
+  0x1BD2458    stp      xzr, xzr, [sp]
+  0x1BD245C    mov      x0, sp
+  0x1BD2460    mov      w2, wzr
+  0x1BD2464    mov      x3, xzr
+  0x1BD2468    bl       #0x2458684
+  0x1BD246C    adrp     x8, #0x5d3e000
+  0x1BD2470    ldr      q0, [sp]
+  0x1BD2474    ldr      d1, [x8, #0xd38]
+  0x1BD2478    mov      x21, xzr
+  0x1BD247C    str      q0, [x22]
+  0x1BD2480    str      d1, [sp, #0x18]
+  0x1BD2484    mov      w22, #1
+  0x1BD2488    adrp     x10, #0x767b000
+  0x1BD248C    ldr      x8, [x19]
+  0x1BD2490    ldr      x10, [x10, #0x8f0]
+  0x1BD2494    ldrh     w9, [x8, #0x12a]
+  0x1BD2498    ldr      x1, [x10]
+  0x1BD249C    cbz      x9, #0x1bd24c8
+  0x1BD24A0    ldr      x11, [x8, #0xb0]
+  0x1BD24A4    mov      x10, xzr
+  0x1BD24A8    add      x11, x11, #8
+  0x1BD24AC    ldur     x12, [x11, #-8]
+  0x1BD24B0    cmp      x12, x1
+  0x1BD24B4    b.eq     #0x1bd24d8
+  0x1BD24B8    add      x10, x10, #1
+  0x1BD24BC    cmp      x10, x9
+  0x1BD24C0    add      x11, x11, #0x10
+  0x1BD24C4    b.lo     #0x1bd24ac
+  0x1BD24C8    mov      x0, x19
+  0x1BD24CC    mov      w2, wzr
+  0x1BD24D0    bl       #0x15cf530
+  0x1BD24D4    b        #0x1bd24e4
+  0x1BD24D8    ldrsw    x9, [x11]
+  0x1BD24DC    add      x8, x8, x9, lsl #4
+  0x1BD24E0    add      x0, x8, #0x138
+  0x1BD24E4    ldp      x8, x1, [x0]
+  0x1BD24E8    mov      x0, x19
+  0x1BD24EC    blr      x8
+  0x1BD24F0    cbnz     x21, #0x1bd2530
+  0x1BD24F4    cbz      w22, #0x1bd2510
+  0x1BD24F8    sub      x8, x22, #1
+  0x1BD24FC    add      x9, sp, #0x18
+  0x1BD2500    ldr      w9, [x9, x8, lsl #2]
+  0x1BD2504    cmp      w9, #0x39
+  0x1BD2508    b.ne     #0x1bd2510
+  0x1BD250C    str      w8, [sp, #0x1c]
+  0x1BD2510    and      w0, w20, #1
+  0x1BD2514    ldp      x29, x30, [sp, #0x40]
+  0x1BD2518    ldp      x20, x19, [sp, #0x30]
+  0x1BD251C    ldp      x22, x21, [sp, #0x20]
+  0x1BD2520    ldr      x23, [sp, #0x10]
+  0x1BD2524    add      sp, sp, #0x50
+  0x1BD2528    ret      
+
+--- idx=24015 GetUsableAisacControl RVA=0x1BD2638 ---
+  0x1BD2638    sub      sp, sp, #0x50
+  0x1BD263C    str      x23, [sp, #0x10]
+  0x1BD2640    stp      x22, x21, [sp, #0x20]
+  0x1BD2644    stp      x20, x19, [sp, #0x30]
+  0x1BD2648    stp      x29, x30, [sp, #0x40]
+  0x1BD264C    add      x29, sp, #0x40
+  0x1BD2650    adrp     x19, #0x7ba2000
+  0x1BD2654    ldrb     w8, [x19, #0xa7f]
+  0x1BD2658    mov      x22, x3
+  0x1BD265C    mov      w20, w2
+  0x1BD2660    mov      w21, w1
+  0x1BD2664    mov      x23, x0
+  0x1BD2668    tbnz     w8, #0, #0x1bd26b0
+  0x1BD266C    adrp     x0, #0x7621000
+  0x1BD2670    ldr      x0, [x0, #0x580]
+  0x1BD2674    bl       #0x16378b0
+  0x1BD2678    adrp     x0, #0x75aa000
+  0x1BD267C    ldr      x0, [x0, #0x558]
+  0x1BD2680    bl       #0x16378b0
+  0x1BD2684    adrp     x0, #0x7648000
+  0x1BD2688    ldr      x0, [x0, #0xbb0]
+  0x1BD268C    bl       #0x16378b0
+  0x1BD2690    adrp     x0, #0x75f9000
+  0x1BD2694    ldr      x0, [x0, #0xdd0]
+  0x1BD2698    bl       #0x16378b0
+  0x1BD269C    adrp     x0, #0x767b000
+  0x1BD26A0    ldr      x0, [x0, #0x8f0]
+  0x1BD26A4    bl       #0x16378b0
+  0x1BD26A8    mov      w8, #1
+  0x1BD26AC    strb     w8, [x19, #0xa7f]
+  0x1BD26B0    adrp     x8, #0x75f9000
+  0x1BD26B4    ldr      x8, [x8, #0xdd0]
+  0x1BD26B8    str      wzr, [sp, #0x1c]
+  0x1BD26BC    ldr      x0, [x8]
+  0x1BD26C0    bl       #0x163797c
+  0x1BD26C4    adrp     x8, #0x7621000
+  0x1BD26C8    ldr      x8, [x8, #0x580]
+  0x1BD26CC    mov      x19, x0
+  0x1BD26D0    ldr      x1, [x8]
+  0x1BD26D4    bl       #0x1dd8548
+  0x1BD26D8    cbz      x19, #0x1bd27e4
+  0x1BD26DC    adrp     x8, #0x7648000
+  0x1BD26E0    ldr      x23, [x23, #0x20]
+  0x1BD26E4    ldr      x8, [x8, #0xbb0]
+  0x1BD26E8    ldr      x1, [x8]
+  0x1BD26EC    mov      x0, x19
+  0x1BD26F0    bl       #0x1dd853c
+  0x1BD26F4    mov      x3, x0
+  0x1BD26F8    mov      x0, x23
+  0x1BD26FC    mov      w1, w21
+  0x1BD2700    mov      w2, w20
+  0x1BD2704    bl       #0x1bd2828
+  0x1BD2708    ldr      x1, [x19, #0x10]
+  0x1BD270C    mov      w20, w0
+  0x1BD2710    stp      xzr, xzr, [sp]
+  0x1BD2714    mov      x0, sp
+  0x1BD2718    mov      w2, wzr
+  0x1BD271C    mov      x3, xzr
+  0x1BD2720    bl       #0x2458684
+  0x1BD2724    adrp     x8, #0x5d3e000
+  0x1BD2728    ldr      q0, [sp]
+  0x1BD272C    ldr      d1, [x8, #0xd38]
+  0x1BD2730    mov      x21, xzr
+  0x1BD2734    str      q0, [x22]
+  0x1BD2738    str      d1, [sp, #0x18]
+  0x1BD273C    mov      w22, #1
+  0x1BD2740    adrp     x10, #0x767b000
+  0x1BD2744    ldr      x8, [x19]
+  0x1BD2748    ldr      x10, [x10, #0x8f0]
+  0x1BD274C    ldrh     w9, [x8, #0x12a]
+  0x1BD2750    ldr      x1, [x10]
+  0x1BD2754    cbz      x9, #0x1bd2780
+  0x1BD2758    ldr      x11, [x8, #0xb0]
+  0x1BD275C    mov      x10, xzr
+  0x1BD2760    add      x11, x11, #8
+  0x1BD2764    ldur     x12, [x11, #-8]
+  0x1BD2768    cmp      x12, x1
+  0x1BD276C    b.eq     #0x1bd2790
+  0x1BD2770    add      x10, x10, #1
+  0x1BD2774    cmp      x10, x9
+  0x1BD2778    add      x11, x11, #0x10
+  0x1BD277C    b.lo     #0x1bd2764
+  0x1BD2780    mov      x0, x19
+  0x1BD2784    mov      w2, wzr
+  0x1BD2788    bl       #0x15cf530
+  0x1BD278C    b        #0x1bd279c
+  0x1BD2790    ldrsw    x9, [x11]
+  0x1BD2794    add      x8, x8, x9, lsl #4
+  0x1BD2798    add      x0, x8, #0x138
+  0x1BD279C    ldp      x8, x1, [x0]
+  0x1BD27A0    mov      x0, x19
+  0x1BD27A4    blr      x8
+  0x1BD27A8    cbnz     x21, #0x1bd27e8
+  0x1BD27AC    cbz      w22, #0x1bd27c8
+  0x1BD27B0    sub      x8, x22, #1
+  0x1BD27B4    add      x9, sp, #0x18
+  0x1BD27B8    ldr      w9, [x9, x8, lsl #2]
+  0x1BD27BC    cmp      w9, #0x39
+  0x1BD27C0    b.ne     #0x1bd27c8
+  0x1BD27C4    str      w8, [sp, #0x1c]
+  0x1BD27C8    and      w0, w20, #1
+  0x1BD27CC    ldp      x29, x30, [sp, #0x40]
+  0x1BD27D0    ldp      x20, x19, [sp, #0x30]
+  0x1BD27D4    ldp      x22, x21, [sp, #0x20]
+  0x1BD27D8    ldr      x23, [sp, #0x10]
+  0x1BD27DC    add      sp, sp, #0x50
+  0x1BD27E0    ret      
+
+--- idx=24016 GetUsableAisacControlList RVA=0x1BD28D8 ---
+  0x1BD28D8    stp      x24, x23, [sp, #-0x40]!
+  0x1BD28DC    stp      x22, x21, [sp, #0x10]
+  0x1BD28E0    stp      x20, x19, [sp, #0x20]
+  0x1BD28E4    stp      x29, x30, [sp, #0x30]
+  0x1BD28E8    add      x29, sp, #0x30
+  0x1BD28EC    adrp     x21, #0x7ba2000
+  0x1BD28F0    ldrb     w8, [x21, #0xa80]
+  0x1BD28F4    mov      x19, x1
+  0x1BD28F8    mov      x20, x0
+  0x1BD28FC    tbnz     w8, #0, #0x1bd2914
+  0x1BD2900    adrp     x0, #0x7662000
+  0x1BD2904    ldr      x0, [x0, #0xc40]
+  0x1BD2908    bl       #0x16378b0
+  0x1BD290C    mov      w8, #1
+  0x1BD2910    strb     w8, [x21, #0xa80]
+  0x1BD2914    ldr      x0, [x20, #0x20]
+  0x1BD2918    mov      x1, x19
+  0x1BD291C    bl       #0x1bd223c
+  0x1BD2920    adrp     x8, #0x7662000
+  0x1BD2924    ldr      x8, [x8, #0xc40]
+  0x1BD2928    mov      w23, w0
+  0x1BD292C    mov      w1, w23
+  0x1BD2930    ldr      x8, [x8]
+  0x1BD2934    mov      x0, x8
+  0x1BD2938    bl       #0x16378c4
+  0x1BD293C    cmp      w23, #1
+  0x1BD2940    mov      x21, x0
+  0x1BD2944    b.lt     #0x1bd2988
+  0x1BD2948    cbz      x21, #0x1bd29ac
+  0x1BD294C    mov      x22, xzr
+  0x1BD2950    sxtw     x24, w23
+  0x1BD2954    add      x23, x21, #0x20
+  0x1BD2958    ldr      w8, [x21, #0x18]
+  0x1BD295C    cmp      x22, x8
+  0x1BD2960    b.hs     #0x1bd29a0
+  0x1BD2964    mov      x0, x20
+  0x1BD2968    mov      x1, x19
+  0x1BD296C    mov      w2, w22
+  0x1BD2970    mov      x3, x23
+  0x1BD2974    bl       #0x1bd2380
+  0x1BD2978    add      x22, x22, #1
+  0x1BD297C    cmp      x22, x24
+  0x1BD2980    add      x23, x23, #0x10
+  0x1BD2984    b.lt     #0x1bd2958
+  0x1BD2988    mov      x0, x21
+  0x1BD298C    ldp      x29, x30, [sp, #0x30]
+  0x1BD2990    ldp      x20, x19, [sp, #0x20]
+  0x1BD2994    ldp      x22, x21, [sp, #0x10]
+  0x1BD2998    ldp      x24, x23, [sp], #0x40
+  0x1BD299C    ret      
+
+--- idx=24017 GetUsableAisacControlList RVA=0x1BD29B0 ---
+  0x1BD29B0    stp      x24, x23, [sp, #-0x40]!
+  0x1BD29B4    stp      x22, x21, [sp, #0x10]
+  0x1BD29B8    stp      x20, x19, [sp, #0x20]
+  0x1BD29BC    stp      x29, x30, [sp, #0x30]
+  0x1BD29C0    add      x29, sp, #0x30
+  0x1BD29C4    adrp     x21, #0x7ba2000
+  0x1BD29C8    ldrb     w8, [x21, #0xa81]
+  0x1BD29CC    mov      w19, w1
+  0x1BD29D0    mov      x20, x0
+  0x1BD29D4    tbnz     w8, #0, #0x1bd29ec
+  0x1BD29D8    adrp     x0, #0x7662000
+  0x1BD29DC    ldr      x0, [x0, #0xc40]
+  0x1BD29E0    bl       #0x16378b0
+  0x1BD29E4    mov      w8, #1
+  0x1BD29E8    strb     w8, [x21, #0xa81]
+  0x1BD29EC    ldr      x0, [x20, #0x20]
+  0x1BD29F0    mov      w1, w19
+  0x1BD29F4    bl       #0x1bd22f0
+  0x1BD29F8    adrp     x8, #0x7662000
+  0x1BD29FC    ldr      x8, [x8, #0xc40]
+  0x1BD2A00    mov      w23, w0
+  0x1BD2A04    mov      w1, w23
+  0x1BD2A08    ldr      x8, [x8]
+  0x1BD2A0C    mov      x0, x8
+  0x1BD2A10    bl       #0x16378c4
+  0x1BD2A14    cmp      w23, #1
+  0x1BD2A18    mov      x21, x0
+  0x1BD2A1C    b.lt     #0x1bd2a60
+  0x1BD2A20    cbz      x21, #0x1bd2a84
+  0x1BD2A24    mov      x22, xzr
+  0x1BD2A28    sxtw     x24, w23
+  0x1BD2A2C    add      x23, x21, #0x20
+  0x1BD2A30    ldr      w8, [x21, #0x18]
+  0x1BD2A34    cmp      x22, x8
+  0x1BD2A38    b.hs     #0x1bd2a78
+  0x1BD2A3C    mov      x0, x20
+  0x1BD2A40    mov      w1, w19
+  0x1BD2A44    mov      w2, w22
+  0x1BD2A48    mov      x3, x23
+  0x1BD2A4C    bl       #0x1bd2638
+  0x1BD2A50    add      x22, x22, #1
+  0x1BD2A54    cmp      x22, x24
+  0x1BD2A58    add      x23, x23, #0x10
+  0x1BD2A5C    b.lt     #0x1bd2a30
+  0x1BD2A60    mov      x0, x21
+  0x1BD2A64    ldp      x29, x30, [sp, #0x30]
+  0x1BD2A68    ldp      x20, x19, [sp, #0x20]
+  0x1BD2A6C    ldp      x22, x21, [sp, #0x10]
+  0x1BD2A70    ldp      x24, x23, [sp], #0x40
+  0x1BD2A74    ret      
+
+--- idx=24018 ResetCueTypeState RVA=0x1BD2A88 ---
+  0x1BD2A88    ldr      x0, [x0, #0x20]
+  0x1BD2A8C    b        #0x1bd2a90
+  0x1BD2A90    sub      sp, sp, #0x60
+  0x1BD2A94    str      x21, [sp, #0x30]
+  0x1BD2A98    stp      x20, x19, [sp, #0x40]
+  0x1BD2A9C    stp      x29, x30, [sp, #0x50]
+  0x1BD2AA0    add      x29, sp, #0x50
+  0x1BD2AA4    adrp     x21, #0x7ba2000
+  0x1BD2AA8    ldr      x8, [x21, #0xb20]
+  0x1BD2AAC    mov      x20, x1
+  0x1BD2AB0    mov      x19, x0
+  0x1BD2AB4    cbnz     x8, #0x1bd2afc
+  0x1BD2AB8    adrp     x12, #0x5d3e000
+  0x1BD2ABC    ldr      d0, [x12, #0xd10]
+  0x1BD2AC0    adrp     x8, #0x5d3e000
+  0x1BD2AC4    adrp     x10, #0x5d3f000
+  0x1BD2AC8    add      x8, x8, #0xdc0
+  0x1BD2ACC    mov      w9, #0xe
+  0x1BD2AD0    add      x10, x10, #0x985
+  0x1BD2AD4    mov      w11, #0x24
+  0x1BD2AD8    mov      w13, #0x10
+  0x1BD2ADC    mov      x0, sp
+  0x1BD2AE0    stp      x8, x9, [sp]
+  0x1BD2AE4    stp      x10, x11, [sp, #0x10]
+  0x1BD2AE8    str      d0, [sp, #0x20]
+  0x1BD2AEC    str      w13, [sp, #0x28]
+  0x1BD2AF0    strb     wzr, [sp, #0x2c]
+  0x1BD2AF4    bl       #0x1637d24
+  0x1BD2AF8    str      x0, [x21, #0xb20]
+  0x1BD2AFC    mov      x0, x20
+  0x1BD2B00    bl       #0x1637cf8
+  0x1BD2B04    ldr      x8, [x21, #0xb20]
+  0x1BD2B08    mov      x20, x0
+  0x1BD2B0C    mov      x0, x19
+  0x1BD2B10    mov      x1, x20
+  0x1BD2B14    blr      x8
+  0x1BD2B18    mov      x0, x20
+  0x1BD2B1C    bl       #0x1637d18
+  0x1BD2B20    ldp      x29, x30, [sp, #0x50]
+  0x1BD2B24    ldp      x20, x19, [sp, #0x40]
+  0x1BD2B28    ldr      x21, [sp, #0x30]
+  0x1BD2B2C    add      sp, sp, #0x60
+  0x1BD2B30    ret      
+
+--- idx=24019 ResetCueTypeState RVA=0x1BD2B34 ---
+  0x1BD2B34    ldr      x0, [x0, #0x20]
+  0x1BD2B38    b        #0x1bd2b3c
+  0x1BD2B3C    sub      sp, sp, #0x60
+  0x1BD2B40    str      x21, [sp, #0x30]
+  0x1BD2B44    stp      x20, x19, [sp, #0x40]
+  0x1BD2B48    stp      x29, x30, [sp, #0x50]
+  0x1BD2B4C    add      x29, sp, #0x50
+  0x1BD2B50    adrp     x21, #0x7ba2000
+  0x1BD2B54    ldr      x8, [x21, #0xb28]
+  0x1BD2B58    mov      w19, w1
+  0x1BD2B5C    mov      x20, x0
+  0x1BD2B60    cbnz     x8, #0x1bd2bac
+  0x1BD2B64    adrp     x12, #0x5d3e000
+  0x1BD2B68    ldr      d0, [x12, #0xd10]
+  0x1BD2B6C    adrp     x8, #0x5d3e000
+  0x1BD2B70    adrp     x10, #0x5d3f000
+  0x1BD2B74    add      x8, x8, #0xdc0
+  0x1BD2B78    mov      w9, #0xe
+  0x1BD2B7C    add      x10, x10, #0x9aa
+  0x1BD2B80    mov      w11, #0x22
+  0x1BD2B84    mov      w13, #0xc
+  0x1BD2B88    mov      x0, sp
+  0x1BD2B8C    stp      x8, x9, [sp]
+  0x1BD2B90    stp      x10, x11, [sp, #0x10]
+  0x1BD2B94    str      d0, [sp, #0x20]
+  0x1BD2B98    str      w13, [sp, #0x28]
+  0x1BD2B9C    strb     wzr, [sp, #0x2c]
+  0x1BD2BA0    bl       #0x1637d24
+  0x1BD2BA4    mov      x8, x0
+  0x1BD2BA8    str      x0, [x21, #0xb28]
+  0x1BD2BAC    mov      x0, x20
+  0x1BD2BB0    mov      w1, w19
+  0x1BD2BB4    blr      x8
+  0x1BD2BB8    ldp      x29, x30, [sp, #0x50]
+  0x1BD2BBC    ldp      x20, x19, [sp, #0x40]
+  0x1BD2BC0    ldr      x21, [sp, #0x30]
+  0x1BD2BC4    add      sp, sp, #0x60
+  0x1BD2BC8    ret      
+
+--- idx=24020 AttachAwbFile RVA=0x1BD2BCC ---
+  0x1BD2BCC    str      x23, [sp, #-0x40]!
+  0x1BD2BD0    stp      x22, x21, [sp, #0x10]
+  0x1BD2BD4    stp      x20, x19, [sp, #0x20]
+  0x1BD2BD8    stp      x29, x30, [sp, #0x30]
+  0x1BD2BDC    add      x29, sp, #0x30
+  0x1BD2BE0    adrp     x23, #0x7ba2000
+  0x1BD2BE4    ldrb     w8, [x23, #0xa82]
+  0x1BD2BE8    mov      x19, x3
+  0x1BD2BEC    mov      x20, x2
+  0x1BD2BF0    mov      x22, x1
+  0x1BD2BF4    mov      x21, x0
+  0x1BD2BF8    tbnz     w8, #0, #0x1bd2c10
+  0x1BD2BFC    adrp     x0, #0x75e7000
+  0x1BD2C00    ldr      x0, [x0, #0xa10]
+  0x1BD2C04    bl       #0x16378b0
+  0x1BD2C08    mov      w8, #1
+  0x1BD2C0C    strb     w8, [x23, #0xa82]
+  0x1BD2C10    mov      x0, x21
+  0x1BD2C14    bl       #0x1bd0cdc
+  0x1BD2C18    tbz      w0, #0, #0x1bd2c28
+  0x1BD2C1C    cbz      x22, #0x1bd2c3c
+  0x1BD2C20    ldr      x1, [x22, #0x20]
+  0x1BD2C24    b        #0x1bd2c40
+  0x1BD2C28    ldp      x29, x30, [sp, #0x30]
+  0x1BD2C2C    ldp      x20, x19, [sp, #0x20]
+  0x1BD2C30    ldp      x22, x21, [sp, #0x10]
+  0x1BD2C34    ldr      x23, [sp], #0x40
+  0x1BD2C38    ret      
+
+--- idx=24021 DetachAwbFile RVA=0x1BD2D50 ---
+  0x1BD2D50    stp      x20, x19, [sp, #-0x20]!
+  0x1BD2D54    stp      x29, x30, [sp, #0x10]
+  0x1BD2D58    add      x29, sp, #0x10
+  0x1BD2D5C    mov      x19, x1
+  0x1BD2D60    mov      x20, x0
+  0x1BD2D64    bl       #0x1bd0cdc
+  0x1BD2D68    tbz      w0, #0, #0x1bd2d80
+  0x1BD2D6C    ldr      x0, [x20, #0x20]
+  0x1BD2D70    ldp      x29, x30, [sp, #0x10]
+  0x1BD2D74    mov      x1, x19
+  0x1BD2D78    ldp      x20, x19, [sp], #0x20
+  0x1BD2D7C    b        #0x1bd2d8c
+  0x1BD2D80    ldp      x29, x30, [sp, #0x10]
+  0x1BD2D84    ldp      x20, x19, [sp], #0x20
+  0x1BD2D88    ret      
+
+--- idx=24022 IsReadyToRelease RVA=0x1BD2E30 ---
+  0x1BD2E30    str      x19, [sp, #-0x20]!
+  0x1BD2E34    stp      x29, x30, [sp, #0x10]
+  0x1BD2E38    add      x29, sp, #0x10
+  0x1BD2E3C    mov      x19, x0
+  0x1BD2E40    bl       #0x1bd0cdc
+  0x1BD2E44    tbz      w0, #0, #0x1bd2e58
+  0x1BD2E48    ldr      x0, [x19, #0x20]
+  0x1BD2E4C    ldp      x29, x30, [sp, #0x10]
+  0x1BD2E50    ldr      x19, [sp], #0x20
+  0x1BD2E54    b        #0x1bd2e68
+  0x1BD2E58    ldp      x29, x30, [sp, #0x10]
+  0x1BD2E5C    mov      w0, wzr
+  0x1BD2E60    ldr      x19, [sp], #0x20
+  0x1BD2E64    ret      
+
+--- idx=24023 GetLoadProgress RVA=0x1BD2EF0 ---
+  0x1BD2EF0    fmov     s0, #1.00000000
+  0x1BD2EF4    ret      
+  0x1BD2EF8    str      x21, [sp, #-0x30]!
+  0x1BD2EFC    stp      x20, x19, [sp, #0x10]
+  0x1BD2F00    stp      x29, x30, [sp, #0x20]
+  0x1BD2F04    add      x29, sp, #0x20
+  0x1BD2F08    adrp     x21, #0x7ba2000
+  0x1BD2F0C    ldrb     w8, [x21, #0xa83]
+  0x1BD2F10    mov      x19, x1
+  0x1BD2F14    mov      x20, x0
+  0x1BD2F18    tbnz     w8, #0, #0x1bd2f30
+  0x1BD2F1C    adrp     x0, #0x76c4000
+  0x1BD2F20    ldr      x0, [x0, #0x7c0]
+  0x1BD2F24    bl       #0x16378b0
+  0x1BD2F28    mov      w8, #1
+  0x1BD2F2C    strb     w8, [x21, #0xa83]
+  0x1BD2F30    mov      x0, x20
+  0x1BD2F34    bl       #0x1bd0cdc
+  0x1BD2F38    tbz      w0, #0, #0x1bd2f78
+  0x1BD2F3C    adrp     x8, #0x76c4000
+  0x1BD2F40    ldr      x8, [x8, #0x7c0]
+  0x1BD2F44    ldr      x20, [x20, #0x20]
+  0x1BD2F48    ldr      x0, [x8]
+  0x1BD2F4C    ldrb     w8, [x0, #0x133]
+  0x1BD2F50    tbz      w8, #2, #0x1bd2f60
+  0x1BD2F54    ldr      w8, [x0, #0xe0]
+  0x1BD2F58    cbnz     w8, #0x1bd2f60
+  0x1BD2F5C    bl       #0x1637960
+  0x1BD2F60    mov      x0, x20
+  0x1BD2F64    mov      x1, x19
+  0x1BD2F68    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F6C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F70    ldr      x21, [sp], #0x30
+  0x1BD2F74    b        #0x1bd2f88
+  0x1BD2F78    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F7C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F80    ldr      x21, [sp], #0x30
+  0x1BD2F84    ret      
+
+--- idx=24024 Decrypt RVA=0x1BD2EF8 <== 目标 ---
+  0x1BD2EF8    str      x21, [sp, #-0x30]!
+  0x1BD2EFC    stp      x20, x19, [sp, #0x10]
+  0x1BD2F00    stp      x29, x30, [sp, #0x20]
+  0x1BD2F04    add      x29, sp, #0x20
+  0x1BD2F08    adrp     x21, #0x7ba2000
+  0x1BD2F0C    ldrb     w8, [x21, #0xa83]
+  0x1BD2F10    mov      x19, x1
+  0x1BD2F14    mov      x20, x0
+  0x1BD2F18    tbnz     w8, #0, #0x1bd2f30
+  0x1BD2F1C    adrp     x0, #0x76c4000
+  0x1BD2F20    ldr      x0, [x0, #0x7c0]
+  0x1BD2F24    bl       #0x16378b0
+  0x1BD2F28    mov      w8, #1
+  0x1BD2F2C    strb     w8, [x21, #0xa83]
+  0x1BD2F30    mov      x0, x20
+  0x1BD2F34    bl       #0x1bd0cdc
+  0x1BD2F38    tbz      w0, #0, #0x1bd2f78
+  0x1BD2F3C    adrp     x8, #0x76c4000
+  0x1BD2F40    ldr      x8, [x8, #0x7c0]
+  0x1BD2F44    ldr      x20, [x20, #0x20]
+  0x1BD2F48    ldr      x0, [x8]
+  0x1BD2F4C    ldrb     w8, [x0, #0x133]
+  0x1BD2F50    tbz      w8, #2, #0x1bd2f60
+  0x1BD2F54    ldr      w8, [x0, #0xe0]
+  0x1BD2F58    cbnz     w8, #0x1bd2f60
+  0x1BD2F5C    bl       #0x1637960
+  0x1BD2F60    mov      x0, x20
+  0x1BD2F64    mov      x1, x19
+  0x1BD2F68    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F6C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F70    ldr      x21, [sp], #0x30
+  0x1BD2F74    b        #0x1bd2f88
+  0x1BD2F78    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F7C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F80    ldr      x21, [sp], #0x30
+  0x1BD2F84    ret      
+
+--- idx=24025 .ctor RVA=0x1BD0E14 ---
+  0x1BD0E14    sub      sp, sp, #0x40
+  0x1BD0E18    stp      x22, x21, [sp, #0x10]
+  0x1BD0E1C    stp      x20, x19, [sp, #0x20]
+  0x1BD0E20    stp      x29, x30, [sp, #0x30]
+  0x1BD0E24    add      x29, sp, #0x30
+  0x1BD0E28    adrp     x22, #0x7ba2000
+  0x1BD0E2C    ldrb     w8, [x22, #0xa84]
+  0x1BD0E30    mov      x20, x2
+  0x1BD0E34    mov      x21, x1
+  0x1BD0E38    mov      x19, x0
+  0x1BD0E3C    str      x2, [sp, #8]
+  0x1BD0E40    tbnz     w8, #0, #0x1bd0e7c
+  0x1BD0E44    adrp     x0, #0x75fe000
+  0x1BD0E48    ldr      x0, [x0, #0xfa0]
+  0x1BD0E4C    bl       #0x16378b0
+  0x1BD0E50    adrp     x0, #0x75e7000
+  0x1BD0E54    ldr      x0, [x0, #0xa10]
+  0x1BD0E58    bl       #0x16378b0
+  0x1BD0E5C    adrp     x0, #0x75bf000
+  0x1BD0E60    ldr      x0, [x0, #0xa18]
+  0x1BD0E64    bl       #0x16378b0
+  0x1BD0E68    adrp     x0, #0x75ef000
+  0x1BD0E6C    ldr      x0, [x0, #0x578]
+  0x1BD0E70    bl       #0x16378b0
+  0x1BD0E74    mov      w8, #1
+  0x1BD0E78    strb     w8, [x22, #0xa84]
+  0x1BD0E7C    mov      x0, x19
+  0x1BD0E80    mov      x1, xzr
+  0x1BD0E84    str      xzr, [x19, #0x20]
+  0x1BD0E88    bl       #0x1dfeb04
+  0x1BD0E8C    tst      x20, #0xff00000000
+  0x1BD0E90    str      x21, [x19, #0x20]
+  0x1BD0E94    b.eq     #0x1bd0eb0
+  0x1BD0E98    adrp     x8, #0x75ef000
+  0x1BD0E9C    ldr      x8, [x8, #0x578]
+  0x1BD0EA0    add      x0, sp, #8
+  0x1BD0EA4    ldr      x1, [x8]
+  0x1BD0EA8    bl       #0x1cc64e0
+  0x1BD0EAC    str      w0, [x19, #0x28]
+  0x1BD0EB0    adrp     x8, #0x75fe000
+  0x1BD0EB4    ldr      x8, [x8, #0xfa0]
+  0x1BD0EB8    ldr      x0, [x8]
+  0x1BD0EBC    ldrb     w8, [x0, #0x133]
+  0x1BD0EC0    tbz      w8, #2, #0x1bd0ed0
+  0x1BD0EC4    ldr      w8, [x0, #0xe0]
+  0x1BD0EC8    cbnz     w8, #0x1bd0ed0
+  0x1BD0ECC    bl       #0x1637960
+  0x1BD0ED0    mov      x0, x19
+  0x1BD0ED4    mov      w1, wzr
+  0x1BD0ED8    mov      x2, xzr
+  0x1BD0EDC    bl       #0x1dfeddc
+  0x1BD0EE0    ldp      x29, x30, [sp, #0x30]
+  0x1BD0EE4    ldp      x20, x19, [sp, #0x20]
+  0x1BD0EE8    ldp      x22, x21, [sp, #0x10]
+  0x1BD0EEC    add      sp, sp, #0x40
+  0x1BD0EF0    ret      
+
+--- idx=24026 Finalize RVA=0x1BD307C ---
+  0x1BD307C    stp      x20, x19, [sp, #-0x20]!
+  0x1BD3080    stp      x29, x30, [sp, #0x10]
+  0x1BD3084    add      x29, sp, #0x10
+  0x1BD3088    mov      x19, x0
+  0x1BD308C    mov      w1, wzr
+  0x1BD3090    bl       #0x1bd1040
+  0x1BD3094    ldp      x29, x30, [sp, #0x10]
+  0x1BD3098    mov      x0, x19
+  0x1BD309C    mov      x1, xzr
+  0x1BD30A0    ldp      x20, x19, [sp], #0x20
+  0x1BD30A4    b        #0x2900b74
+  0x1BD30A8    cmp      w1, #1
+  0x1BD30AC    b.ne     #0x1bd30d8
+  0x1BD30B0    bl       #0x1360a90
+  0x1BD30B4    ldr      x20, [x0]
+  0x1BD30B8    bl       #0x13604f0
+  0x1BD30BC    mov      x0, x19
+  0x1BD30C0    mov      x1, xzr
+  0x1BD30C4    bl       #0x2900b74
+  0x1BD30C8    cbnz     x20, #0x1bd30dc
+  0x1BD30CC    ldp      x29, x30, [sp, #0x10]
+  0x1BD30D0    ldp      x20, x19, [sp], #0x20
+  0x1BD30D4    ret      
+
+--- idx=24027 criAtomExAcb_LoadAcbFile RVA=0x1BD0D24 ---
+  0x1BD0D24    sub      sp, sp, #0x80
+  0x1BD0D28    str      x25, [sp, #0x30]
+  0x1BD0D2C    stp      x24, x23, [sp, #0x40]
+  0x1BD0D30    stp      x22, x21, [sp, #0x50]
+  0x1BD0D34    stp      x20, x19, [sp, #0x60]
+  0x1BD0D38    stp      x29, x30, [sp, #0x70]
+  0x1BD0D3C    add      x29, sp, #0x70
+  0x1BD0D40    adrp     x25, #0x7ba2000
+  0x1BD0D44    ldr      x8, [x25, #0xa88]
+  0x1BD0D48    mov      w19, w5
+  0x1BD0D4C    mov      x20, x4
+  0x1BD0D50    mov      x23, x3
+  0x1BD0D54    mov      x21, x2
+  0x1BD0D58    mov      x24, x1
+  0x1BD0D5C    mov      x22, x0
+  0x1BD0D60    cbnz     x8, #0x1bd0da8
+  0x1BD0D64    adrp     x12, #0x5d3e000
+  0x1BD0D68    ldr      d0, [x12, #0xd10]
+  0x1BD0D6C    adrp     x8, #0x5d3e000
+  0x1BD0D70    adrp     x10, #0x5d3f000
+  0x1BD0D74    add      x8, x8, #0xdc0
+  0x1BD0D78    mov      w9, #0xe
+  0x1BD0D7C    add      x10, x10, #0x723
+  0x1BD0D80    mov      w11, #0x18
+  0x1BD0D84    mov      w13, #0x2c
+  0x1BD0D88    mov      x0, sp
+  0x1BD0D8C    stp      x8, x9, [sp]
+  0x1BD0D90    stp      x10, x11, [sp, #0x10]
+  0x1BD0D94    str      d0, [sp, #0x20]
+  0x1BD0D98    str      w13, [sp, #0x28]
+  0x1BD0D9C    strb     wzr, [sp, #0x2c]
+  0x1BD0DA0    bl       #0x1637d24
+  0x1BD0DA4    str      x0, [x25, #0xa88]
+  0x1BD0DA8    mov      x0, x24
+  0x1BD0DAC    bl       #0x1637cf8
+  0x1BD0DB0    mov      x24, x0
+  0x1BD0DB4    mov      x0, x23
+  0x1BD0DB8    bl       #0x1637cf8
+  0x1BD0DBC    ldr      x8, [x25, #0xa88]
+  0x1BD0DC0    mov      x23, x0
+  0x1BD0DC4    mov      x0, x22
+  0x1BD0DC8    mov      x1, x24
+  0x1BD0DCC    mov      x2, x21
+  0x1BD0DD0    mov      x3, x23
+  0x1BD0DD4    mov      x4, x20
+  0x1BD0DD8    mov      w5, w19
+  0x1BD0DDC    blr      x8
+  0x1BD0DE0    mov      x19, x0
+  0x1BD0DE4    mov      x0, x24
+  0x1BD0DE8    bl       #0x1637d18
+  0x1BD0DEC    mov      x0, x23
+  0x1BD0DF0    bl       #0x1637d18
+  0x1BD0DF4    mov      x0, x19
+  0x1BD0DF8    ldp      x29, x30, [sp, #0x70]
+  0x1BD0DFC    ldp      x20, x19, [sp, #0x60]
+  0x1BD0E00    ldp      x22, x21, [sp, #0x50]
+  0x1BD0E04    ldp      x24, x23, [sp, #0x40]
+  0x1BD0E08    ldr      x25, [sp, #0x30]
+  0x1BD0E0C    add      sp, sp, #0x80
+  0x1BD0E10    ret      
+
+--- idx=24028 criAtomExAcb_LoadAcbData RVA=0x1BD0EF4 ---
+  0x1BD0EF4    sub      sp, sp, #0x80
+  0x1BD0EF8    str      x25, [sp, #0x30]
+  0x1BD0EFC    stp      x24, x23, [sp, #0x40]
+  0x1BD0F00    stp      x22, x21, [sp, #0x50]
+  0x1BD0F04    stp      x20, x19, [sp, #0x60]
+  0x1BD0F08    stp      x29, x30, [sp, #0x70]
+  0x1BD0F0C    add      x29, sp, #0x70
+  0x1BD0F10    adrp     x25, #0x7ba2000
+  0x1BD0F14    ldr      x8, [x25, #0xa90]
+  0x1BD0F18    mov      w19, w5
+  0x1BD0F1C    mov      x20, x4
+  0x1BD0F20    mov      x24, x3
+  0x1BD0F24    mov      x21, x2
+  0x1BD0F28    mov      w22, w1
+  0x1BD0F2C    mov      x23, x0
+  0x1BD0F30    cbnz     x8, #0x1bd0f78
+  0x1BD0F34    adrp     x12, #0x5d3e000
+  0x1BD0F38    ldr      d0, [x12, #0xd10]
+  0x1BD0F3C    adrp     x8, #0x5d3e000
+  0x1BD0F40    adrp     x10, #0x5d3f000
+  0x1BD0F44    add      x8, x8, #0xdc0
+  0x1BD0F48    mov      w9, #0xe
+  0x1BD0F4C    add      x10, x10, #0x73c
+  0x1BD0F50    mov      w11, #0x18
+  0x1BD0F54    mov      w13, #0x28
+  0x1BD0F58    mov      x0, sp
+  0x1BD0F5C    stp      x8, x9, [sp]
+  0x1BD0F60    stp      x10, x11, [sp, #0x10]
+  0x1BD0F64    str      d0, [sp, #0x20]
+  0x1BD0F68    str      w13, [sp, #0x28]
+  0x1BD0F6C    strb     wzr, [sp, #0x2c]
+  0x1BD0F70    bl       #0x1637d24
+  0x1BD0F74    str      x0, [x25, #0xa90]
+  0x1BD0F78    mov      x0, x24
+  0x1BD0F7C    bl       #0x1637cf8
+  0x1BD0F80    ldr      x8, [x25, #0xa90]
+  0x1BD0F84    mov      x24, x0
+  0x1BD0F88    mov      x0, x23
+  0x1BD0F8C    mov      w1, w22
+  0x1BD0F90    mov      x2, x21
+  0x1BD0F94    mov      x3, x24
+  0x1BD0F98    mov      x4, x20
+  0x1BD0F9C    mov      w5, w19
+  0x1BD0FA0    blr      x8
+  0x1BD0FA4    mov      x19, x0
+  0x1BD0FA8    mov      x0, x24
+  0x1BD0FAC    bl       #0x1637d18
+  0x1BD0FB0    mov      x0, x19
+  0x1BD0FB4    ldp      x29, x30, [sp, #0x70]
+  0x1BD0FB8    ldp      x20, x19, [sp, #0x60]
+  0x1BD0FBC    ldp      x22, x21, [sp, #0x50]
+  0x1BD0FC0    ldp      x24, x23, [sp, #0x40]
+  0x1BD0FC4    ldr      x25, [sp, #0x30]
+  0x1BD0FC8    add      sp, sp, #0x80
+  0x1BD0FCC    ret      
+
+--- idx=24029 criAtomExAcb_Release RVA=0x1BD1110 ---
+  0x1BD1110    sub      sp, sp, #0x50
+  0x1BD1114    stp      x20, x19, [sp, #0x30]
+  0x1BD1118    stp      x29, x30, [sp, #0x40]
+  0x1BD111C    add      x29, sp, #0x40
+  0x1BD1120    adrp     x20, #0x7ba2000
+  0x1BD1124    ldr      x8, [x20, #0xa98]
+  0x1BD1128    mov      x19, x0
+  0x1BD112C    cbnz     x8, #0x1bd1178
+  0x1BD1130    adrp     x12, #0x5d3e000
+  0x1BD1134    ldr      d0, [x12, #0xd10]
+  0x1BD1138    adrp     x8, #0x5d3e000
+  0x1BD113C    adrp     x10, #0x5d3f000
+  0x1BD1140    add      x8, x8, #0xdc0
+  0x1BD1144    mov      w9, #0xe
+  0x1BD1148    add      x10, x10, #0x755
+  0x1BD114C    mov      w11, #0x14
+  0x1BD1150    mov      w13, #8
+  0x1BD1154    mov      x0, sp
+  0x1BD1158    stp      x8, x9, [sp]
+  0x1BD115C    stp      x10, x11, [sp, #0x10]
+  0x1BD1160    str      d0, [sp, #0x20]
+  0x1BD1164    str      w13, [sp, #0x28]
+  0x1BD1168    strb     wzr, [sp, #0x2c]
+  0x1BD116C    bl       #0x1637d24
+  0x1BD1170    mov      x8, x0
+  0x1BD1174    str      x0, [x20, #0xa98]
+  0x1BD1178    mov      x0, x19
+  0x1BD117C    blr      x8
+  0x1BD1180    ldp      x29, x30, [sp, #0x40]
+  0x1BD1184    ldp      x20, x19, [sp, #0x30]
+  0x1BD1188    add      sp, sp, #0x50
+  0x1BD118C    ret      
+
+--- idx=24030 criAtomExAcb_GetNumCues RVA=0x1BD1B94 ---
+  0x1BD1B94    sub      sp, sp, #0x50
+  0x1BD1B98    stp      x20, x19, [sp, #0x30]
+  0x1BD1B9C    stp      x29, x30, [sp, #0x40]
+  0x1BD1BA0    add      x29, sp, #0x40
+  0x1BD1BA4    adrp     x20, #0x7ba2000
+  0x1BD1BA8    ldr      x8, [x20, #0xaa0]
+  0x1BD1BAC    mov      x19, x0
+  0x1BD1BB0    cbnz     x8, #0x1bd1bfc
+  0x1BD1BB4    adrp     x12, #0x5d3e000
+  0x1BD1BB8    ldr      d0, [x12, #0xd10]
+  0x1BD1BBC    adrp     x8, #0x5d3e000
+  0x1BD1BC0    adrp     x10, #0x5d3f000
+  0x1BD1BC4    add      x8, x8, #0xdc0
+  0x1BD1BC8    mov      w9, #0xe
+  0x1BD1BCC    add      x10, x10, #0x76a
+  0x1BD1BD0    mov      w11, #0x17
+  0x1BD1BD4    mov      w13, #8
+  0x1BD1BD8    mov      x0, sp
+  0x1BD1BDC    stp      x8, x9, [sp]
+  0x1BD1BE0    stp      x10, x11, [sp, #0x10]
+  0x1BD1BE4    str      d0, [sp, #0x20]
+  0x1BD1BE8    str      w13, [sp, #0x28]
+  0x1BD1BEC    strb     wzr, [sp, #0x2c]
+  0x1BD1BF0    bl       #0x1637d24
+  0x1BD1BF4    mov      x8, x0
+  0x1BD1BF8    str      x0, [x20, #0xaa0]
+  0x1BD1BFC    mov      x0, x19
+  0x1BD1C00    blr      x8
+  0x1BD1C04    ldp      x29, x30, [sp, #0x40]
+  0x1BD1C08    ldp      x20, x19, [sp, #0x30]
+  0x1BD1C0C    add      sp, sp, #0x50
+  0x1BD1C10    ret      
+
+--- idx=24031 criAtomExAcb_ExistsId RVA=0x1BD1250 ---
+  0x1BD1250    sub      sp, sp, #0x60
+  0x1BD1254    str      x21, [sp, #0x30]
+  0x1BD1258    stp      x20, x19, [sp, #0x40]
+  0x1BD125C    stp      x29, x30, [sp, #0x50]
+  0x1BD1260    add      x29, sp, #0x50
+  0x1BD1264    adrp     x21, #0x7ba2000
+  0x1BD1268    ldr      x8, [x21, #0xaa8]
+  0x1BD126C    mov      w19, w1
+  0x1BD1270    mov      x20, x0
+  0x1BD1274    cbnz     x8, #0x1bd12c0
+  0x1BD1278    adrp     x12, #0x5d3e000
+  0x1BD127C    ldr      d0, [x12, #0xd10]
+  0x1BD1280    adrp     x8, #0x5d3e000
+  0x1BD1284    adrp     x10, #0x5d3f000
+  0x1BD1288    add      x8, x8, #0xdc0
+  0x1BD128C    mov      w9, #0xe
+  0x1BD1290    add      x10, x10, #0x782
+  0x1BD1294    mov      w11, #0x15
+  0x1BD1298    mov      w13, #0xc
+  0x1BD129C    mov      x0, sp
+  0x1BD12A0    stp      x8, x9, [sp]
+  0x1BD12A4    stp      x10, x11, [sp, #0x10]
+  0x1BD12A8    str      d0, [sp, #0x20]
+  0x1BD12AC    str      w13, [sp, #0x28]
+  0x1BD12B0    strb     wzr, [sp, #0x2c]
+  0x1BD12B4    bl       #0x1637d24
+  0x1BD12B8    mov      x8, x0
+  0x1BD12BC    str      x0, [x21, #0xaa8]
+  0x1BD12C0    mov      x0, x20
+  0x1BD12C4    mov      w1, w19
+  0x1BD12C8    blr      x8
+  0x1BD12CC    ldp      x29, x30, [sp, #0x50]
+  0x1BD12D0    ldp      x20, x19, [sp, #0x40]
+  0x1BD12D4    ldr      x21, [sp, #0x30]
+  0x1BD12D8    cmp      w0, #0
+  0x1BD12DC    cset     w0, ne
+  0x1BD12E0    add      sp, sp, #0x60
+  0x1BD12E4    ret      
+
+--- idx=24032 criAtomExAcb_ExistsName RVA=0x1BD1198 ---
+  0x1BD1198    sub      sp, sp, #0x60
+  0x1BD119C    str      x21, [sp, #0x30]
+  0x1BD11A0    stp      x20, x19, [sp, #0x40]
+  0x1BD11A4    stp      x29, x30, [sp, #0x50]
+  0x1BD11A8    add      x29, sp, #0x50
+  0x1BD11AC    adrp     x21, #0x7ba2000
+  0x1BD11B0    ldr      x8, [x21, #0xab0]
+  0x1BD11B4    mov      x20, x1
+  0x1BD11B8    mov      x19, x0
+  0x1BD11BC    cbnz     x8, #0x1bd1204
+  0x1BD11C0    adrp     x12, #0x5d3e000
+  0x1BD11C4    ldr      d0, [x12, #0xd10]
+  0x1BD11C8    adrp     x8, #0x5d3e000
+  0x1BD11CC    adrp     x10, #0x5d3f000
+  0x1BD11D0    add      x8, x8, #0xdc0
+  0x1BD11D4    mov      w9, #0xe
+  0x1BD11D8    add      x10, x10, #0x798
+  0x1BD11DC    mov      w11, #0x17
+  0x1BD11E0    mov      w13, #0x10
+  0x1BD11E4    mov      x0, sp
+  0x1BD11E8    stp      x8, x9, [sp]
+  0x1BD11EC    stp      x10, x11, [sp, #0x10]
+  0x1BD11F0    str      d0, [sp, #0x20]
+  0x1BD11F4    str      w13, [sp, #0x28]
+  0x1BD11F8    strb     wzr, [sp, #0x2c]
+  0x1BD11FC    bl       #0x1637d24
+  0x1BD1200    str      x0, [x21, #0xab0]
+  0x1BD1204    mov      x0, x20
+  0x1BD1208    bl       #0x1637cf8
+  0x1BD120C    ldr      x8, [x21, #0xab0]
+  0x1BD1210    mov      x20, x0
+  0x1BD1214    mov      x0, x19
+  0x1BD1218    mov      x1, x20
+  0x1BD121C    blr      x8
+  0x1BD1220    mov      w19, w0
+  0x1BD1224    mov      x0, x20
+  0x1BD1228    bl       #0x1637d18
+  0x1BD122C    cmp      w19, #0
+  0x1BD1230    ldp      x29, x30, [sp, #0x50]
+  0x1BD1234    ldp      x20, x19, [sp, #0x40]
+  0x1BD1238    ldr      x21, [sp, #0x30]
+  0x1BD123C    cset     w0, ne
+  0x1BD1240    add      sp, sp, #0x60
+  0x1BD1244    ret      
+
+--- idx=24033 criAtomExAcb_GetNumUsableAisacControlsById RVA=0x1BD22F0 ---
+  0x1BD22F0    sub      sp, sp, #0x60
+  0x1BD22F4    str      x21, [sp, #0x30]
+  0x1BD22F8    stp      x20, x19, [sp, #0x40]
+  0x1BD22FC    stp      x29, x30, [sp, #0x50]
+  0x1BD2300    add      x29, sp, #0x50
+  0x1BD2304    adrp     x21, #0x7ba2000
+  0x1BD2308    ldr      x8, [x21, #0xab8]
+  0x1BD230C    mov      w19, w1
+  0x1BD2310    mov      x20, x0
+  0x1BD2314    cbnz     x8, #0x1bd2360
+  0x1BD2318    adrp     x12, #0x5d3e000
+  0x1BD231C    ldr      d0, [x12, #0xd10]
+  0x1BD2320    adrp     x8, #0x5d3e000
+  0x1BD2324    adrp     x10, #0x5d3f000
+  0x1BD2328    add      x8, x8, #0xdc0
+  0x1BD232C    mov      w9, #0xe
+  0x1BD2330    add      x10, x10, #0x7b0
+  0x1BD2334    mov      w11, #0x2a
+  0x1BD2338    mov      w13, #0xc
+  0x1BD233C    mov      x0, sp
+  0x1BD2340    stp      x8, x9, [sp]
+  0x1BD2344    stp      x10, x11, [sp, #0x10]
+  0x1BD2348    str      d0, [sp, #0x20]
+  0x1BD234C    str      w13, [sp, #0x28]
+  0x1BD2350    strb     wzr, [sp, #0x2c]
+  0x1BD2354    bl       #0x1637d24
+  0x1BD2358    mov      x8, x0
+  0x1BD235C    str      x0, [x21, #0xab8]
+  0x1BD2360    mov      x0, x20
+  0x1BD2364    mov      w1, w19
+  0x1BD2368    blr      x8
+  0x1BD236C    ldp      x29, x30, [sp, #0x50]
+  0x1BD2370    ldp      x20, x19, [sp, #0x40]
+  0x1BD2374    ldr      x21, [sp, #0x30]
+  0x1BD2378    add      sp, sp, #0x60
+  0x1BD237C    ret      
+
+--- idx=24034 criAtomExAcb_GetNumUsableAisacControlsByName RVA=0x1BD223C ---
+  0x1BD223C    sub      sp, sp, #0x60
+  0x1BD2240    str      x21, [sp, #0x30]
+  0x1BD2244    stp      x20, x19, [sp, #0x40]
+  0x1BD2248    stp      x29, x30, [sp, #0x50]
+  0x1BD224C    add      x29, sp, #0x50
+  0x1BD2250    adrp     x21, #0x7ba2000
+  0x1BD2254    ldr      x8, [x21, #0xac0]
+  0x1BD2258    mov      x20, x1
+  0x1BD225C    mov      x19, x0
+  0x1BD2260    cbnz     x8, #0x1bd22a8
+  0x1BD2264    adrp     x12, #0x5d3e000
+  0x1BD2268    ldr      d0, [x12, #0xd10]
+  0x1BD226C    adrp     x8, #0x5d3e000
+  0x1BD2270    adrp     x10, #0x5d3f000
+  0x1BD2274    add      x8, x8, #0xdc0
+  0x1BD2278    mov      w9, #0xe
+  0x1BD227C    add      x10, x10, #0x7db
+  0x1BD2280    mov      w11, #0x2c
+  0x1BD2284    mov      w13, #0x10
+  0x1BD2288    mov      x0, sp
+  0x1BD228C    stp      x8, x9, [sp]
+  0x1BD2290    stp      x10, x11, [sp, #0x10]
+  0x1BD2294    str      d0, [sp, #0x20]
+  0x1BD2298    str      w13, [sp, #0x28]
+  0x1BD229C    strb     wzr, [sp, #0x2c]
+  0x1BD22A0    bl       #0x1637d24
+  0x1BD22A4    str      x0, [x21, #0xac0]
+  0x1BD22A8    mov      x0, x20
+  0x1BD22AC    bl       #0x1637cf8
+  0x1BD22B0    ldr      x8, [x21, #0xac0]
+  0x1BD22B4    mov      x20, x0
+  0x1BD22B8    mov      x0, x19
+  0x1BD22BC    mov      x1, x20
+  0x1BD22C0    blr      x8
+  0x1BD22C4    mov      w19, w0
+  0x1BD22C8    mov      x0, x20
+  0x1BD22CC    bl       #0x1637d18
+  0x1BD22D0    mov      w0, w19
+  0x1BD22D4    ldp      x29, x30, [sp, #0x50]
+  0x1BD22D8    ldp      x20, x19, [sp, #0x40]
+  0x1BD22DC    ldr      x21, [sp, #0x30]
+  0x1BD22E0    add      sp, sp, #0x60
+  0x1BD22E4    ret      
+
+--- idx=24035 criAtomExAcb_GetUsableAisacControlById RVA=0x1BD2828 ---
+  0x1BD2828    sub      sp, sp, #0x70
+  0x1BD282C    str      x23, [sp, #0x30]
+  0x1BD2830    stp      x22, x21, [sp, #0x40]
+  0x1BD2834    stp      x20, x19, [sp, #0x50]
+  0x1BD2838    stp      x29, x30, [sp, #0x60]
+  0x1BD283C    add      x29, sp, #0x60
+  0x1BD2840    adrp     x23, #0x7ba2000
+  0x1BD2844    ldr      x8, [x23, #0xac8]
+  0x1BD2848    mov      x19, x3
+  0x1BD284C    mov      w20, w2
+  0x1BD2850    mov      w21, w1
+  0x1BD2854    mov      x22, x0
+  0x1BD2858    cbnz     x8, #0x1bd28a4
+  0x1BD285C    adrp     x12, #0x5d3e000
+  0x1BD2860    ldr      d0, [x12, #0xd10]
+  0x1BD2864    adrp     x8, #0x5d3e000
+  0x1BD2868    adrp     x10, #0x5d3f000
+  0x1BD286C    add      x8, x8, #0xdc0
+  0x1BD2870    mov      w9, #0xe
+  0x1BD2874    add      x10, x10, #0x808
+  0x1BD2878    mov      w11, #0x26
+  0x1BD287C    mov      w13, #0x18
+  0x1BD2880    mov      x0, sp
+  0x1BD2884    stp      x8, x9, [sp]
+  0x1BD2888    stp      x10, x11, [sp, #0x10]
+  0x1BD288C    str      d0, [sp, #0x20]
+  0x1BD2890    str      w13, [sp, #0x28]
+  0x1BD2894    strb     wzr, [sp, #0x2c]
+  0x1BD2898    bl       #0x1637d24
+  0x1BD289C    mov      x8, x0
+  0x1BD28A0    str      x0, [x23, #0xac8]
+  0x1BD28A4    mov      x0, x22
+  0x1BD28A8    mov      w1, w21
+  0x1BD28AC    mov      w2, w20
+  0x1BD28B0    mov      x3, x19
+  0x1BD28B4    blr      x8
+  0x1BD28B8    ldp      x29, x30, [sp, #0x60]
+  0x1BD28BC    ldp      x20, x19, [sp, #0x50]
+  0x1BD28C0    ldp      x22, x21, [sp, #0x40]
+  0x1BD28C4    ldr      x23, [sp, #0x30]
+  0x1BD28C8    cmp      w0, #0
+  0x1BD28CC    cset     w0, ne
+  0x1BD28D0    add      sp, sp, #0x70
+  0x1BD28D4    ret      
+
+--- idx=24036 criAtomExAcb_GetUsableAisacControlByName RVA=0x1BD2570 ---
+  0x1BD2570    sub      sp, sp, #0x70
+  0x1BD2574    str      x23, [sp, #0x30]
+  0x1BD2578    stp      x22, x21, [sp, #0x40]
+  0x1BD257C    stp      x20, x19, [sp, #0x50]
+  0x1BD2580    stp      x29, x30, [sp, #0x60]
+  0x1BD2584    add      x29, sp, #0x60
+  0x1BD2588    adrp     x23, #0x7ba2000
+  0x1BD258C    ldr      x8, [x23, #0xad0]
+  0x1BD2590    mov      x19, x3
+  0x1BD2594    mov      w20, w2
+  0x1BD2598    mov      x22, x1
+  0x1BD259C    mov      x21, x0
+  0x1BD25A0    cbnz     x8, #0x1bd25e8
+  0x1BD25A4    adrp     x12, #0x5d3e000
+  0x1BD25A8    ldr      d0, [x12, #0xd10]
+  0x1BD25AC    adrp     x8, #0x5d3e000
+  0x1BD25B0    adrp     x10, #0x5d3f000
+  0x1BD25B4    add      x8, x8, #0xdc0
+  0x1BD25B8    mov      w9, #0xe
+  0x1BD25BC    add      x10, x10, #0x82f
+  0x1BD25C0    mov      w11, #0x28
+  0x1BD25C4    mov      w13, #0x1c
+  0x1BD25C8    mov      x0, sp
+  0x1BD25CC    stp      x8, x9, [sp]
+  0x1BD25D0    stp      x10, x11, [sp, #0x10]
+  0x1BD25D4    str      d0, [sp, #0x20]
+  0x1BD25D8    str      w13, [sp, #0x28]
+  0x1BD25DC    strb     wzr, [sp, #0x2c]
+  0x1BD25E0    bl       #0x1637d24
+  0x1BD25E4    str      x0, [x23, #0xad0]
+  0x1BD25E8    mov      x0, x22
+  0x1BD25EC    bl       #0x1637cf8
+  0x1BD25F0    ldr      x8, [x23, #0xad0]
+  0x1BD25F4    mov      x22, x0
+  0x1BD25F8    mov      x0, x21
+  0x1BD25FC    mov      x1, x22
+  0x1BD2600    mov      w2, w20
+  0x1BD2604    mov      x3, x19
+  0x1BD2608    blr      x8
+  0x1BD260C    mov      w19, w0
+  0x1BD2610    mov      x0, x22
+  0x1BD2614    bl       #0x1637d18
+  0x1BD2618    cmp      w19, #0
+  0x1BD261C    ldp      x29, x30, [sp, #0x60]
+  0x1BD2620    ldp      x20, x19, [sp, #0x50]
+  0x1BD2624    ldp      x22, x21, [sp, #0x40]
+  0x1BD2628    ldr      x23, [sp, #0x30]
+  0x1BD262C    cset     w0, ne
+  0x1BD2630    add      sp, sp, #0x70
+  0x1BD2634    ret      
+
+--- idx=24037 criAtomExAcb_GetWaveformInfoById RVA=0x1BD1EBC ---
+  0x1BD1EBC    sub      sp, sp, #0x60
+  0x1BD1EC0    stp      x22, x21, [sp, #0x30]
+  0x1BD1EC4    stp      x20, x19, [sp, #0x40]
+  0x1BD1EC8    stp      x29, x30, [sp, #0x50]
+  0x1BD1ECC    add      x29, sp, #0x50
+  0x1BD1ED0    adrp     x22, #0x7ba2000
+  0x1BD1ED4    ldr      x8, [x22, #0xad8]
+  0x1BD1ED8    mov      x19, x2
+  0x1BD1EDC    mov      w20, w1
+  0x1BD1EE0    mov      x21, x0
+  0x1BD1EE4    cbnz     x8, #0x1bd1f30
+  0x1BD1EE8    adrp     x12, #0x5d3e000
+  0x1BD1EEC    ldr      d0, [x12, #0xd10]
+  0x1BD1EF0    adrp     x8, #0x5d3e000
+  0x1BD1EF4    adrp     x10, #0x5d3f000
+  0x1BD1EF8    add      x8, x8, #0xdc0
+  0x1BD1EFC    mov      w9, #0xe
+  0x1BD1F00    add      x10, x10, #0x858
+  0x1BD1F04    mov      w11, #0x20
+  0x1BD1F08    mov      w13, #0x14
+  0x1BD1F0C    mov      x0, sp
+  0x1BD1F10    stp      x8, x9, [sp]
+  0x1BD1F14    stp      x10, x11, [sp, #0x10]
+  0x1BD1F18    str      d0, [sp, #0x20]
+  0x1BD1F1C    str      w13, [sp, #0x28]
+  0x1BD1F20    strb     wzr, [sp, #0x2c]
+  0x1BD1F24    bl       #0x1637d24
+  0x1BD1F28    mov      x8, x0
+  0x1BD1F2C    str      x0, [x22, #0xad8]
+  0x1BD1F30    mov      x0, x21
+  0x1BD1F34    mov      w1, w20
+  0x1BD1F38    mov      x2, x19
+  0x1BD1F3C    blr      x8
+  0x1BD1F40    ldp      x29, x30, [sp, #0x50]
+  0x1BD1F44    ldp      x20, x19, [sp, #0x40]
+  0x1BD1F48    ldp      x22, x21, [sp, #0x30]
+  0x1BD1F4C    cmp      w0, #0
+  0x1BD1F50    cset     w0, ne
+  0x1BD1F54    add      sp, sp, #0x60
+  0x1BD1F58    ret      
+
+--- idx=24038 criAtomExAcb_GetWaveformInfoByName RVA=0x1BD1C14 ---
+  0x1BD1C14    sub      sp, sp, #0x60
+  0x1BD1C18    stp      x22, x21, [sp, #0x30]
+  0x1BD1C1C    stp      x20, x19, [sp, #0x40]
+  0x1BD1C20    stp      x29, x30, [sp, #0x50]
+  0x1BD1C24    add      x29, sp, #0x50
+  0x1BD1C28    adrp     x22, #0x7ba2000
+  0x1BD1C2C    ldr      x8, [x22, #0xae0]
+  0x1BD1C30    mov      x19, x2
+  0x1BD1C34    mov      x21, x1
+  0x1BD1C38    mov      x20, x0
+  0x1BD1C3C    cbnz     x8, #0x1bd1c84
+  0x1BD1C40    adrp     x12, #0x5d3e000
+  0x1BD1C44    ldr      d0, [x12, #0xd10]
+  0x1BD1C48    adrp     x8, #0x5d3e000
+  0x1BD1C4C    adrp     x10, #0x5d3f000
+  0x1BD1C50    add      x8, x8, #0xdc0
+  0x1BD1C54    mov      w9, #0xe
+  0x1BD1C58    add      x10, x10, #0x879
+  0x1BD1C5C    mov      w11, #0x22
+  0x1BD1C60    mov      w13, #0x18
+  0x1BD1C64    mov      x0, sp
+  0x1BD1C68    stp      x8, x9, [sp]
+  0x1BD1C6C    stp      x10, x11, [sp, #0x10]
+  0x1BD1C70    str      d0, [sp, #0x20]
+  0x1BD1C74    str      w13, [sp, #0x28]
+  0x1BD1C78    strb     wzr, [sp, #0x2c]
+  0x1BD1C7C    bl       #0x1637d24
+  0x1BD1C80    str      x0, [x22, #0xae0]
+  0x1BD1C84    mov      x0, x21
+  0x1BD1C88    bl       #0x1637cf8
+  0x1BD1C8C    ldr      x8, [x22, #0xae0]
+  0x1BD1C90    mov      x21, x0
+  0x1BD1C94    mov      x0, x20
+  0x1BD1C98    mov      x1, x21
+  0x1BD1C9C    mov      x2, x19
+  0x1BD1CA0    blr      x8
+  0x1BD1CA4    mov      w19, w0
+  0x1BD1CA8    mov      x0, x21
+  0x1BD1CAC    bl       #0x1637d18
+  0x1BD1CB0    cmp      w19, #0
+  0x1BD1CB4    ldp      x29, x30, [sp, #0x50]
+  0x1BD1CB8    ldp      x20, x19, [sp, #0x40]
+  0x1BD1CBC    ldp      x22, x21, [sp, #0x30]
+  0x1BD1CC0    cset     w0, ne
+  0x1BD1CC4    add      sp, sp, #0x60
+  0x1BD1CC8    ret      
+
+--- idx=24039 criAtomExAcb_GetCueInfoByName RVA=0x1BD14E0 ---
+  0x1BD14E0    sub      sp, sp, #0x60
+  0x1BD14E4    stp      x22, x21, [sp, #0x30]
+  0x1BD14E8    stp      x20, x19, [sp, #0x40]
+  0x1BD14EC    stp      x29, x30, [sp, #0x50]
+  0x1BD14F0    add      x29, sp, #0x50
+  0x1BD14F4    adrp     x22, #0x7ba2000
+  0x1BD14F8    ldr      x8, [x22, #0xae8]
+  0x1BD14FC    mov      x19, x2
+  0x1BD1500    mov      x21, x1
+  0x1BD1504    mov      x20, x0
+  0x1BD1508    cbnz     x8, #0x1bd1550
+  0x1BD150C    adrp     x12, #0x5d3e000
+  0x1BD1510    ldr      d0, [x12, #0xd10]
+  0x1BD1514    adrp     x8, #0x5d3e000
+  0x1BD1518    adrp     x10, #0x5d3f000
+  0x1BD151C    add      x8, x8, #0xdc0
+  0x1BD1520    mov      w9, #0xe
+  0x1BD1524    add      x10, x10, #0x89c
+  0x1BD1528    mov      w11, #0x1d
+  0x1BD152C    mov      w13, #0x18
+  0x1BD1530    mov      x0, sp
+  0x1BD1534    stp      x8, x9, [sp]
+  0x1BD1538    stp      x10, x11, [sp, #0x10]
+  0x1BD153C    str      d0, [sp, #0x20]
+  0x1BD1540    str      w13, [sp, #0x28]
+  0x1BD1544    strb     wzr, [sp, #0x2c]
+  0x1BD1548    bl       #0x1637d24
+  0x1BD154C    str      x0, [x22, #0xae8]
+  0x1BD1550    mov      x0, x21
+  0x1BD1554    bl       #0x1637cf8
+  0x1BD1558    ldr      x8, [x22, #0xae8]
+  0x1BD155C    mov      x21, x0
+  0x1BD1560    mov      x0, x20
+  0x1BD1564    mov      x1, x21
+  0x1BD1568    mov      x2, x19
+  0x1BD156C    blr      x8
+  0x1BD1570    mov      w19, w0
+  0x1BD1574    mov      x0, x21
+  0x1BD1578    bl       #0x1637d18
+  0x1BD157C    cmp      w19, #0
+  0x1BD1580    ldp      x29, x30, [sp, #0x50]
+  0x1BD1584    ldp      x20, x19, [sp, #0x40]
+  0x1BD1588    ldp      x22, x21, [sp, #0x30]
+  0x1BD158C    cset     w0, ne
+  0x1BD1590    add      sp, sp, #0x60
+  0x1BD1594    ret      
+
+--- idx=24040 criAtomExAcb_GetCueInfoById RVA=0x1BD1790 ---
+  0x1BD1790    sub      sp, sp, #0x60
+  0x1BD1794    stp      x22, x21, [sp, #0x30]
+  0x1BD1798    stp      x20, x19, [sp, #0x40]
+  0x1BD179C    stp      x29, x30, [sp, #0x50]
+  0x1BD17A0    add      x29, sp, #0x50
+  0x1BD17A4    adrp     x22, #0x7ba2000
+  0x1BD17A8    ldr      x8, [x22, #0xaf0]
+  0x1BD17AC    mov      x19, x2
+  0x1BD17B0    mov      w20, w1
+  0x1BD17B4    mov      x21, x0
+  0x1BD17B8    cbnz     x8, #0x1bd1804
+  0x1BD17BC    adrp     x12, #0x5d3e000
+  0x1BD17C0    ldr      d0, [x12, #0xd10]
+  0x1BD17C4    adrp     x8, #0x5d3e000
+  0x1BD17C8    adrp     x10, #0x5d3f000
+  0x1BD17CC    add      x8, x8, #0xdc0
+  0x1BD17D0    mov      w9, #0xe
+  0x1BD17D4    add      x10, x10, #0x8ba
+  0x1BD17D8    mov      w11, #0x1b
+  0x1BD17DC    mov      w13, #0x14
+  0x1BD17E0    mov      x0, sp
+  0x1BD17E4    stp      x8, x9, [sp]
+  0x1BD17E8    stp      x10, x11, [sp, #0x10]
+  0x1BD17EC    str      d0, [sp, #0x20]
+  0x1BD17F0    str      w13, [sp, #0x28]
+  0x1BD17F4    strb     wzr, [sp, #0x2c]
+  0x1BD17F8    bl       #0x1637d24
+  0x1BD17FC    mov      x8, x0
+  0x1BD1800    str      x0, [x22, #0xaf0]
+  0x1BD1804    mov      x0, x21
+  0x1BD1808    mov      w1, w20
+  0x1BD180C    mov      x2, x19
+  0x1BD1810    blr      x8
+  0x1BD1814    ldp      x29, x30, [sp, #0x50]
+  0x1BD1818    ldp      x20, x19, [sp, #0x40]
+  0x1BD181C    ldp      x22, x21, [sp, #0x30]
+  0x1BD1820    cmp      w0, #0
+  0x1BD1824    cset     w0, ne
+  0x1BD1828    add      sp, sp, #0x60
+  0x1BD182C    ret      
+
+--- idx=24041 criAtomExAcb_GetCueInfoByIndex RVA=0x1BD1A28 ---
+  0x1BD1A28    sub      sp, sp, #0x60
+  0x1BD1A2C    stp      x22, x21, [sp, #0x30]
+  0x1BD1A30    stp      x20, x19, [sp, #0x40]
+  0x1BD1A34    stp      x29, x30, [sp, #0x50]
+  0x1BD1A38    add      x29, sp, #0x50
+  0x1BD1A3C    adrp     x22, #0x7ba2000
+  0x1BD1A40    ldr      x8, [x22, #0xaf8]
+  0x1BD1A44    mov      x19, x2
+  0x1BD1A48    mov      w20, w1
+  0x1BD1A4C    mov      x21, x0
+  0x1BD1A50    cbnz     x8, #0x1bd1a9c
+  0x1BD1A54    adrp     x12, #0x5d3e000
+  0x1BD1A58    ldr      d0, [x12, #0xd10]
+  0x1BD1A5C    adrp     x8, #0x5d3e000
+  0x1BD1A60    adrp     x10, #0x5d3f000
+  0x1BD1A64    add      x8, x8, #0xdc0
+  0x1BD1A68    mov      w9, #0xe
+  0x1BD1A6C    add      x10, x10, #0x8d6
+  0x1BD1A70    mov      w11, #0x1e
+  0x1BD1A74    mov      w13, #0x14
+  0x1BD1A78    mov      x0, sp
+  0x1BD1A7C    stp      x8, x9, [sp]
+  0x1BD1A80    stp      x10, x11, [sp, #0x10]
+  0x1BD1A84    str      d0, [sp, #0x20]
+  0x1BD1A88    str      w13, [sp, #0x28]
+  0x1BD1A8C    strb     wzr, [sp, #0x2c]
+  0x1BD1A90    bl       #0x1637d24
+  0x1BD1A94    mov      x8, x0
+  0x1BD1A98    str      x0, [x22, #0xaf8]
+  0x1BD1A9C    mov      x0, x21
+  0x1BD1AA0    mov      w1, w20
+  0x1BD1AA4    mov      x2, x19
+  0x1BD1AA8    blr      x8
+  0x1BD1AAC    ldp      x29, x30, [sp, #0x50]
+  0x1BD1AB0    ldp      x20, x19, [sp, #0x40]
+  0x1BD1AB4    ldp      x22, x21, [sp, #0x30]
+  0x1BD1AB8    cmp      w0, #0
+  0x1BD1ABC    cset     w0, ne
+  0x1BD1AC0    add      sp, sp, #0x60
+  0x1BD1AC4    ret      
+
+--- idx=24042 criAtomExAcb_GetNumCuePlayingCountByName RVA=0x1BD1F64 ---
+  0x1BD1F64    sub      sp, sp, #0x60
+  0x1BD1F68    str      x21, [sp, #0x30]
+  0x1BD1F6C    stp      x20, x19, [sp, #0x40]
+  0x1BD1F70    stp      x29, x30, [sp, #0x50]
+  0x1BD1F74    add      x29, sp, #0x50
+  0x1BD1F78    adrp     x21, #0x7ba2000
+  0x1BD1F7C    ldr      x8, [x21, #0xb00]
+  0x1BD1F80    mov      x20, x1
+  0x1BD1F84    mov      x19, x0
+  0x1BD1F88    cbnz     x8, #0x1bd1fd0
+  0x1BD1F8C    adrp     x12, #0x5d3e000
+  0x1BD1F90    ldr      d0, [x12, #0xd10]
+  0x1BD1F94    adrp     x8, #0x5d3e000
+  0x1BD1F98    adrp     x10, #0x5d3f000
+  0x1BD1F9C    add      x8, x8, #0xdc0
+  0x1BD1FA0    mov      w9, #0xe
+  0x1BD1FA4    add      x10, x10, #0x8f5
+  0x1BD1FA8    mov      w11, #0x28
+  0x1BD1FAC    mov      w13, #0x10
+  0x1BD1FB0    mov      x0, sp
+  0x1BD1FB4    stp      x8, x9, [sp]
+  0x1BD1FB8    stp      x10, x11, [sp, #0x10]
+  0x1BD1FBC    str      d0, [sp, #0x20]
+  0x1BD1FC0    str      w13, [sp, #0x28]
+  0x1BD1FC4    strb     wzr, [sp, #0x2c]
+  0x1BD1FC8    bl       #0x1637d24
+  0x1BD1FCC    str      x0, [x21, #0xb00]
+  0x1BD1FD0    mov      x0, x20
+  0x1BD1FD4    bl       #0x1637cf8
+  0x1BD1FD8    ldr      x8, [x21, #0xb00]
+  0x1BD1FDC    mov      x20, x0
+  0x1BD1FE0    mov      x0, x19
+  0x1BD1FE4    mov      x1, x20
+  0x1BD1FE8    blr      x8
+  0x1BD1FEC    mov      w19, w0
+  0x1BD1FF0    mov      x0, x20
+  0x1BD1FF4    bl       #0x1637d18
+  0x1BD1FF8    mov      w0, w19
+  0x1BD1FFC    ldp      x29, x30, [sp, #0x50]
+  0x1BD2000    ldp      x20, x19, [sp, #0x40]
+  0x1BD2004    ldr      x21, [sp, #0x30]
+  0x1BD2008    add      sp, sp, #0x60
+  0x1BD200C    ret      
+
+--- idx=24043 criAtomExAcb_GetNumCuePlayingCountById RVA=0x1BD2018 ---
+  0x1BD2018    sub      sp, sp, #0x60
+  0x1BD201C    str      x21, [sp, #0x30]
+  0x1BD2020    stp      x20, x19, [sp, #0x40]
+  0x1BD2024    stp      x29, x30, [sp, #0x50]
+  0x1BD2028    add      x29, sp, #0x50
+  0x1BD202C    adrp     x21, #0x7ba2000
+  0x1BD2030    ldr      x8, [x21, #0xb08]
+  0x1BD2034    mov      w19, w1
+  0x1BD2038    mov      x20, x0
+  0x1BD203C    cbnz     x8, #0x1bd2088
+  0x1BD2040    adrp     x12, #0x5d3e000
+  0x1BD2044    ldr      d0, [x12, #0xd10]
+  0x1BD2048    adrp     x8, #0x5d3e000
+  0x1BD204C    adrp     x10, #0x5d3f000
+  0x1BD2050    add      x8, x8, #0xdc0
+  0x1BD2054    mov      w9, #0xe
+  0x1BD2058    add      x10, x10, #0x91e
+  0x1BD205C    mov      w11, #0x26
+  0x1BD2060    mov      w13, #0xc
+  0x1BD2064    mov      x0, sp
+  0x1BD2068    stp      x8, x9, [sp]
+  0x1BD206C    stp      x10, x11, [sp, #0x10]
+  0x1BD2070    str      d0, [sp, #0x20]
+  0x1BD2074    str      w13, [sp, #0x28]
+  0x1BD2078    strb     wzr, [sp, #0x2c]
+  0x1BD207C    bl       #0x1637d24
+  0x1BD2080    mov      x8, x0
+  0x1BD2084    str      x0, [x21, #0xb08]
+  0x1BD2088    mov      x0, x20
+  0x1BD208C    mov      w1, w19
+  0x1BD2090    blr      x8
+  0x1BD2094    ldp      x29, x30, [sp, #0x50]
+  0x1BD2098    ldp      x20, x19, [sp, #0x40]
+  0x1BD209C    ldr      x21, [sp, #0x30]
+  0x1BD20A0    add      sp, sp, #0x60
+  0x1BD20A4    ret      
+
+--- idx=24044 criAtomExAcb_GetBlockIndexById RVA=0x1BD2180 ---
+  0x1BD2180    sub      sp, sp, #0x60
+  0x1BD2184    stp      x22, x21, [sp, #0x30]
+  0x1BD2188    stp      x20, x19, [sp, #0x40]
+  0x1BD218C    stp      x29, x30, [sp, #0x50]
+  0x1BD2190    add      x29, sp, #0x50
+  0x1BD2194    adrp     x22, #0x7ba2000
+  0x1BD2198    ldr      x8, [x22, #0xb10]
+  0x1BD219C    mov      x21, x2
+  0x1BD21A0    mov      w19, w1
+  0x1BD21A4    mov      x20, x0
+  0x1BD21A8    cbnz     x8, #0x1bd21f0
+  0x1BD21AC    adrp     x12, #0x5d3e000
+  0x1BD21B0    ldr      d0, [x12, #0xd10]
+  0x1BD21B4    adrp     x8, #0x5d3e000
+  0x1BD21B8    adrp     x10, #0x5d3f000
+  0x1BD21BC    add      x8, x8, #0xdc0
+  0x1BD21C0    mov      w9, #0xe
+  0x1BD21C4    add      x10, x10, #0x945
+  0x1BD21C8    mov      w11, #0x1e
+  0x1BD21CC    mov      w13, #0x14
+  0x1BD21D0    mov      x0, sp
+  0x1BD21D4    stp      x8, x9, [sp]
+  0x1BD21D8    stp      x10, x11, [sp, #0x10]
+  0x1BD21DC    str      d0, [sp, #0x20]
+  0x1BD21E0    str      w13, [sp, #0x28]
+  0x1BD21E4    strb     wzr, [sp, #0x2c]
+  0x1BD21E8    bl       #0x1637d24
+  0x1BD21EC    str      x0, [x22, #0xb10]
+  0x1BD21F0    mov      x0, x21
+  0x1BD21F4    bl       #0x1637cf8
+  0x1BD21F8    ldr      x8, [x22, #0xb10]
+  0x1BD21FC    mov      x21, x0
+  0x1BD2200    mov      x0, x20
+  0x1BD2204    mov      w1, w19
+  0x1BD2208    mov      x2, x21
+  0x1BD220C    blr      x8
+  0x1BD2210    mov      w19, w0
+  0x1BD2214    mov      x0, x21
+  0x1BD2218    bl       #0x1637d18
+  0x1BD221C    mov      w0, w19
+  0x1BD2220    ldp      x29, x30, [sp, #0x50]
+  0x1BD2224    ldp      x20, x19, [sp, #0x40]
+  0x1BD2228    ldp      x22, x21, [sp, #0x30]
+  0x1BD222C    add      sp, sp, #0x60
+  0x1BD2230    ret      
+
+--- idx=24045 criAtomExAcb_GetBlockIndexByName RVA=0x1BD20B0 ---
+  0x1BD20B0    sub      sp, sp, #0x60
+  0x1BD20B4    stp      x22, x21, [sp, #0x30]
+  0x1BD20B8    stp      x20, x19, [sp, #0x40]
+  0x1BD20BC    stp      x29, x30, [sp, #0x50]
+  0x1BD20C0    add      x29, sp, #0x50
+  0x1BD20C4    adrp     x22, #0x7ba2000
+  0x1BD20C8    ldr      x8, [x22, #0xb18]
+  0x1BD20CC    mov      x20, x2
+  0x1BD20D0    mov      x21, x1
+  0x1BD20D4    mov      x19, x0
+  0x1BD20D8    cbnz     x8, #0x1bd2120
+  0x1BD20DC    adrp     x12, #0x5d3e000
+  0x1BD20E0    ldr      d0, [x12, #0xd10]
+  0x1BD20E4    adrp     x8, #0x5d3e000
+  0x1BD20E8    adrp     x10, #0x5d3f000
+  0x1BD20EC    add      x8, x8, #0xdc0
+  0x1BD20F0    mov      w9, #0xe
+  0x1BD20F4    add      x10, x10, #0x964
+  0x1BD20F8    mov      w11, #0x20
+  0x1BD20FC    mov      w13, #0x18
+  0x1BD2100    mov      x0, sp
+  0x1BD2104    stp      x8, x9, [sp]
+  0x1BD2108    stp      x10, x11, [sp, #0x10]
+  0x1BD210C    str      d0, [sp, #0x20]
+  0x1BD2110    str      w13, [sp, #0x28]
+  0x1BD2114    strb     wzr, [sp, #0x2c]
+  0x1BD2118    bl       #0x1637d24
+  0x1BD211C    str      x0, [x22, #0xb18]
+  0x1BD2120    mov      x0, x21
+  0x1BD2124    bl       #0x1637cf8
+  0x1BD2128    mov      x21, x0
+  0x1BD212C    mov      x0, x20
+  0x1BD2130    bl       #0x1637cf8
+  0x1BD2134    ldr      x8, [x22, #0xb18]
+  0x1BD2138    mov      x20, x0
+  0x1BD213C    mov      x0, x19
+  0x1BD2140    mov      x1, x21
+  0x1BD2144    mov      x2, x20
+  0x1BD2148    blr      x8
+  0x1BD214C    mov      w19, w0
+  0x1BD2150    mov      x0, x21
+  0x1BD2154    bl       #0x1637d18
+  0x1BD2158    mov      x0, x20
+  0x1BD215C    bl       #0x1637d18
+  0x1BD2160    mov      w0, w19
+  0x1BD2164    ldp      x29, x30, [sp, #0x50]
+  0x1BD2168    ldp      x20, x19, [sp, #0x40]
+  0x1BD216C    ldp      x22, x21, [sp, #0x30]
+  0x1BD2170    add      sp, sp, #0x60
+  0x1BD2174    ret      
+
+--- idx=24046 criAtomExAcb_ResetCueTypeStateByName RVA=0x1BD2A90 ---
+  0x1BD2A90    sub      sp, sp, #0x60
+  0x1BD2A94    str      x21, [sp, #0x30]
+  0x1BD2A98    stp      x20, x19, [sp, #0x40]
+  0x1BD2A9C    stp      x29, x30, [sp, #0x50]
+  0x1BD2AA0    add      x29, sp, #0x50
+  0x1BD2AA4    adrp     x21, #0x7ba2000
+  0x1BD2AA8    ldr      x8, [x21, #0xb20]
+  0x1BD2AAC    mov      x20, x1
+  0x1BD2AB0    mov      x19, x0
+  0x1BD2AB4    cbnz     x8, #0x1bd2afc
+  0x1BD2AB8    adrp     x12, #0x5d3e000
+  0x1BD2ABC    ldr      d0, [x12, #0xd10]
+  0x1BD2AC0    adrp     x8, #0x5d3e000
+  0x1BD2AC4    adrp     x10, #0x5d3f000
+  0x1BD2AC8    add      x8, x8, #0xdc0
+  0x1BD2ACC    mov      w9, #0xe
+  0x1BD2AD0    add      x10, x10, #0x985
+  0x1BD2AD4    mov      w11, #0x24
+  0x1BD2AD8    mov      w13, #0x10
+  0x1BD2ADC    mov      x0, sp
+  0x1BD2AE0    stp      x8, x9, [sp]
+  0x1BD2AE4    stp      x10, x11, [sp, #0x10]
+  0x1BD2AE8    str      d0, [sp, #0x20]
+  0x1BD2AEC    str      w13, [sp, #0x28]
+  0x1BD2AF0    strb     wzr, [sp, #0x2c]
+  0x1BD2AF4    bl       #0x1637d24
+  0x1BD2AF8    str      x0, [x21, #0xb20]
+  0x1BD2AFC    mov      x0, x20
+  0x1BD2B00    bl       #0x1637cf8
+  0x1BD2B04    ldr      x8, [x21, #0xb20]
+  0x1BD2B08    mov      x20, x0
+  0x1BD2B0C    mov      x0, x19
+  0x1BD2B10    mov      x1, x20
+  0x1BD2B14    blr      x8
+  0x1BD2B18    mov      x0, x20
+  0x1BD2B1C    bl       #0x1637d18
+  0x1BD2B20    ldp      x29, x30, [sp, #0x50]
+  0x1BD2B24    ldp      x20, x19, [sp, #0x40]
+  0x1BD2B28    ldr      x21, [sp, #0x30]
+  0x1BD2B2C    add      sp, sp, #0x60
+  0x1BD2B30    ret      
+
+--- idx=24047 criAtomExAcb_ResetCueTypeStateById RVA=0x1BD2B3C ---
+  0x1BD2B3C    sub      sp, sp, #0x60
+  0x1BD2B40    str      x21, [sp, #0x30]
+  0x1BD2B44    stp      x20, x19, [sp, #0x40]
+  0x1BD2B48    stp      x29, x30, [sp, #0x50]
+  0x1BD2B4C    add      x29, sp, #0x50
+  0x1BD2B50    adrp     x21, #0x7ba2000
+  0x1BD2B54    ldr      x8, [x21, #0xb28]
+  0x1BD2B58    mov      w19, w1
+  0x1BD2B5C    mov      x20, x0
+  0x1BD2B60    cbnz     x8, #0x1bd2bac
+  0x1BD2B64    adrp     x12, #0x5d3e000
+  0x1BD2B68    ldr      d0, [x12, #0xd10]
+  0x1BD2B6C    adrp     x8, #0x5d3e000
+  0x1BD2B70    adrp     x10, #0x5d3f000
+  0x1BD2B74    add      x8, x8, #0xdc0
+  0x1BD2B78    mov      w9, #0xe
+  0x1BD2B7C    add      x10, x10, #0x9aa
+  0x1BD2B80    mov      w11, #0x22
+  0x1BD2B84    mov      w13, #0xc
+  0x1BD2B88    mov      x0, sp
+  0x1BD2B8C    stp      x8, x9, [sp]
+  0x1BD2B90    stp      x10, x11, [sp, #0x10]
+  0x1BD2B94    str      d0, [sp, #0x20]
+  0x1BD2B98    str      w13, [sp, #0x28]
+  0x1BD2B9C    strb     wzr, [sp, #0x2c]
+  0x1BD2BA0    bl       #0x1637d24
+  0x1BD2BA4    mov      x8, x0
+  0x1BD2BA8    str      x0, [x21, #0xb28]
+  0x1BD2BAC    mov      x0, x20
+  0x1BD2BB0    mov      w1, w19
+  0x1BD2BB4    blr      x8
+  0x1BD2BB8    ldp      x29, x30, [sp, #0x50]
+  0x1BD2BBC    ldp      x20, x19, [sp, #0x40]
+  0x1BD2BC0    ldr      x21, [sp, #0x30]
+  0x1BD2BC4    add      sp, sp, #0x60
+  0x1BD2BC8    ret      
+
+--- idx=24048 criAtomExAcb_AttachAwbFile RVA=0x1BD2C68 ---
+  0x1BD2C68    sub      sp, sp, #0x80
+  0x1BD2C6C    str      x25, [sp, #0x30]
+  0x1BD2C70    stp      x24, x23, [sp, #0x40]
+  0x1BD2C74    stp      x22, x21, [sp, #0x50]
+  0x1BD2C78    stp      x20, x19, [sp, #0x60]
+  0x1BD2C7C    stp      x29, x30, [sp, #0x70]
+  0x1BD2C80    add      x29, sp, #0x70
+  0x1BD2C84    adrp     x25, #0x7ba2000
+  0x1BD2C88    ldr      x8, [x25, #0xb30]
+  0x1BD2C8C    mov      w19, w5
+  0x1BD2C90    mov      x20, x4
+  0x1BD2C94    mov      x23, x3
+  0x1BD2C98    mov      x24, x2
+  0x1BD2C9C    mov      x21, x1
+  0x1BD2CA0    mov      x22, x0
+  0x1BD2CA4    cbnz     x8, #0x1bd2cec
+  0x1BD2CA8    adrp     x12, #0x5d3e000
+  0x1BD2CAC    ldr      d0, [x12, #0xd10]
+  0x1BD2CB0    adrp     x8, #0x5d3e000
+  0x1BD2CB4    adrp     x10, #0x5d3f000
+  0x1BD2CB8    add      x8, x8, #0xdc0
+  0x1BD2CBC    mov      w9, #0xe
+  0x1BD2CC0    add      x10, x10, #0x9cd
+  0x1BD2CC4    mov      w11, #0x1a
+  0x1BD2CC8    mov      w13, #0x2c
+  0x1BD2CCC    mov      x0, sp
+  0x1BD2CD0    stp      x8, x9, [sp]
+  0x1BD2CD4    stp      x10, x11, [sp, #0x10]
+  0x1BD2CD8    str      d0, [sp, #0x20]
+  0x1BD2CDC    str      w13, [sp, #0x28]
+  0x1BD2CE0    strb     wzr, [sp, #0x2c]
+  0x1BD2CE4    bl       #0x1637d24
+  0x1BD2CE8    str      x0, [x25, #0xb30]
+  0x1BD2CEC    mov      x0, x24
+  0x1BD2CF0    bl       #0x1637cf8
+  0x1BD2CF4    mov      x24, x0
+  0x1BD2CF8    mov      x0, x23
+  0x1BD2CFC    bl       #0x1637cf8
+  0x1BD2D00    ldr      x8, [x25, #0xb30]
+  0x1BD2D04    mov      x23, x0
+  0x1BD2D08    mov      x0, x22
+  0x1BD2D0C    mov      x1, x21
+  0x1BD2D10    mov      x2, x24
+  0x1BD2D14    mov      x3, x23
+  0x1BD2D18    mov      x4, x20
+  0x1BD2D1C    mov      w5, w19
+  0x1BD2D20    blr      x8
+  0x1BD2D24    mov      x0, x24
+  0x1BD2D28    bl       #0x1637d18
+  0x1BD2D2C    mov      x0, x23
+  0x1BD2D30    bl       #0x1637d18
+  0x1BD2D34    ldp      x29, x30, [sp, #0x70]
+  0x1BD2D38    ldp      x20, x19, [sp, #0x60]
+  0x1BD2D3C    ldp      x22, x21, [sp, #0x50]
+  0x1BD2D40    ldp      x24, x23, [sp, #0x40]
+  0x1BD2D44    ldr      x25, [sp, #0x30]
+  0x1BD2D48    add      sp, sp, #0x80
+  0x1BD2D4C    ret      
+
+--- idx=24049 criAtomExAcb_DetachAwbFile RVA=0x1BD2D8C ---
+  0x1BD2D8C    sub      sp, sp, #0x60
+  0x1BD2D90    str      x21, [sp, #0x30]
+  0x1BD2D94    stp      x20, x19, [sp, #0x40]
+  0x1BD2D98    stp      x29, x30, [sp, #0x50]
+  0x1BD2D9C    add      x29, sp, #0x50
+  0x1BD2DA0    adrp     x21, #0x7ba2000
+  0x1BD2DA4    ldr      x8, [x21, #0xb38]
+  0x1BD2DA8    mov      x20, x1
+  0x1BD2DAC    mov      x19, x0
+  0x1BD2DB0    cbnz     x8, #0x1bd2df8
+  0x1BD2DB4    adrp     x12, #0x5d3e000
+  0x1BD2DB8    ldr      d0, [x12, #0xd10]
+  0x1BD2DBC    adrp     x8, #0x5d3e000
+  0x1BD2DC0    adrp     x10, #0x5d3f000
+  0x1BD2DC4    add      x8, x8, #0xdc0
+  0x1BD2DC8    mov      w9, #0xe
+  0x1BD2DCC    add      x10, x10, #0x9e8
+  0x1BD2DD0    mov      w11, #0x1a
+  0x1BD2DD4    mov      w13, #0x10
+  0x1BD2DD8    mov      x0, sp
+  0x1BD2DDC    stp      x8, x9, [sp]
+  0x1BD2DE0    stp      x10, x11, [sp, #0x10]
+  0x1BD2DE4    str      d0, [sp, #0x20]
+  0x1BD2DE8    str      w13, [sp, #0x28]
+  0x1BD2DEC    strb     wzr, [sp, #0x2c]
+  0x1BD2DF0    bl       #0x1637d24
+  0x1BD2DF4    str      x0, [x21, #0xb38]
+  0x1BD2DF8    mov      x0, x20
+  0x1BD2DFC    bl       #0x1637cf8
+  0x1BD2E00    ldr      x8, [x21, #0xb38]
+  0x1BD2E04    mov      x20, x0
+  0x1BD2E08    mov      x0, x19
+  0x1BD2E0C    mov      x1, x20
+  0x1BD2E10    blr      x8
+  0x1BD2E14    mov      x0, x20
+  0x1BD2E18    bl       #0x1637d18
+  0x1BD2E1C    ldp      x29, x30, [sp, #0x50]
+  0x1BD2E20    ldp      x20, x19, [sp, #0x40]
+  0x1BD2E24    ldr      x21, [sp, #0x30]
+  0x1BD2E28    add      sp, sp, #0x60
+  0x1BD2E2C    ret      
+
+--- idx=24050 criAtomExAcb_IsReadyToRelease RVA=0x1BD2E68 ---
+  0x1BD2E68    sub      sp, sp, #0x50
+  0x1BD2E6C    stp      x20, x19, [sp, #0x30]
+  0x1BD2E70    stp      x29, x30, [sp, #0x40]
+  0x1BD2E74    add      x29, sp, #0x40
+  0x1BD2E78    adrp     x20, #0x7ba2000
+  0x1BD2E7C    ldr      x8, [x20, #0xb40]
+  0x1BD2E80    mov      x19, x0
+  0x1BD2E84    cbnz     x8, #0x1bd2ed0
+  0x1BD2E88    adrp     x12, #0x5d3e000
+  0x1BD2E8C    ldr      d0, [x12, #0xd10]
+  0x1BD2E90    adrp     x8, #0x5d3e000
+  0x1BD2E94    adrp     x10, #0x5d3f000
+  0x1BD2E98    add      x8, x8, #0xdc0
+  0x1BD2E9C    mov      w9, #0xe
+  0x1BD2EA0    add      x10, x10, #0xa03
+  0x1BD2EA4    mov      w11, #0x1d
+  0x1BD2EA8    mov      w13, #8
+  0x1BD2EAC    mov      x0, sp
+  0x1BD2EB0    stp      x8, x9, [sp]
+  0x1BD2EB4    stp      x10, x11, [sp, #0x10]
+  0x1BD2EB8    str      d0, [sp, #0x20]
+  0x1BD2EBC    str      w13, [sp, #0x28]
+  0x1BD2EC0    strb     wzr, [sp, #0x2c]
+  0x1BD2EC4    bl       #0x1637d24
+  0x1BD2EC8    mov      x8, x0
+  0x1BD2ECC    str      x0, [x20, #0xb40]
+  0x1BD2ED0    mov      x0, x19
+  0x1BD2ED4    blr      x8
+  0x1BD2ED8    ldp      x29, x30, [sp, #0x40]
+  0x1BD2EDC    ldp      x20, x19, [sp, #0x30]
+  0x1BD2EE0    cmp      w0, #0
+  0x1BD2EE4    cset     w0, ne
+  0x1BD2EE8    add      sp, sp, #0x50
+  0x1BD2EEC    ret      
