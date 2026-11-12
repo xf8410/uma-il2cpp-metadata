@@ -1,0 +1,26 @@
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/resources/Manifest/Android/manifest.json
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/resources/manifest/Android/manifest.json
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/resources/Manifest/manifest.json
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/resources/Android/assetbundles/
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+200  220  l1-prod-bili-gs-uma.bilibiligame.net/manifest/Android/manifest.json
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/resources/Manifest/Android/manifest.json
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/resources/manifest/Android/manifest.json
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/resources/Manifest/manifest.json
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/resources/Android/assetbundles/
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+200  220  l2-prod-bili-gs-uma.bilibiligame.net/manifest/Android/manifest.json
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/resources/Manifest/Android/manifest.json
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/resources/manifest/Android/manifest.json
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/resources/Manifest/manifest.json
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/resources/Android/assetbundles/
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+200  220  le1-prod-bili-gs-uma.bilibiligame.net/manifest/Android/manifest.json
+=== 非 404 的候选再取头 320 字节 ===
+25 probe.log
