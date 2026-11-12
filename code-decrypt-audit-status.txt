@@ -1,0 +1,42 @@
+dec.so.gz = metadata-20261110/libil2cpp.dec.so.gz
+-rw-r--r-- 1 runner runner 129667848 Nov 12 01:59 dec.so
+rva = metadata-20261110/dump/methods_rva.tsv
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""反汇编抽样验证 + XOR 0x97 加密区间的精细定位 + 解密复验
+
+    pip install capstone
+    python3 tools/verify_code.py <libil2cpp.so> <global-metadata.fixed.dat> <methods_rva.tsv>
+
+流程：
+  1) 抽样 200 个 RVA，反汇编判定是「明文代码 / XOR 0x97 加密 / 长函数 / 解不开」；
+  2) 对 AX 段按 **256 字节** 粒度算 capstone 覆盖率，判定每个窗口是明文还是加密
+     （覆盖率 = 被成功解码的字节比例；加密数据原样解释时覆盖率很低）；
+  3) 合并相邻窗口 → 写 code_xor97_pages.txt；
+  4) 在内存里按该表解密，再对同一批地址复验，输出解密前后的成功率对比。
+"""
+import os
+import struct
+import sys
+
+try:
+    from capstone import Cs, CS_ARCH_ARM64, CS_MODE_ARM
+except ImportError:
+    raise SystemExit("需要 capstone: pip install capstone")
+
+MAX_INSN = 400
+XOR_KEY = 0x97
+WIN = 256
+
+
+def load_sections(d):
+    (_t, _m, _v, _e, _phoff, shoff, _f, _eh, _ph, _phn,
+Traceback (most recent call last):
+  File "/home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/tools/verify_code.py", line 190, in <module>
+    main()
+  File "/home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/tools/verify_code.py", line 67, in main
+    so_path, meta_path, tsv = sys.argv[1], sys.argv[2], sys.argv[3]
+                                                        ~~~~~~~~^^^
+IndexError: list index out of range
+--- dec.so 中 0xD65F03C0(ret) 出现次数 ---
+0
