@@ -29,22 +29,15 @@ jobs:
           ls -l dec.so >> hunt.log
           R=$(ls metadata-*/dump/methods_rva.tsv 2>/dev/null | head -1)
           T=$(ls metadata-*/dump/crypto_targets.tsv 2>/dev/null | head -1)
-          M=$(ls metadata-*/dump/methods.tsv 2>/dev/null | head -1)
           echo "rva     = $R" >> hunt.log
           echo "targets = $T" >> hunt.log
-          echo "--- methods.tsv 前 5 行（确认列格式）---" >> hunt.log
-          head -5 "$M" 2>/dev/null >> hunt.log
           echo "RVA=$R" >> "$GITHUB_ENV"
           echo "TARGETS=$T" >> "$GITHUB_ENV"
       - name: 反汇编加解密方法
         run: |
-          python3 tools/hunt_crypto.py dec.so "$RVA" "$TARGETS" >> hunt.log 2>&1 || true
-      - name: 试拉 CDN 样本（预期失败，留证据）
-        run: |
-          U='https://prd-storage-umamusume.akamaized.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI'
-          echo "=== GET $U ===" >> hunt.log
-          code=$(curl -sS -L --max-time 20 -o s.bin -w '%{http_code}' "$U" 2>>hunt.log || echo ERR)
-          echo "http=$code size=$(stat -c%s s.bin 2>/dev/null || echo 0)" >> hunt.log
+          rm -rf crypto-hunt
+          python3 tools/hunt_crypto.py dec.so "$RVA" "$TARGETS" crypto-hunt >> hunt.log 2>&1 || true
+          ls -l crypto-hunt >> hunt.log 2>&1 || true
       - name: 提交
         if: always()
         run: |
@@ -52,6 +45,6 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           cp hunt.log crypto-hunt.txt
-          git add crypto-hunt.txt || true
+          git add crypto-hunt.txt crypto-hunt || true
           git commit -m "ci: crypto hunt" || echo "no change"
           git push || true
