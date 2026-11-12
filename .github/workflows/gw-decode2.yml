@@ -1,0 +1,65 @@
+name: gw-decode2
+
+# 解 220 字节 msgpack 网关响应 + 打印全部响应头，判断它要什么鉴权
+on:
+  push:
+    paths:
+      - '.github/workflows/gw-decode2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python3 -m pip install --quiet msgpack
+      - name: 抓响应头 + 包体
+        run: |
+          : > gw2.log
+          for H in l2-prod-bili-gs-uma.bilibiligame.net l1-prod-bili-gs-uma.bilibiligame.net; do
+            echo "########## $H ##########" >> gw2.log
+            curl -sS -D hdr.txt -o body.bin --max-time 20 "https://$H/" 2>>gw2.log || true
+            echo "--- 响应头 ---" >> gw2.log
+            cat hdr.txt >> gw2.log 2>&1 || true
+            echo "--- size=$(stat -c%s body.bin 2>/dev/null) ---" >> gw2.log
+            od -An -tx1 -v body.bin >> gw2.log 2>&1 || true
+            python3 - >> gw2.log 2>&1 <<'PY'
+            import msgpack
+            d = open('body.bin','rb').read()
+            for raw in (False, True):
+                try:
+                    o = msgpack.unpackb(d, raw=raw, strict_map_key=False)
+                    print("msgpack(raw=%s) -> %r" % (raw, o)[:2000] if False else "msgpack(raw=%s) -> %s" % (raw, repr(o)[:2000]))
+                    break
+                except Exception as e:
+                    print("msgpack(raw=%s) 失败: %s" % (raw, e))
+            print("ascii:", ''.join(chr(b) if 32 <= b < 127 else '.' for b in d))
+            PY
+            echo >> gw2.log
+          done
+          echo "########## 带浏览器 UA 再试 ##########" >> gw2.log
+          for H in l2-prod-bili-gs-uma.bilibiligame.net; do
+            for P in "/" "/resources/Manifest/Android/manifest.json"; do
+              code=$(curl -sS -o b2 -w '%{http_code}' --max-time 15 \
+                -A "Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36" \
+                "https://$H$P" 2>/dev/null || echo ERR)
+              echo "$code size=$(stat -c%s b2 2>/dev/null) $P" >> gw2.log
+              head -c 200 b2 | tr -c '[:print:]' '.' >> gw2.log 2>&1 || true
+              echo >> gw2.log
+            done
+          done
+      - name: 提交
+        if: always()
+        run: |
+          [ -f gw2.log ] || echo "(无)" > gw2.log
+          git init -q r && cd r
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main && git checkout -q -B main origin/main
+          cp ../gw2.log gw-decode2.txt
+          git add gw-decode2.txt
+          git commit -m "ci: gateway response decode" || echo "no change"
+          for i in 1 2 3; do git push -q origin main && break || sleep 4; done
