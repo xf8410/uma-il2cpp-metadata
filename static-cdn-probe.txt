@@ -1,0 +1,24 @@
+code=403 size=605  static.biligame.net/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=603  static.biligame.net/robots.txt  [HTML document, ASCII text, with CRLF lin]
+code=404 size=596  static.biligame.net/dl/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=606  static.biligame.net/dl/resources/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=603  static.biligame.net/resources/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=597  static.biligame.net/uma/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=603  static.biligame.net/umamusume/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=598  static.biligame.net/game/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=601  static.biligame.net/android/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=601  static.biligame.net/Android/  [HTML document, ASCII text, with CRLF lin]
+code=404 size=649  static.biligame.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI  [HTML document, ASCII text, with CRLF lin]
+code=404 size=636  static.biligame.net/dl/resources/Manifest/Android/manifest.json  [HTML document, ASCII text, with CRLF lin]
+code=404 size=646  static.biligame.net/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI  [HTML document, ASCII text, with CRLF lin]
+code=404 size=618  static.biligame.net/uma/Android/manifest.json  [HTML document, ASCII text, with CRLF lin]
+code=404 size=624  static.biligame.net/umamusume/Android/manifest.json  [HTML document, ASCII text, with CRLF lin]
+=== DNS ===
+47.246.20.201   static.biligame.net.w.kunlungr.com static.biligame.net
+47.246.20.199   static.biligame.net.w.kunlungr.com static.biligame.net
+47.246.20.197   static.biligame.net.w.kunlungr.com static.biligame.net
+47.246.20.203   static.biligame.net.w.kunlungr.com static.biligame.net
+47.246.20.200   static.biligame.net.w.kunlungr.com static.biligame.net
+47.246.20.202   static.biligame.net.w.kunlungr.com static.biligame.net
+47.246.20.198   static.biligame.net.w.kunlungr.com static.biligame.net
+47.246.20.196   static.biligame.net.w.kunlungr.com static.biligame.net
