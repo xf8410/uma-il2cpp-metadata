@@ -1,0 +1,44 @@
+-rw-r--r-- 1 runner runner 129667848 Nov 12 02:46 dec.so
+-rwxr-xr-x 1 runner runner  32248932 Nov 12 02:46 global-metadata.dat
+--- dumper 内容 ---
+total 920
+-rw-r--r-- 1 runner runner   1471 Jul  6  2024 Il2CppDumper.deps.json
+-rw-r--r-- 1 runner runner 223744 Jul  6  2024 Il2CppDumper.dll
+-rw-r--r-- 1 runner runner 150016 Jul  6  2024 Il2CppDumper.exe
+-rw-r--r-- 1 runner runner    330 Jul  6  2024 Il2CppDumper.runtimeconfig.json
+-rw-r--r-- 1 runner runner  39424 Jul  6  2024 Mono.Cecil.Mdb.dll
+-rw-r--r-- 1 runner runner  89600 Jul  6  2024 Mono.Cecil.Pdb.dll
+-rw-r--r-- 1 runner runner  24576 Jul  6  2024 Mono.Cecil.Rocks.dll
+-rw-r--r-- 1 runner runner 356864 Jul  6  2024 Mono.Cecil.dll
+-rw-r--r-- 1 runner runner    391 Jul  6  2024 config.json
+-rw-r--r-- 1 runner runner   2756 Jul  6  2024 ghidra.py
+-rw-r--r-- 1 runner runner   3235 Jul  6  2024 ghidra_wasm.py
+-rw-r--r-- 1 runner runner   5156 Jul  6  2024 ghidra_with_struct.py
+-rw-r--r-- 1 runner runner   2405 Jul  6  2024 ida.py
+-rw-r--r-- 1 runner runner   2342 Jul  6  2024 ida_py3.py
+-rw-r--r-- 1 runner runner   2903 Jul  6  2024 ida_with_struct.py
+-rw-r--r-- 1 runner runner   2809 Jul  6  2024 ida_with_struct_py3.py
+-rw-r--r-- 1 runner runner   1209 Jul  6  2024 il2cpp_header_to_ghidra.py
+Initializing metadata...
+Metadata Version: 27
+Initializing il2cpp file...
+Applying relocations...
+WARNING: find .init_proc
+ERROR: This file may be protected.
+Il2Cpp Version: 27
+Searching...
+Change il2cpp version to: 27.1
+CodeRegistration : 7469708
+MetadataRegistration : 746a1f0
+System.OverflowException: Arithmetic operation resulted in an overflow.
+   at Il2CppDumper.Il2Cpp.Init(UInt64 codeRegistration, UInt64 metadataRegistration) in C:\projects\il2cppdumper\Il2CppDumper\Il2Cpp\Il2Cpp.cs:line 230
+   at Il2CppDumper.Il2Cpp.AutoPlusInit(UInt64 codeRegistration, UInt64 metadataRegistration) in C:\projects\il2cppdumper\Il2CppDumper\Il2Cpp\Il2Cpp.cs:line 114
+   at Il2CppDumper.Elf64.PlusSearch(Int32 methodCount, Int32 typeDefinitionsCount, Int32 imageCount) in C:\projects\il2cppdumper\Il2CppDumper\ExecutableFormats\Elf64.cs:line 97
+   at Il2CppDumper.Program.Init(String il2cppPath, String metadataPath, Metadata& metadata, Il2Cpp& il2Cpp) in C:\projects\il2cppdumper\Il2CppDumper\Program.cs:line 210
+ERROR: An error occurred while processing.
+Press any key to exit...
+Unhandled exception. System.InvalidOperationException: Cannot read keys when either application does not have a console or when console input has been redirected. Try Console.Read.
+   at System.ConsolePal.ReadKey(Boolean intercept)
+   at Il2CppDumper.Program.Main(String[] args) in C:\projects\il2cppdumper\Il2CppDumper\Program.cs:line 110
+ls: cannot access 'out': No such file or directory
+--- dump.cs = <无> ---
