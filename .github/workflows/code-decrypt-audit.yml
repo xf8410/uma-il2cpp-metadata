@@ -28,19 +28,29 @@ jobs:
           [ -f dec.so ] || { U=$(ls metadata-*/libil2cpp.so.gz | head -1); gunzip -c "$U" > dec.so; }
           ls -l dec.so >> aud.log
           R=$(ls metadata-*/dump-fixed/methods_rva.tsv metadata-*/dump/methods_rva.tsv 2>/dev/null | head -1)
-          echo "rva = ${R:-<无>}" >> aud.log
-          echo "RVA=$R" >> $GITHUB_ENV
+          # verify_code.py 的接口是 3 参：<so> <global-metadata.fixed.dat> <methods_rva.tsv>
+          # （第 2 参当前脚本体里没被读取，但缺了就 IndexError: sys.argv[3]）
+          M=$(ls metadata-*/global-metadata.fixed.dat metadata-*/dump-fixed/global-metadata.fixed.dat 2>/dev/null | head -1)
+          echo "rva  = ${R:-<无>}" >> aud.log
+          echo "meta = ${M:-<无>}" >> aud.log
+          echo "RVA=$R" >> "$GITHUB_ENV"
+          echo "META=$M" >> "$GITHUB_ENV"
       - name: 脚本接口
+        run: head -30 tools/verify_code.py >> aud.log 2>&1
+      - name: 跑 verify（3 参）
         run: |
-          head -30 tools/verify_code.py >> aud.log 2>&1
-      - name: 跑 verify
-        run: |
-          python3 tools/verify_code.py dec.so "$RVA" > aud.out 2>&1 || true
+          python3 tools/verify_code.py dec.so "$META" "$RVA" > aud.out 2>&1 || true
           tail -c 6000 aud.out >> aud.log
-      - name: 统计
+          P=$(ls metadata-*/dump*/code_xor97_pages.txt metadata-*/code_xor97_pages.txt 2>/dev/null | head -1)
+          echo "--- code_xor97_pages.txt = ${P:-<无>} ---" >> aud.log
+          if [ -n "$P" ]; then
+            echo "区间条数：$(grep -c '^0x' "$P" || true)" >> aud.log
+            head -20 "$P" >> aud.log
+          fi
+      - name: 统计 ret（按字节数，ARM64 小端 c0 03 5f d6）
         run: |
-          echo "--- dec.so 中 0xD65F03C0(ret) 出现次数 ---" >> aud.log
-          od -An -tx1 -v dec.so | tr -d ' \n' | grep -o "d65f03c0" | wc -l >> aud.log || true
+          python3 -c "d=open('dec.so','rb').read(); print('--- ARM64 ret 小端 c0 03 5f d6 次数 ---'); print(d.count(bytes.fromhex('c0035fd6')))" >> aud.log 2>&1 || true
+          python3 -c "d=open('dec.so','rb').read(); print('--- 对照：反序 d6 5f 03 c0 次数（旧写法搜的是这个，必然≈0）---'); print(d.count(bytes.fromhex('d65f03c0')))" >> aud.log 2>&1 || true
       - name: 提交
         if: always()
         run: |
