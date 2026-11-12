@@ -1,0 +1,45 @@
+name: callers-hunt2
+
+# BL/B 都扫 + 自检计数（验证解码器是否正确、直接调用是否存在）
+on:
+  push:
+    paths:
+      - '.github/workflows/callers-hunt2.yml'
+      - 'tools/find_callers2.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  callers2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 -m pip install --quiet capstone numpy
+      - name: 准备 SO
+        run: |
+          : > callers2.log
+          G=$(ls metadata-*/libil2cpp.dec.so.gz 2>/dev/null | head -1)
+          gunzip -c "$G" > dec.so
+          ls -l dec.so >> callers2.log
+      - name: 扫调用点（含自检）
+        run: |
+          rm -rf callers2
+          # 0x16378b0 = 反汇编里见过的运行时辅助函数，用来验证扫描器本身
+          python3 tools/find_callers2.py dec.so callers2 \
+            0x16378b0,0x27B5618,0x27B56EC,0x1BD2F88,0x1BD2EF8 >> callers2.log 2>&1 || true
+          ls -l callers2 >> callers2.log 2>&1 || true
+      - name: 提交
+        if: always()
+        run: |
+          [ -f callers2.log ] || echo "(无)" > callers2.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp callers2.log callers2-status.txt
+          git add callers2-status.txt callers2 || true
+          git commit -m "ci: callers hunt 2" || echo "no change"
+          git push || true
