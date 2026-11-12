@@ -1,0 +1,54 @@
+name: gw-decode3
+
+# 取 220B 网关响应的响应头 + 完整 hex（不依赖 python/msgpack，避免步骤被 -e 掐断）
+on:
+  push:
+    paths:
+      - '.github/workflows/gw-decode3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 抓响应头 + 包体
+        run: |
+          set +e
+          : > gw3.log
+          echo "workflow started $(date -u)" >> gw3.log
+          for H in l2-prod-bili-gs-uma.bilibiligame.net l1-prod-bili-gs-uma.bilibiligame.net; do
+            for P in "/" "/resources/Manifest/Android/manifest.json"; do
+              echo "########## https://$H$P" >> gw3.log
+              curl -sS -D hdr.txt -o body.bin --max-time 20 "https://$H$P" >> gw3.log 2>&1
+              echo "--- 状态与大小 ---" >> gw3.log
+              head -1 hdr.txt >> gw3.log 2>&1
+              grep -iE '^(content-type|content-length|server|via|x-|set-cookie|location|date):' hdr.txt >> gw3.log 2>&1
+              echo "size=$(stat -c%s body.bin 2>/dev/null)" >> gw3.log
+              echo "--- body hex ---" >> gw3.log
+              od -An -tx1 -v body.bin >> gw3.log 2>&1
+              echo "--- body ascii ---" >> gw3.log
+              tr -c '[:print:]' '.' < body.bin >> gw3.log 2>&1
+              echo >> gw3.log
+            done
+          done
+          echo "=== done $(date -u) ===" >> gw3.log
+      - name: 提交
+        if: always()
+        run: |
+          set +e
+          [ -s gw3.log ] || echo "(空日志)" > gw3.log
+          git init -q r
+          cd r
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main
+          git checkout -q -B main origin/main
+          cp ../gw3.log gw-decode3.txt
+          git add gw-decode3.txt
+          git commit -m "ci: gateway response hex" || echo "no change"
+          for i in 1 2 3; do git push -q origin main && break; sleep 4; done
+          echo done
