@@ -1,0 +1,11 @@
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /resources/Manifest/Android/manifest.json
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /resources/manifest/Android/manifest.json
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /dl/resources/Manifest/Android/manifest.json
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /resources/Android/assetbundles/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+code=200 size=220 ct=application/x-msgpack; charset=utf-8  /Android/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+=== 同样请求打到 l1 做对照 ===
+code=200 size=220 l1-prod-bili-gs-uma.bilibiligame.net/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+code=200 size=220 le1-prod-bili-gs-uma.bilibiligame.net/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
