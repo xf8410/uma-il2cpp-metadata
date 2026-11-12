@@ -1,0 +1,47 @@
+name: cn-cdn-probe
+
+# 探国服 CDN（bilibiligame）的资源路径模板，找一个真实资源样本
+on:
+  push:
+    paths:
+      - '.github/workflows/cn-cdn-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 探路径
+        run: |
+          : > probe.log
+          HOSTS="l1-prod-bili-gs-uma.bilibiligame.net l2-prod-bili-gs-uma.bilibiligame.net le1-prod-bili-gs-uma.bilibiligame.net l1-bak-prod-bili-gs-uma.bilibiligame.net"
+          PATHS="/ /resources/Manifest/Android/manifest.json /resources/manifest/Android/manifest.json /resources/Manifest/manifest.json /dl/resources/Manifest/Android/manifest.json /resources/Android/assetbundles/ /resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI /dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI /manifest/Android/manifest.json /Android/manifest.json"
+          for h in $HOSTS; do
+            for p in $PATHS; do
+              code=$(curl -sS -o /tmp/o -w '%{http_code}' --max-time 15 "https://$h$p" 2>/dev/null || echo ERR)
+              sz=$(stat -c%s /tmp/o 2>/dev/null || echo 0)
+              ct=$(curl -sSI --max-time 15 "https://$h$p" 2>/dev/null | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print $2; exit}')
+              echo "$code  $sz  ${ct:-?}  $h$p" >> probe.log
+            done
+          done
+          echo "=== 200/3xx 的候选再取头 320 字节 ===" >> probe.log
+          grep -E '^(200|30)' probe.log | awk '{print $4}' | head -5 | while read u; do
+            echo "--- $u" >> probe.log
+            curl -sS -o /tmp/b --max-time 30 "$u" 2>>probe.log || true
+            od -An -tx1 -N320 /tmp/b >> probe.log 2>&1 || true
+            head -c 120 /tmp/b | tr -c '[:print:]' '.' >> probe.log 2>&1 || true
+            echo >> probe.log
+          done
+      - name: 提交
+        if: always()
+        run: |
+          [ -f probe.log ] || echo "(无)" > probe.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp probe.log cn-cdn-probe.txt
+          git add cn-cdn-probe.txt || true
+          git commit -m "ci: cn cdn probe" || echo "no change"
+          git push || true
