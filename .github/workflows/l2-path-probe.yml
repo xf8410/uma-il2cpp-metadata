@@ -1,0 +1,55 @@
+name: l2-path-probe
+
+# 在 l2-prod（下载实际走的网段）上验证资源路径模板；用「404 vs 220字节网关体」区分对错
+on:
+  push:
+    paths:
+      - '.github/workflows/l2-path-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 探路径
+        run: |
+          : > l2.log
+          H=l2-prod-bili-gs-uma.bilibiligame.net
+          JP=3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+          PATHS="/ /resources/Generic/3U/$JP /dl/resources/Generic/3U/$JP /resources/Manifest/Android/manifest.json /resources/manifest/Android/manifest.json /dl/resources/Manifest/Android/manifest.json /resources/Android/assetbundles/$JP /Android/resources/Generic/3U/$JP"
+          for p in $PATHS; do
+            body=/tmp/b
+            code=$(curl -sS -o $body -w '%{http_code}' --max-time 15 "https://$H$p" 2>/dev/null || echo ERR)
+            sz=$(stat -c%s $body 2>/dev/null || echo 0)
+            ct=$(curl -sSI --max-time 10 "https://$H$p" 2>/dev/null | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print $2; exit}')
+            echo "code=$code size=$sz ct=${ct:-?}  $p" >> l2.log
+            if [ "$sz" != "220" ]; then
+              echo "  --- 头 96B ---" >> l2.log
+              od -An -tx1 -N96 $body >> l2.log 2>&1 || true
+              head -c 96 $body | tr -c '[:print:]' '.' >> l2.log 2>&1 || true
+              echo >> l2.log
+            fi
+          done
+          echo "=== 同样请求打到 l1 做对照 ===" >> l2.log
+          for p in /resources/Generic/3U/$JP; do
+            for H2 in l1-prod-bili-gs-uma.bilibiligame.net le1-prod-bili-gs-uma.bilibiligame.net; do
+              code=$(curl -sS -o /tmp/c -w '%{http_code}' --max-time 12 "https://$H2$p" 2>/dev/null || echo ERR)
+              echo "code=$code size=$(stat -c%s /tmp/c 2>/dev/null) $H2$p" >> l2.log
+            done
+          done
+      - name: 提交
+        if: always()
+        run: |
+          [ -f l2.log ] || echo "(无)" > l2.log
+          git init -q r && cd r
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main && git checkout -q -B main origin/main
+          cp ../l2.log l2-path-probe.txt
+          git add l2-path-probe.txt
+          git commit -m "ci: l2 path probe" || echo "no change"
+          for i in 1 2 3; do git push -q origin main && break || sleep 4; done
