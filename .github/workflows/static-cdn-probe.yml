@@ -1,0 +1,53 @@
+name: static-cdn-probe
+
+# 探 static.biligame.net 的公开路径（游戏资源主机，登录后下发、无明文模板）
+on:
+  push:
+    paths:
+      - '.github/workflows/static-cdn-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 探
+        run: |
+          set +e
+          : > st.log
+          H=static.biligame.net
+          JP=3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI
+          PATHS="/ /robots.txt /dl/ /dl/resources/ /resources/ /uma/ /umamusume/ /game/ /android/ /Android/
+            /dl/resources/Generic/3U/$JP /dl/resources/Manifest/Android/manifest.json
+            /resources/Generic/3U/$JP /uma/Android/manifest.json /umamusume/Android/manifest.json"
+          for p in $PATHS; do
+            code=$(curl -sS -o b -w '%{http_code}' --max-time 15 "https://$H$p" 2>/dev/null)
+            sz=$(stat -c%s b 2>/dev/null)
+            ct=$(file -b b 2>/dev/null | head -c 40)
+            echo "code=$code size=$sz  $H$p  [$ct]" >> st.log
+            if [ "$code" = "200" ] && [ "$sz" != "0" ]; then
+              echo "   --- 头 64B ---" >> st.log
+              od -An -tx1 -N64 b >> st.log 2>&1
+              head -c 120 b | tr -c '[:print:]' '.' >> st.log 2>&1
+              echo >> st.log
+            fi
+          done
+          echo "=== DNS ===" >> st.log
+          getent hosts $H >> st.log 2>&1
+      - name: 提交
+        if: always()
+        run: |
+          set +e
+          [ -s st.log ] || echo "(空)" > st.log
+          git init -q r && cd r
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main && git checkout -q -B main origin/main
+          cp ../st.log static-cdn-probe.txt
+          git add static-cdn-probe.txt
+          git commit -m "ci: static cdn probe" || echo "no change"
+          for i in 1 2 3; do git push -q origin main && break; sleep 4; done
