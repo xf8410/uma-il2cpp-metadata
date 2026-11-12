@@ -1,0 +1,51 @@
+name: cn-cdn-probe2
+
+# 探国服 CDN 资源路径（修掉 git push 竞争导致产物丢失的问题）
+on:
+  push:
+    paths:
+      - '.github/workflows/cn-cdn-probe2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 探路径
+        run: |
+          : > probe.log
+          HOSTS="l1-prod-bili-gs-uma.bilibiligame.net l2-prod-bili-gs-uma.bilibiligame.net le1-prod-bili-gs-uma.bilibiligame.net"
+          PATHS="/ /resources/Manifest/Android/manifest.json /resources/manifest/Android/manifest.json /resources/Manifest/manifest.json /resources/Android/assetbundles/ /resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI /dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI /manifest/Android/manifest.json"
+          for h in $HOSTS; do
+            for p in $PATHS; do
+              code=$(curl -sS -o /tmp/o -w '%{http_code}' --max-time 12 "https://$h$p" 2>/dev/null || echo ERR)
+              sz=$(stat -c%s /tmp/o 2>/dev/null || echo 0)
+              echo "$code  $sz  $h$p" >> probe.log
+            done
+          done
+          echo "=== 非 404 的候选再取头 320 字节 ===" >> probe.log
+          awk '$1!="404"{print $3}' probe.log | grep http | head -6 | while read u; do
+            echo "--- $u" >> probe.log
+            curl -sS -o /tmp/b --max-time 30 "$u" 2>>probe.log || true
+            od -An -tx1 -N320 /tmp/b >> probe.log 2>&1 || true
+            head -c 120 /tmp/b | tr -c '[:print:]' '.' >> probe.log 2>&1 || true
+            echo >> probe.log
+          done
+          wc -l probe.log >> probe.log
+      - name: 提交（带 rebase 重试）
+        if: always()
+        run: |
+          [ -f probe.log ] || echo "(无)" > probe.log
+          git init -q repo2 && cd repo2
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git fetch -q origin main
+          git checkout -q -B main origin/main
+          cp ../probe.log cn-cdn-probe2.txt
+          git add cn-cdn-probe2.txt
+          git commit -m "ci: cn cdn probe2" || echo "no change"
+          for i in 1 2 3; do git push -q origin main && break || sleep 4; done
