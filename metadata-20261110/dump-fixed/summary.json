@@ -1,0 +1,13 @@
+{
+  "version": 27,
+  "string_mode": "nul",
+  "counts": {
+    "typeDefinitions": 32080,
+    "fields": 254055,
+    "methods": 213983,
+    "images": 73,
+    "assemblies": 68
+  },
+  "type_token_reverses": 4985,
+  "field_owner_coverage": 254055
+}

@@ -1,0 +1,47 @@
+metadata = metadata-20261110/global-metadata.fixed.dat
+total 105660
+-rw-r--r-- 1 runner runner     2880 Nov 12 01:57 decrypted-report.md
+drwxr-xr-x 2 runner runner     4096 Nov 12 01:57 dump
+-rw-r--r-- 1 runner runner      351 Nov 12 01:57 dump_check.txt
+-rwxr-xr-x 1 runner runner 32248932 Nov 12 01:57 global-metadata.fixed.dat
+-rw-r--r-- 1 runner runner 37246432 Nov 12 01:57 libil2cpp.dec.so.gz
+-rw-r--r-- 1 runner runner       78 Nov 12 01:57 libil2cpp.sha256
+-rwxr-xr-x 1 runner runner 38612513 Nov 12 01:57 libil2cpp.so.gz
+-rw-r--r-- 1 runner runner     1049 Nov 12 01:57 rva_verify.txt
+-rw-r--r-- 1 runner runner     2765 Nov 12 01:57 so_check.txt
+-rw-r--r-- 1 runner runner     2645 Nov 12 01:57 so_hook_更正.md
+-rw-r--r-- 1 runner runner    22977 Nov 12 01:57 so_modules.txt
+-rw-r--r-- 1 runner runner     5147 Nov 12 01:57 so_payload.txt
+-rw-r--r-- 1 runner runner     4668 Nov 12 01:57 so_registration.txt
+-rw-r--r-- 1 runner runner     1929 Nov 12 01:57 so_rva.txt
+-rw-r--r-- 1 runner runner     6672 Nov 12 01:57 说明.md
+version      = 27
+string mode  = nul
+typeDefinitions = 32080
+fields         = 254055
+methods        = 213983
+images         = 73
+assemblies     = 68
+字段归属校验  = OK (组内 type token 逆序对 4985 个，证明重排必要)
+
+输出目录: rep
+  types.tsv  fields.tsv  methods.tsv  images.tsv  summary.json
+--- 行数（期望 fields=254055 methods=213983 types=32080）---
+fields.tsv = 254056
+images.tsv = 74
+methods.tsv = 213984
+types.tsv = 32081
+--- summary.json ---
+{
+  "version": 27,
+  "string_mode": "nul",
+  "counts": {
+    "typeDefinitions": 32080,
+    "fields": 254055,
+    "methods": 213983,
+    "images": 73,
+    "assemblies": 68
+  },
+  "type_token_reverses": 4985,
+  "field_owner_coverage": 254055
+}
