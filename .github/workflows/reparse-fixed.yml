@@ -1,0 +1,83 @@
+name: reparse-fixed
+
+# 用修好的解析器重跑 metadata，验证「解密是否完整」
+#   · 输入直接用仓库里的 metadata-20261110/global-metadata.fixed.dat（不必下 APK）
+#   · 输出的 fields.tsv 覆盖旧的错误版本
+#   · summary.json 里的校验（字段归属累加必须等于 254055）就是解密完整性判据
+on:
+  push:
+    paths:
+      - '.github/workflows/reparse-fixed.yml'
+      - 'tools/parse_metadata_fixed.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reparse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 定位 metadata
+        run: |
+          : > rp.log
+          F=$(ls metadata-*/global-metadata.fixed.dat 2>/dev/null | head -1)
+          [ -z "$F" ] && F=$(ls metadata-*/global-metadata.dat 2>/dev/null | head -1)
+          echo "metadata = ${F:-<无>}" >> rp.log
+          ls -l metadata-*/ >> rp.log 2>&1 || true
+          echo "MD=$F" >> $GITHUB_ENV
+
+      - name: 重跑解析
+        run: |
+          set -e
+          mkdir -p rep
+          python3 tools/parse_metadata_fixed.py "$MD" rep > rp.out 2>&1 || echo "(解析异常，见 rp.out)" >> rp.log
+          tail -c 12000 rp.out >> rp.log
+          echo "--- 输出文件 ---" >> rp.log
+          ls -l rep/ >> rp.log 2>&1 || true
+          echo "--- 行数 ---" >> rp.log
+          for f in rep/*.tsv ; do [ -f "$f" ] && echo "$(basename $f): $(wc -l < $f)" >> rp.log ; done
+
+      - name: 解密完整性自检
+        run: |
+          {
+            echo ""
+            echo "=== 解密完整性自检 ==="
+            if [ -f rep/summary.json ]; then
+              echo "--- summary.json ---"
+              head -c 4000 rep/summary.json
+              echo ""
+            fi
+            echo "--- 关键计数（期望: fields=254055 methods=213983 types=32080）---"
+            for f in rep/fields.tsv rep/methods.tsv rep/types.tsv rep/images.tsv ; do
+              [ -f "$f" ] && echo "$(basename $f) = $(wc -l < $f)"
+            done
+            echo "--- 字段归属完整性 ---"
+            python3 - <<'PY' >> rp.log 2>&1 || true
+import json, os
+p = "rep/summary.json"
+if os.path.exists(p):
+    d = json.load(open(p))
+    print(json.dumps(d, ensure_ascii=False, indent=2)[:2000])
+else:
+    print("no summary.json")
+PY
+          } >> rp.log
+
+      - name: 覆盖旧字段表并提交
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          D=$(dirname "$MD")
+          mkdir -p "$D/dump-fixed"
+          cp rep/*.tsv rep/*.json "$D/dump-fixed/" 2>/dev/null || true
+          cp rp.log reparse-status.txt
+          git add reparse-status.txt "$D/dump-fixed" || true
+          git commit -m "ci: 重跑 metadata 解析（字段归属修复）+ 完整性自检" || echo "no change"
+          git push || true
