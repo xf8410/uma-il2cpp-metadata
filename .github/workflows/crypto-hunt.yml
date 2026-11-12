@@ -1,11 +1,12 @@
 name: crypto-hunt
 
-# 用已解密的 libil2cpp 反汇编加解密方法，抽 key/IV；顺便试拉一个 CDN 资源样本
+# 用已解密的 libil2cpp 反汇编加解密方法，抽 key/IV（目标名单见 dump/crypto_targets.tsv）
 on:
   push:
     paths:
       - '.github/workflows/crypto-hunt.yml'
       - 'tools/hunt_crypto.py'
+      - 'metadata-*/dump/crypto_targets.tsv'
   workflow_dispatch:
 
 permissions:
@@ -27,44 +28,23 @@ jobs:
           gunzip -c "$G" > dec.so
           ls -l dec.so >> hunt.log
           R=$(ls metadata-*/dump/methods_rva.tsv 2>/dev/null | head -1)
+          T=$(ls metadata-*/dump/crypto_targets.tsv 2>/dev/null | head -1)
           M=$(ls metadata-*/dump/methods.tsv 2>/dev/null | head -1)
-          echo "rva  = $R" >> hunt.log
-          echo "meth = $M" >> hunt.log
+          echo "rva     = $R" >> hunt.log
+          echo "targets = $T" >> hunt.log
+          echo "--- methods.tsv 前 5 行（确认列格式）---" >> hunt.log
+          head -5 "$M" 2>/dev/null >> hunt.log
           echo "RVA=$R" >> "$GITHUB_ENV"
-          echo "METH=$M" >> "$GITHUB_ENV"
+          echo "TARGETS=$T" >> "$GITHUB_ENV"
       - name: 反汇编加解密方法
         run: |
-          python3 tools/hunt_crypto.py dec.so "$RVA" "$METH" >> hunt.log 2>&1 || true
-          echo "===== 第二轮：更宽的正则 =====" >> hunt.log
-          python3 tools/hunt_crypto.py dec.so "$RVA" "$METH" \
-            '^(?i:.*(rijndael|aes|hmac|Crypt|Decrypt|Encrypt|Key|Iv).*)$' >> hunt.log 2>&1 || true
-      - name: 试拉一个 CDN 资源样本
+          python3 tools/hunt_crypto.py dec.so "$RVA" "$TARGETS" >> hunt.log 2>&1 || true
+      - name: 试拉 CDN 样本（预期失败，留证据）
         run: |
           U='https://prd-storage-umamusume.akamaized.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI'
           echo "=== GET $U ===" >> hunt.log
-          code=$(curl -sS -L --max-time 60 -o s.bin -w '%{http_code}' "$U" 2>>hunt.log || echo ERR)
+          code=$(curl -sS -L --max-time 20 -o s.bin -w '%{http_code}' "$U" 2>>hunt.log || echo ERR)
           echo "http=$code size=$(stat -c%s s.bin 2>/dev/null || echo 0)" >> hunt.log
-          if [ -s s.bin ]; then
-            echo "--- 头 64B ---" >> hunt.log
-            od -An -tx1 -N64 s.bin >> hunt.log
-            echo "--- 偏移 256 起 64B ---" >> hunt.log
-            od -An -tx1 -j256 -N64 s.bin >> hunt.log
-            echo "--- 头 4 字节 ASCII ---" >> hunt.log
-            head -c 4 s.bin | od -An -c >> hunt.log
-            echo "--- 可读串 top10 ---" >> hunt.log
-            strings -n 8 s.bin | head -10 >> hunt.log
-            echo "--- 若 256 后为循环 XOR：用 UnityFS 明文位置反推 key ---" >> hunt.log
-            python3 - >> hunt.log <<'PY'
-            d = open('s.bin','rb').read()
-            print("size =", len(d))
-            print("magic =", d[:8])
-            # 假设前 256 字节里藏着 UnityFS 明文，用已知明文猜 key 周期
-            cand = [b'UnityFS', b'unityfs', b'UnityWeb', b'CAB-']
-            for c in cand:
-                i = d.find(c)
-                print("%-8s at %s" % (c.decode(), i))
-            PY
-          fi
       - name: 提交
         if: always()
         run: |
