@@ -1,6 +1,7 @@
 dec.so.gz = metadata-20261110/libil2cpp.dec.so.gz
--rw-r--r-- 1 runner runner 129667848 Nov 12 01:59 dec.so
-rva = metadata-20261110/dump/methods_rva.tsv
+-rw-r--r-- 1 runner runner 129667848 Nov 12 02:04 dec.so
+rva  = metadata-20261110/dump/methods_rva.tsv
+meta = metadata-20261110/global-metadata.fixed.dat
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """反汇编抽样验证 + XOR 0x97 加密区间的精细定位 + 解密复验
@@ -31,12 +32,47 @@ WIN = 256
 
 def load_sections(d):
     (_t, _m, _v, _e, _phoff, shoff, _f, _eh, _ph, _phn,
-Traceback (most recent call last):
-  File "/home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/tools/verify_code.py", line 190, in <module>
-    main()
-  File "/home/runner/work/uma-il2cpp-metadata/uma-il2cpp-metadata/tools/verify_code.py", line 67, in main
-    so_path, meta_path, tsv = sys.argv[1], sys.argv[2], sys.argv[3]
-                                                        ~~~~~~~~^^^
-IndexError: list index out of range
---- dec.so 中 0xD65F03C0(ret) 出现次数 ---
+抽样 200 个地址（共 207419 条映射）
+  ret           185 (92.5%)
+  truncated      12 (6.0%)
+  no_return       2 (1.0%)
+  undecodable     1 (0.5%)
+
+精细扫描（256 字节窗口，AX 段共 72.7 MiB）：
+  窗口 297859 个；判定为加密 0 段，共 0.00 MiB（0.0% of AX）
+
+解密后复验（同一批 200 个地址）：
+  ret           185 (92.5%)
+  truncated      12 (6.0%)
+  no_return       2 (1.0%)
+  undecodable     1 (0.5%)
+  走到 ret 的比例：解密前 185 (92.5%) → 解密后 185 (92.5%)
+  仍解不开：1 (0.5%)
+
+正常样例：
+  0x20622E0  #0  1 条指令
+     ret 
+  0x29838DC  #1329  16 条指令
+     ldr x8, [x0]
+     and x9, x8, #0x3fffffffffffffff
+     neg x10, x9
+     cmp x10, x1
+     b.gt #0x298391c
+     mov x10, #0x3fff
+  0x2A66C6C  #2409  60 条指令
+     stp x20, x19, [sp, #-0x20]!
+     stp x29, x30, [sp, #0x10]
+     add x29, sp, #0x10
+     mov x20, x0
+     mov x0, xzr
+     mov x19, x1
+
+加密/异常样例：
+  0x1363004   #11594   undecodable  83 0b 3f a7 25 0b 24 15 fa 90 b1 a4 e7 cc 56 84
+--- code_xor97_pages.txt = metadata-20261110/dump/code_xor97_pages.txt ---
+区间条数：0
+# start	end	(AX 段里按 XOR 0x97 加密的代码区间)
+--- ARM64 ret 小端 c0 03 5f d6 次数 ---
+225362
+--- 对照：反序 d6 5f 03 c0 次数（旧写法搜的是这个，必然≈0）---
 0
