@@ -1,11 +1,228 @@
--rw-r--r-- 1 runner runner 129667848 Nov 12 02:21 dec.so
-rva  = metadata-20261110/dump/methods_rva.tsv
-meth = metadata-20261110/dump/methods.tsv
-methods.tsv 名字 28398 个，methods_rva.tsv 207419 条，命中 0 个
+-rw-r--r-- 1 runner runner 129667848 Nov 12 02:25 dec.so
+rva     = metadata-20261110/dump/methods_rva.tsv
+targets = metadata-20261110/dump/crypto_targets.tsv
+--- methods.tsv 前 5 行（确认列格式）---
+decl_type_index	name	token	param_count
+1	GetText	0x06000001	1
+1	GetText	0x06000002	2
+2	Format	0x06000003	2
+2	Format	0x06000004	3
+methods.tsv 名字 10 个，methods_rva.tsv 207419 条，命中 5 个
 
-提示：RJ256 的 key/IV 是 32 字节常量，看 -> 行里成片规律/可打印的字节。
-===== 第二轮：更宽的正则 =====
-methods.tsv 名字 28398 个，methods_rva.tsv 207419 条，命中 0 个
+===== [23341] DecryptAcb   RVA=0x1BD2F88  file=0x1BD2F88 =====
+  0x1BD2F88    str      x21, [sp, #-0x30]!
+  0x1BD2F8C    stp      x20, x19, [sp, #0x10]
+  0x1BD2F90    stp      x29, x30, [sp, #0x20]
+  0x1BD2F94    add      x29, sp, #0x20
+  0x1BD2F98    adrp     x21, #0x7ba3000
+  0x1BD2F9C    ldrb     w8, [x21, #0x5e5]
+  0x1BD2FA0    mov      x20, x1
+  0x1BD2FA4    mov      x19, x0
+  0x1BD2FA8    tbnz     w8, #0, #0x1bd2fe4
+  0x1BD2FAC    adrp     x0, #0x7673000
+  0x1BD2FB0    ldr      x0, [x0, #0xce8]
+  0x1BD2FB4    bl       #0x16378b0
+  0x1BD2FB8    adrp     x0, #0x75b2000
+  0x1BD2FBC    ldr      x0, [x0, #0x788]
+  0x1BD2FC0    bl       #0x16378b0
+  0x1BD2FC4    adrp     x0, #0x76c4000
+  0x1BD2FC8    ldr      x0, [x0, #0x7c0]
+  0x1BD2FCC    bl       #0x16378b0
+  0x1BD2FD0    adrp     x0, #0x75e7000
+  0x1BD2FD4    ldr      x0, [x0, #0xa10]
+  0x1BD2FD8    bl       #0x16378b0
+  0x1BD2FDC    mov      w8, #1
+  0x1BD2FE0    strb     w8, [x21, #0x5e5]
+  0x1BD2FE4    adrp     x21, #0x76c4000
+  0x1BD2FE8    ldr      x21, [x21, #0x7c0]
+  0x1BD2FEC    ldr      x0, [x21]
+  0x1BD2FF0    ldrb     w8, [x0, #0x133]
+  0x1BD2FF4    tbz      w8, #2, #0x1bd3008
+  0x1BD2FF8    ldr      w8, [x0, #0xe0]
+  0x1BD2FFC    cbnz     w8, #0x1bd3008
+  0x1BD3000    bl       #0x1637960
+  0x1BD3004    ldr      x0, [x21]
+  0x1BD3008    mov      x9, #0x50
+  0x1BD300C    ldr      x8, [x0, #0xb8]
+  0x1BD3010    movk     x9, #0xb535, lsl #16
+  0x1BD3014    movk     x9, #0xd207, lsl #32
+  0x1BD3018    movk     x9, #0x17, lsl #48
+  0x1BD301C    eor      x9, x20, x9
+  0x1BD3020    str      x9, [x8, #0x30]
+  0x1BD3024    adrp     x8, #0x7673000
+  ...（共 256 条指令）
+
+===== [24024] Decrypt   RVA=0x1BD2EF8  file=0x1BD2EF8 =====
+  0x1BD2EF8    str      x21, [sp, #-0x30]!
+  0x1BD2EFC    stp      x20, x19, [sp, #0x10]
+  0x1BD2F00    stp      x29, x30, [sp, #0x20]
+  0x1BD2F04    add      x29, sp, #0x20
+  0x1BD2F08    adrp     x21, #0x7ba2000
+  0x1BD2F0C    ldrb     w8, [x21, #0xa83]
+  0x1BD2F10    mov      x19, x1
+  0x1BD2F14    mov      x20, x0
+  0x1BD2F18    tbnz     w8, #0, #0x1bd2f30
+  0x1BD2F1C    adrp     x0, #0x76c4000
+  0x1BD2F20    ldr      x0, [x0, #0x7c0]
+  0x1BD2F24    bl       #0x16378b0
+  0x1BD2F28    mov      w8, #1
+  0x1BD2F2C    strb     w8, [x21, #0xa83]
+  0x1BD2F30    mov      x0, x20
+  0x1BD2F34    bl       #0x1bd0cdc
+  0x1BD2F38    tbz      w0, #0, #0x1bd2f78
+  0x1BD2F3C    adrp     x8, #0x76c4000
+  0x1BD2F40    ldr      x8, [x8, #0x7c0]
+  0x1BD2F44    ldr      x20, [x20, #0x20]
+  0x1BD2F48    ldr      x0, [x8]
+  0x1BD2F4C    ldrb     w8, [x0, #0x133]
+  0x1BD2F50    tbz      w8, #2, #0x1bd2f60
+  0x1BD2F54    ldr      w8, [x0, #0xe0]
+  0x1BD2F58    cbnz     w8, #0x1bd2f60
+  0x1BD2F5C    bl       #0x1637960
+  0x1BD2F60    mov      x0, x20
+  0x1BD2F64    mov      x1, x19
+  0x1BD2F68    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F6C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F70    ldr      x21, [sp], #0x30
+  0x1BD2F74    b        #0x1bd2f88
+  0x1BD2F78    ldp      x29, x30, [sp, #0x20]
+  0x1BD2F7C    ldp      x20, x19, [sp, #0x10]
+  0x1BD2F80    ldr      x21, [sp], #0x30
+  0x1BD2F84    ret      
+  0x1BD2F88    str      x21, [sp, #-0x30]!
+  0x1BD2F8C    stp      x20, x19, [sp, #0x10]
+  0x1BD2F90    stp      x29, x30, [sp, #0x20]
+  0x1BD2F94    add      x29, sp, #0x20
+  ...（共 256 条指令）
+
+===== [26000] EncryptRJ256   RVA=0x27B4FF4  file=0x27B4FF4 =====
+  0x27B4FF4    stp      x22, x21, [sp, #-0x30]!
+  0x27B4FF8    stp      x20, x19, [sp, #0x10]
+  0x27B4FFC    stp      x29, x30, [sp, #0x20]
+  0x27B5000    add      x29, sp, #0x20
+  0x27B5004    adrp     x22, #0x7ba9000
+  0x27B5008    ldrb     w8, [x22, #0x56]
+  0x27B500C    mov      x19, x2
+  0x27B5010    mov      x21, x1
+  0x27B5014    mov      x20, x0
+  0x27B5018    tbnz     w8, #0, #0x27b5030
+  0x27B501C    adrp     x0, #0x7612000
+  0x27B5020    ldr      x0, [x0, #0x6c0]
+  0x27B5024    bl       #0x16378b0
+  0x27B5028    mov      w8, #1
+  0x27B502C    strb     w8, [x22, #0x56]
+  0x27B5030    mov      w0, #0x11f
+  0x27B5034    mov      x1, xzr
+  0x27B5038    bl       #0x2e0482c
+  0x27B503C    tbz      w0, #0, #0x27b506c
+  0x27B5040    mov      w0, #0x11f
+  0x27B5044    mov      x1, xzr
+  0x27B5048    bl       #0x2e0479c
+  0x27B504C    cbz      x0, #0x27b50c4
+  0x27B5050    mov      x1, x20
+  0x27B5054    mov      x3, x19
+  0x27B5058    ldp      x29, x30, [sp, #0x20]
+  0x27B505C    ldp      x20, x19, [sp, #0x10]
+  0x27B5060    mov      x2, x21
+  0x27B5064    ldp      x22, x21, [sp], #0x30
+  0x27B5068    b        #0x27b50c8
+  0x27B506C    adrp     x8, #0x7612000
+  0x27B5070    ldr      x8, [x8, #0x6c0]
+  0x27B5074    ldr      x0, [x8]
+  0x27B5078    ldrb     w8, [x0, #0x133]
+  0x27B507C    tbz      w8, #2, #0x27b508c
+  0x27B5080    ldr      w8, [x0, #0xe0]
+  0x27B5084    cbnz     w8, #0x27b508c
+  0x27B5088    bl       #0x1637960
+  0x27B508C    mov      x0, x21
+  0x27B5090    mov      x1, xzr
+  ...（共 256 条指令）
+
+===== [26002] DecryptRJ256   RVA=0x27B5618  file=0x27B5618 =====
+  0x27B5618    stp      x22, x21, [sp, #-0x30]!
+  0x27B561C    stp      x20, x19, [sp, #0x10]
+  0x27B5620    stp      x29, x30, [sp, #0x20]
+  0x27B5624    add      x29, sp, #0x20
+  0x27B5628    adrp     x22, #0x7ba9000
+  0x27B562C    ldrb     w8, [x22, #0x58]
+  0x27B5630    mov      x19, x2
+  0x27B5634    mov      x21, x1
+  0x27B5638    mov      x20, x0
+  0x27B563C    tbnz     w8, #0, #0x27b5654
+  0x27B5640    adrp     x0, #0x7612000
+  0x27B5644    ldr      x0, [x0, #0x6c0]
+  0x27B5648    bl       #0x16378b0
+  0x27B564C    mov      w8, #1
+  0x27B5650    strb     w8, [x22, #0x58]
+  0x27B5654    mov      w0, #0x121
+  0x27B5658    mov      x1, xzr
+  0x27B565C    bl       #0x2e0482c
+  0x27B5660    tbz      w0, #0, #0x27b5690
+  0x27B5664    mov      w0, #0x121
+  0x27B5668    mov      x1, xzr
+  0x27B566C    bl       #0x2e0479c
+  0x27B5670    cbz      x0, #0x27b56e8
+  0x27B5674    mov      x1, x20
+  0x27B5678    mov      x3, x19
+  0x27B567C    ldp      x29, x30, [sp, #0x20]
+  0x27B5680    ldp      x20, x19, [sp, #0x10]
+  0x27B5684    mov      x2, x21
+  0x27B5688    ldp      x22, x21, [sp], #0x30
+  0x27B568C    b        #0x27b50c8
+  0x27B5690    adrp     x8, #0x7612000
+  0x27B5694    ldr      x8, [x8, #0x6c0]
+  0x27B5698    ldr      x0, [x8]
+  0x27B569C    ldrb     w8, [x0, #0x133]
+  0x27B56A0    tbz      w8, #2, #0x27b56b0
+  0x27B56A4    ldr      w8, [x0, #0xe0]
+  0x27B56A8    cbnz     w8, #0x27b56b0
+  0x27B56AC    bl       #0x1637960
+  0x27B56B0    mov      x0, x21
+  0x27B56B4    mov      x1, xzr
+  ...（共 256 条指令）
+
+===== [26004] CreateKey   RVA=0x27B5B28  file=0x27B5B28 =====
+  0x27B5B28    sub      sp, sp, #0x40
+  0x27B5B2C    stp      x22, x21, [sp, #0x10]
+  0x27B5B30    stp      x20, x19, [sp, #0x20]
+  0x27B5B34    stp      x29, x30, [sp, #0x30]
+  0x27B5B38    add      x29, sp, #0x30
+  0x27B5B3C    adrp     x19, #0x7ba9000
+  0x27B5B40    ldrb     w8, [x19, #0x5a]
+  0x27B5B44    tbnz     w8, #0, #0x27b5b74
+  0x27B5B48    adrp     x0, #0x7612000
+  0x27B5B4C    ldr      x0, [x0, #0x6c0]
+  0x27B5B50    bl       #0x16378b0
+  0x27B5B54    adrp     x0, #0x767b000
+  0x27B5B58    ldr      x0, [x0, #0x8f0]
+  0x27B5B5C    bl       #0x16378b0
+  0x27B5B60    adrp     x0, #0x75bf000
+  0x27B5B64    ldr      x0, [x0, #0xc80]
+  0x27B5B68    bl       #0x16378b0
+  0x27B5B6C    mov      w8, #1
+  0x27B5B70    strb     w8, [x19, #0x5a]
+  0x27B5B74    mov      w0, #0x123
+  0x27B5B78    mov      x1, xzr
+  0x27B5B7C    str      wzr, [sp, #0xc]
+  0x27B5B80    bl       #0x2e0482c
+  0x27B5B84    tbz      w0, #0, #0x27b5ba4
+  0x27B5B88    mov      w0, #0x123
+  0x27B5B8C    mov      x1, xzr
+  0x27B5B90    bl       #0x2e0479c
+  0x27B5B94    cbz      x0, #0x27b5d28
+  0x27B5B98    bl       #0x27b4e8c
+  0x27B5B9C    mov      x20, x0
+  0x27B5BA0    b        #0x27b5d10
+  0x27B5BA4    adrp     x8, #0x75bf000
+  0x27B5BA8    ldr      x8, [x8, #0xc80]
+  0x27B5BAC    ldr      x0, [x8]
+  0x27B5BB0    bl       #0x163797c
+  0x27B5BB4    mov      x1, xzr
+  0x27B5BB8    mov      x19, x0
+  0x27B5BBC    bl       #0x1f22920
+  0x27B5BC0    cbz      x19, #0x27b5d2c
+  0x27B5BC4    ldr      x8, [x19]
+  ...（共 256 条指令）
 
 提示：RJ256 的 key/IV 是 32 字节常量，看 -> 行里成片规律/可打印的字节。
 === GET https://prd-storage-umamusume.akamaized.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI ===
