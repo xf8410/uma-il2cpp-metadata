@@ -1,0 +1,13 @@
+-rw-r--r-- 1 runner runner 129667848 Nov 12 02:21 dec.so
+rva  = metadata-20261110/dump/methods_rva.tsv
+meth = metadata-20261110/dump/methods.tsv
+methods.tsv 名字 28398 个，methods_rva.tsv 207419 条，命中 0 个
+
+提示：RJ256 的 key/IV 是 32 字节常量，看 -> 行里成片规律/可打印的字节。
+===== 第二轮：更宽的正则 =====
+methods.tsv 名字 28398 个，methods_rva.tsv 207419 条，命中 0 个
+
+提示：RJ256 的 key/IV 是 32 字节常量，看 -> 行里成片规律/可打印的字节。
+=== GET https://prd-storage-umamusume.akamaized.net/dl/resources/Generic/3U/3UWLSQXVR5UA6RCZ7S4XJEA3FGJHSCVI ===
+curl: (6) Could not resolve host: prd-storage-umamusume.akamaized.net
+http=000ERR size=0
