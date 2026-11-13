@@ -112,3 +112,21 @@ BlackBox 容器 App（随便改签——是自己的 App）
 2. 【AI】按 §五 改造 `hachimi_ura_plugin` → 产出 `libhachimi_ura_cn.so`（aarch64）
 3. 【AI】构建流（国服版 Cargo feature `cn`）+ 符号 smoke 测试（加载即 dump 7 剧本类存在性）
 4. 【联合】容器内实机验证 /summary 输出 → 对齐 festa App（NativeEngine 收 18766 不用动）
+
+---
+
+## 八、实施进展（2026-11-13）
+
+**代码已落地：festa 仓 `workbench/cn-ura` 杈（commit f7115ea），树杈纪律，日服 main 零改动。**
+
+| 件 | 内容 |
+|---|---|
+| `so/hachimi_ura_plugin/src/cn_summary.rs` | 国服版 /summary（198 行）：对象链 WDM→get_SingleMode→get_Character；**stats/max/proper 全走 74 getter 按名调用**（偏移无关）；turn=field-by-name 运行时查偏移+plain/Obscured 双读法探测（哨兵域 1..=78）；trainings/skills/支援卡先出骨架（len），细节迭代 |
+| lib.rs 四处门 | ①`mod cn_summary` ②`read_summary()` 头部 `feature="cn_only"` 分发 ③日服 hook 安装 5 处 `cfg(not(cn_only))` 门 ④包名 27 处 `jp.co.cygames.umamusume`→`com.bilibili.umamusume` |
+| Cargo | `version 3.29.5-cn.1` + `[features] cn_only` |
+| CI | `.github/workflows/cn-ura-build.yml`（仅 workbench/cn-ura 触发）：cn 校验门（包名零残留+分发在）→ aarch64 release `--features cn_only` → artifact `libhachimi_ura_cn.so` |
+| 本地验证 | `cargo check --features cn_only` 通过（无 error） |
+
+**输出 schema 与日服逐字段对齐**（festa App NativeEngine 无改动接收）；新增探针字段 `turn_probe_plain`（turn 双读法的另一路值，用于实测判定国服 turn 字段是 plain 还是 ObscuredInt）。
+
+待办（容器验证后迭代）：trainings 走 `get_HomeInfo→GetTrainingCommandTurnInfos` 实测结构；support_cards card_id 字段；7 剧本 DataSet 读法；push 链（App 轮询先行）。
